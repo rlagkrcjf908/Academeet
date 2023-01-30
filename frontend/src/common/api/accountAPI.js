@@ -8,5 +8,12 @@ import $axios from "axios";
  */
 const requestLogin = (payload) => $axios.post("/auth/login", payload);
 
-const changePassword = (payload) => $axios.post("/auth/changePassword", payload);
-export { requestLogin, changePassword };
+const checkPassword = (payload) => $axios.get("/auth/checkPassword", payload);
+
+const changePassword = (payload) => $axios.put("/auth/changePassword", payload);
+
+const requestProfile = (payload) => $axios.put("/auth/requestProfile", payload);
+
+const profileUpdate = (payload) => $axios.put("/auth/profileUpdate", payload);
+
+export { requestLogin, changePassword, checkPassword, profileUpdate, requestProfile };

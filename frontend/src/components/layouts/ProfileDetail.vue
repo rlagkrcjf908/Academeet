@@ -46,11 +46,11 @@
             
           </el-row>
 
-          <!-- 수정버튼 -->
-          <el-button type="success" round @click="$router.push('/profile/update')">수정하기</el-button>
-
-    </el-col>
-  </el-row>
+          
+        </el-col>
+      </el-row>
+      <!-- 수정버튼 -->
+      <el-button type="success" round @click="$router.push('/profile/update')" class="profile-btn">수정하기</el-button>
 </template>
 
 <script setup>
@@ -72,17 +72,24 @@ const profile = ref(
 .profileInfo-box {
     border: 4px solid rgba(148, 216, 45, 1);
     border-radius: 40px;
-    box-shadow: 8px 8px 8px 8px rgba(205, 229, 155, 0.5);
+    box-shadow: 8px 8px 8px 2px rgba(205, 229, 155, 0.5);
     padding: 1em;
-    padding-bottom: 2em;
+    margin-bottom: 2em;
     height: 300px; 
     width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .profileInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 1em;
     border-bottom: 1px solid rgba(217, 217, 217, 1);
     margin: 0 2em;
     font-size: 16px;
 }
+
 </style>

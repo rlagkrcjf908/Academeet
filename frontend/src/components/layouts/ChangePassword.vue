@@ -23,9 +23,7 @@
             v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호 확인을 위해 한번 더 입력해주세요"/>
         </el-form-item>
         <!-- 변경 -->
-        <el-form-item>
-          <el-button type="success" round @click="submitForm(ruleFormRef)">변경완료</el-button>
-        </el-form-item>
+        <el-button type="success" round @click="submitForm(ruleFormRef)">변경완료</el-button>
       </el-form>
     </el-col>
   </el-row>
@@ -33,27 +31,32 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
-// import { useRouter } from 'vue-router';
-// import { axios  } from 'axios';
-// const router = useRouter();
+import { checkPassword, changePassword } from '@/common/api/accountAPI.js'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const ruleFormRef = ref()
-const currentpassOK = true
+const isChecked = false
 
 // 현재 비밀번호 확인
 const validateCurrentpass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('현재 비밀번호를 입력해주세요.'))
   } else {
+      const data = checkPassword(value)
+      console.log(data)
+      isChecked.value = data
+  }
     if (value.replace(' ','') !== value){
       callback(new Error('공백은 입력할 수 없습니다.'))
     }
-    if (!currentpassOK) {
+    if (!isChecked.value) {
       callback(new Error('현재 비밀번호와 일치하지 않습니다!'))
     }else{
       callback()
     }
   }
-}
+
 
 const validatePass = (rule, value, callback) => {
   const reg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/
@@ -108,27 +111,19 @@ const submitForm = (formEl) => {
     if (valid) {
       console.log(valid)
       console.log('submit!')
-      // const password = ruleForm.pass
-
-      // axios({
-      //   method: 'post',
-      //   url: `${BASE_URL}/auth/changePassword`,
-      //   data: {
-      //     password: password,
-      //   },
-      //   headers: {
-      //     Authorization: `Token ${Token}`
-      //   }
-      // })
-      //   .then(() => {
-      //     console.log('변경 성공')
-      //     router.push({ name: 'profile' })
-      //   })
-
+      const password = ruleForm.pass
+      try {
+        changePassword(password)
+        router.push({ name: 'profile' })
+      }
+      catch (error) {
+        console.log(error)
+      }
+    }
       // console.log(ruleForm.pass)
       // console.log(ruleForm.currentpass)
       // console.log(ruleForm)
-    } else {
+    else {
       console.log('error submit!')
       return false
     }

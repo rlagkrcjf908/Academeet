@@ -7,7 +7,7 @@
         :model="ruleForm"
         status-icon
         :rules="rules"
-        label-width="120px"
+        label-width=auto
         class="demo-ruleForm">
           
           <el-row :span="24" justify="center">
@@ -66,27 +66,30 @@
             
           </el-row>
 
-          <!-- 수정버튼 -->
-      
-          <el-form-item>
-            <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
-          </el-form-item>
         </el-form>
-    </el-col>
-  </el-row>
+      </el-col>
+      <!-- 수정버튼 -->
+  
+      <el-form-item>
+        <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
+      </el-form-item>
+    </el-row>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { profileUpdate } from '@/common/api/accountAPI.js'
 
 
 const ruleFormRef = ref()
 const router = useRouter()
+
+// store에 프로필 정보 저장해서 들고오기
 const profile = ref(
   {
-    profileImg: require("@/assets/images/user.png"),
+    profileImg: '@/assets/images/user.png',
     username: '김하니',
     email: 'ssafy8@gmail.com',
     nickname: '뉴진스하니',
@@ -135,14 +138,29 @@ const rules = reactive({
   phone: [{ validator: checkPhone, trigger: 'blur' }]
 })
 
+// 회원정보수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!')
+      const data = {
+        profileImg: profile.value.profileImg,
+        username: profile.value.username,
+        email: profile.value.email,
+        nickname: ruleForm.nickname,
+        phone: ruleForm.phone,
+        birthday: profile.value.birthday
+      }
+      try {
+        profileUpdate(data)
+        router.push({ name: 'profile' })
+        console.log('submit!')
+      }
+      catch (error) {
+        console.log(error)
+      }
       console.log(ruleForm.nickname)
       console.log(ruleForm.phone)
-      router.push('/profile')
     } else {
       console.log('error submit!')
       return false
@@ -157,10 +175,13 @@ const handleAvatarSuccess = (
   uploadFile
 ) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw)
+  console.log('uploadFile:',uploadFile)
+  console.log('업로드된이미지url1번:',imageUrl.value)
+
+  console.log('imageUrl1번:',imageUrl)
 }
 
 const beforeAvatarUpload = (rawFile) => {
-  imageUrl.value = ''
   if (rawFile.type !== 'image/jpeg') {
     ElMessage.error('Avatar picture must be JPG format!')
     return false
@@ -168,14 +189,14 @@ const beforeAvatarUpload = (rawFile) => {
     ElMessage.error('Avatar picture size can not exceed 2MB!')
     return false
   }
-  console.log(imageUrl.value)
+  console.log('업로드된이미지url:',imageUrl.value)
+  console.log('imageUrl:',imageUrl)
+  console.log('rawFile:',rawFile)
 
   return true
 }
 </script>
 
-<!-- state에서 원래 닉네임과 연락처 들고와서 초기값에 넣어준다. -->
-<!-- 수정하기 위해서 모든 프로필 정보를 api에 넘긴다. -->
 
 <style scoped>
 .avatar-uploader .avatar {

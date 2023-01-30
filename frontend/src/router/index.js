@@ -5,6 +5,7 @@ import GroupView from '../views/GroupView.vue'
 import profileDetail from '@/components/layouts/ProfileDetail'
 import profileUpdate from '@/components/layouts/ProfileUpdate'
 import changePassword from '@/components/layouts/ChangePassword'
+import NotFound from '@/views/NotFound.vue'
 
 const routes = [
   {
@@ -39,6 +40,16 @@ const routes = [
     name: 'group',
     component: GroupView
   },
+  {
+    // 404 page
+    path: '/404',
+    name: 'NotFound',
+    component: NotFound
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: { name: 'NotFound' }
+  }
   // {
   //   path: '/about',
   //   name: 'about',
