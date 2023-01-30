@@ -1,0 +1,206 @@
+<template>
+  <!-- 폼 시작 -->
+  <el-row :span="24" justify="center">
+    <el-col>
+        <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm">
+          
+          <el-row :span="24" justify="center">
+
+            <el-col :span="4">
+              <!-- 프로필사진 -->
+              <el-upload
+              class="avatar-uploader"
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <p v-else class="avatar-uploader-icon">+</p>
+              </el-upload>
+              <!-- 유저이름 -->
+              <p>{{profile.username}}</p>
+
+            </el-col>
+            
+            <el-col span="8">
+              <div class="profileInfo-box">
+  
+                <!-- 이메일 -->
+                <div class="profileInfo">
+                  <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+                  <span>{{profile.email}}</span>
+                </div>
+                
+                <!-- 닉네임 -->
+                <div class="profileInfo">
+                  <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
+                  <el-form-item prop="nickname">
+                    <el-input v-model.trim="ruleForm.nickname" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
+                  </el-form-item>
+                </div>
+                
+
+                <!-- 연락처  -->                
+                <div class="profileInfo" >
+                  <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
+                  <el-form-item prop="phone">
+                    <el-input v-model.number="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
+                  </el-form-item>
+                </div>
+                
+                <!-- 생일 -->
+                <div class="profileInfo">
+                  <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
+                  <span>{{profile.birthday}}</span>
+                </div>
+              </div>
+
+            </el-col>
+            
+          </el-row>
+
+          <!-- 수정버튼 -->
+      
+          <el-form-item>
+            <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
+          </el-form-item>
+        </el-form>
+    </el-col>
+  </el-row>
+</template>
+
+<script setup>
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+
+
+const ruleFormRef = ref()
+const router = useRouter()
+const profile = ref(
+  {
+    profileImg: require("@/assets/images/user.png"),
+    username: '김하니',
+    email: 'ssafy8@gmail.com',
+    nickname: '뉴진스하니',
+    phone: '010-1234-5678',
+    birthday: '2004.10.06'
+  }
+)
+
+// 연락처 유효성 검사
+const checkPhone = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('연락처를 입력해주세요.'))
+  }
+  setTimeout(() => {
+    if (!Number.isInteger(value)) {
+      callback(new Error('숫자만 입력해주세요.'))
+    } else {
+      if (String(value).length < 7) {
+        callback(new Error('번호를 확인해주세요.'))
+      } else {
+        callback()
+      }
+    }
+  }, 1000)
+}
+
+// 닉네임 유효성 검사
+const validateNickname = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Please input the validateNickname'))
+  } else {
+    if (value.replace(' ','') !== value){
+      callback(new Error('공백은 입력할 수 없습니다.'))
+    }
+    callback()
+  }
+}
+
+const ruleForm = reactive({
+  nickname: profile.value.nickname,
+  phone: profile.value.phone
+})
+
+const rules = reactive({
+  nickname: [{ validator: validateNickname, trigger: 'blur' }],
+  phone: [{ validator: checkPhone, trigger: 'blur' }]
+})
+
+const submitForm = (formEl) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      console.log(ruleForm.nickname)
+      console.log(ruleForm.phone)
+      router.push('/profile')
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
+// 프로필사진 업로드
+const imageUrl = ref('profile.value.profileImg')
+const handleAvatarSuccess = (
+  response,
+  uploadFile
+) => {
+  imageUrl.value = URL.createObjectURL(uploadFile.raw)
+}
+
+const beforeAvatarUpload = (rawFile) => {
+  imageUrl.value = ''
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('Avatar picture must be JPG format!')
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!')
+    return false
+  }
+  console.log(imageUrl.value)
+
+  return true
+}
+</script>
+
+<!-- state에서 원래 닉네임과 연락처 들고와서 초기값에 넣어준다. -->
+<!-- 수정하기 위해서 모든 프로필 정보를 api에 넘긴다. -->
+
+<style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>

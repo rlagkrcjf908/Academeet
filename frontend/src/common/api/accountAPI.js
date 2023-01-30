@@ -8,4 +8,5 @@ import $axios from "axios";
  */
 const requestLogin = (payload) => $axios.post("/auth/login", payload);
 
-export { requestLogin };
+const changePassword = (payload) => $axios.post("/auth/changePassword", payload);
+export { requestLogin, changePassword };
