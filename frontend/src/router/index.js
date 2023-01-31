@@ -5,6 +5,8 @@ import GroupView from '../views/GroupView.vue'
 import profileDetail from '@/components/layouts/ProfileDetail'
 import profileUpdate from '@/components/layouts/ProfileUpdate'
 import changePassword from '@/components/layouts/ChangePassword'
+import MeetingCreate from '@/views/MeetingCreate'
+import AfterMeeting from '@/components/layouts/AfterMeeting'
 import NotFound from '@/views/NotFound.vue'
 
 const routes = [
@@ -39,6 +41,16 @@ const routes = [
     path: '/group',
     name: 'group',
     component: GroupView
+  },
+  {
+    path: '/meetingCreate',
+    name: 'meetingCreate',
+    component: MeetingCreate
+  },
+  {
+    path: '/aftermeeting',
+    name: 'aftermeeting',
+    component: AfterMeeting
   },
   {
     // 404 page
