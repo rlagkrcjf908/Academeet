@@ -1,9 +1,13 @@
 <template>
-  <p>그룹</p>
-  <p>사이드바</p>
-  <p>내브바</p>
-  <p>그룹별 상세 화면 : 그룹원정보, 출석, 공지</p>
-  
+  <div class="common-layout">
+    <el-container>
+      <el-aside width="200px" style="background-color: rgba(205, 229, 155, 1);">Aside</el-aside>
+      <el-container>
+        <el-header style="background-color: rgb(252, 252, 164);">Header</el-header>
+        <el-main><router-view></router-view></el-main>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
 <script>

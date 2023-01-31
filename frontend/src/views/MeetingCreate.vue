@@ -8,49 +8,55 @@
         class="demo-ruleForm"
         >
       <div style="border: 1px solid black; padding: 40px;">
-        <el-form-item label="groupName" prop="groupName">
+        <!-- 그룹이름 -->
+        <el-form-item label="그룹이름" prop="groupName" required>
           <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
         </el-form-item>
 
+        <!-- 시간 -->
         <div class="demo-time-range">
-            <div>
-                <label for="startTime">회의 시작 시간</label>
-                <el-time-select
-                  v-model="startTime"
-                  class="mr-4"
-                  placeholder="회의 시작 시간"
-                  start="00:00"
-                  step="00:15"
-                  end="24:00"
-                  id="startTime"
-                />
-                {{ startTime }}
-            </div>
-            <div>
-                <label for="endTime">회의 마치는 시간</label>
-                <el-time-select
-                  v-model="endTime"
-                  :min-time="startTime"
-                  placeholder="회의 마치는 시간"
-                  start="00:00"
-                  step="00:15"
-                  end="24:00"
-                  id="endTime"
-                />
-                {{ endTime }}
-            </div>
+          <!-- 시작시간 -->
+          <el-form-item label="회의 시작 시간" required prop="startTime">
+            <el-time-select
+              v-model="ruleForm.startTime"
+              class="mr-4"
+              start="00:00"
+              step="00:15"
+              end="24:00"
+              id="startTime"
+            />
+            {{ startTime }}
+          </el-form-item>
+          <!-- 마치는 시간 -->
+          <el-form-item label="회의 마치는 시간" required prop="endTime">
+            <el-time-select
+              v-model="ruleForm.endTime"
+              :min-time="startTime"
+              start="00:00"
+              step="00:15"
+              end="24:00"
+              id="endTime"
+            />
+            {{ endTime }}
+          </el-form-item>
         </div>
     </div>
 
     <div style="border: 1px solid black; padding: 40px;">
-        <div>
-            <p>그룹 선택</p>
-            <SelectGroup/>
-        </div>
-        <div>
-          <p>멤버 선택</p>
+        <!-- 그룹선택 -->
+        <el-form-item label="그룹 선택" prop="group">
+          <el-radio-group v-model="ruleForm.group">
+            <el-radio label="선택안함" />
+            <el-radio label="1반" />
+            <el-radio label="2반" />
+            <el-radio label="3반" />
+          </el-radio-group>
+        </el-form-item>
+
+        <!-- 멤버 선택 -->
+        <el-form-item label="멤버 선택" prop="guest">
           <el-select-v2
-            v-model="value"
+            v-model="ruleForm.guest"
             style="width: 700px"
             multiple
             filterable
@@ -59,63 +65,24 @@
             clearable
             :options="options"
             :loading="loading"
-            placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
+            placeholder="초대하고 싶은 참여자를 검색해주세요"
           />
-        </div>
+        </el-form-item>
       </div>
-
     </el-form>
+
     <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)"
-        >그룹생성</el-button
-      >
+      <el-button type="primary" @click="submitForm(ruleFormRef)">그룹생성</el-button>
     </el-form-item>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import SelectGroup from '@/components/layouts/SelectGroup'
 
-
+const startTime = ref('')
+const endTime = ref('')
 const ruleFormRef = ref()
-
-const validategroupName = (rule, value, callback) => {
-  if (value === '') {
-    callback(new Error('그룹이름을 입력해 주세요.'))
-  } else {
-    if (value.replace(' ','') !== value){
-      callback(new Error('공백은 입력할 수 없습니다.'))
-    }
-    callback()
-  }
-}
-
-const ruleForm = reactive({
-  groupName: '',
-})
-
-const rules = reactive({
-  groupName: [{ validator: validategroupName, trigger: 'blur' }],
-})
-
-const submitForm = (formEl) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid && value.value.length ) {
-      console.log('참가자:',value.value)
-      console.log('submit!')
-    } else {
-      ElMessage({
-        showClose: true,
-        message: '초대된 사용자가 없습니다!',
-        type: 'error',
-      })
-      console.log('error submit!')
-      return false
-    }
-  })
-}
 
 
 const states = [
@@ -170,11 +137,37 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ]
+
+// 그룹이름 유효성 검사
+const validategroupName = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('그룹이름을 입력해 주세요.'))
+  } else {
+    if (value.replace(' ','') !== value){
+      callback(new Error('공백은 입력할 수 없습니다.'))
+    }
+    callback()
+  }
+}
+
+// 유효성 검사할 항목 이름
+const ruleForm = reactive({
+  groupName: '',
+  startTime: '',
+  endTime: '',
+  group: '',
+  guest: [],
+})
+
+// 회의 참여자 목록
+const guestList = ref([])
+
+// 유저 목록
 const list = states.map((item) => {
   return { value: `value:${item}`, label: `label:${item}` }
 })
 
-const value = ref([])
+// 유저 검색
 const options = ref([])
 const loading = ref(false)
 const remoteMethod = (query) => {
@@ -191,11 +184,35 @@ const remoteMethod = (query) => {
   }
 }
 
-console.log(value.value)
+// 유효성 검사 규칙
+const rules = reactive({
+  groupName: [{ validator: validategroupName, trigger: 'blur' }],
+  group: [{ required: true, message: '그룹을 선택하세요', trigger: 'change' }],
+  startTime: [{ required: true, message: '시작 시간을 선택하세요', trigger: 'change' }],
+  endTime: [{ required: true, message: '마치는 시간을 선택하세요', trigger: 'change' }],
+})
 
-// 시간
-const startTime = ref('')
-const endTime = ref('')
+// 회의 생성
+const submitForm = (formEl) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid && guestList.value ) {
+      console.log('참가자:',guestList.value)
+      console.log('submit!')
+    } else {
+      ElMessage({
+        showClose: true,
+        message: '초대된 사용자가 없습니다!',
+        type: 'error',
+      })
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
+
+
 </script>
 
 <style>

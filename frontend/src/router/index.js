@@ -40,7 +40,24 @@ const routes = [
   {
     path: '/group',
     name: 'group',
-    component: GroupView
+    component: GroupView,
+    children: [
+      {
+        path: '',
+        name: 'groupMain',
+        component: () => import(/* webpackChunkName: "groupMain" */ '@/components/layouts/GroupMain.vue')
+      },
+      {
+        path: 'create',
+        name: 'groupCreate',
+        component: () => import(/* webpackChunkName: "groupCreate" */ '@/components/layouts/GroupCreate.vue')
+      },
+      {
+        path: 'users',
+        name: 'GroupUser',
+        component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/layouts/GroupUser.vue')
+      },
+    ],
   },
   {
     path: '/meetingCreate',
