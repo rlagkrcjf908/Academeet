@@ -122,9 +122,10 @@ compileQuerydsl {
 configurations {
     querydsl.extendsFrom compileClasspath
 }
-*/
 //[끝]
 
+
+ */
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
@@ -132,6 +133,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE")
+   // 메일관련
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'javax.mail:mail:1.4.7'
+
     testImplementation("org.springframework.security:spring-security-test")
     annotationProcessor("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("mysql:mysql-connector-java")
@@ -157,7 +162,8 @@ dependencies {
     //Kurento (미디어서버) 관련 의존성 추가
     implementation('org.kurento:kurento-client:6.16.0')
     implementation('org.kurento:kurento-utils-js:6.15.0')
-
+    //redis 이용
+    compile 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
 
     //IntelliJ용
     //IntelliJ에서는 하기 annotationProcessor를 쓰면 별도의 querydsl 플러그인 및 플러그인 설정이 불필요.
