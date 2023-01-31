@@ -12,7 +12,7 @@ const checkPassword = (payload) => $axios.get("/auth/checkPassword", payload);
 
 const changePassword = (payload) => $axios.put("/auth/changePassword", payload);
 
-const requestProfile = (payload) => $axios.put("/auth/requestProfile", payload);
+const requestProfile = (userid) => $axios.get("/auth/requestProfile", userid);
 
 const profileUpdate = (payload) => $axios.put("/auth/profileUpdate", payload);
 

@@ -80,17 +80,23 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { profileUpdate } from '@/common/api/accountAPI.js'
+// import { profileUpdate } from '@/common/api/accountAPI.js'
+import { onMounted } from 'vue'
+import { useStore } from 'vuex'
 
-
+const store = useStore()
 const ruleFormRef = ref()
 const router = useRouter()
 
+onMounted (() => {
+      store.dispatch('accountStore/requestProfileAction', store.state.userid)
+      
+    })
 // store에 프로필 정보 저장해서 들고오기
 const profile = ref(
   {
-    profileImg: '@/assets/images/user.png',
-    username: '김하니',
+    profileImg: store.state.profile.profileImg,
+    username: store.state.profile.username,
     email: 'ssafy8@gmail.com',
     nickname: '뉴진스하니',
     phone: '010-1234-5678',
@@ -119,7 +125,7 @@ const checkPhone = (rule, value, callback) => {
 // 닉네임 유효성 검사
 const validateNickname = (rule, value, callback) => {
   if (value === '') {
-    callback(new Error('Please input the validateNickname'))
+    callback(new Error('닉네임을 입력해 주세요.'))
   } else {
     if (value.replace(' ','') !== value){
       callback(new Error('공백은 입력할 수 없습니다.'))
@@ -141,9 +147,9 @@ const rules = reactive({
 // 회원정보수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      const data = {
+      const profileData = {
         profileImg: profile.value.profileImg,
         username: profile.value.username,
         email: profile.value.email,
@@ -151,16 +157,19 @@ const submitForm = (formEl) => {
         phone: ruleForm.phone,
         birthday: profile.value.birthday
       }
-      try {
-        profileUpdate(data)
+      await store.dispatch('accountStore/profileUpdateAction', profileData)
         router.push({ name: 'profile' })
         console.log('submit!')
-      }
-      catch (error) {
-        console.log(error)
-      }
-      console.log(ruleForm.nickname)
-      console.log(ruleForm.phone)
+      // try {
+      //   profileUpdate(data)
+      //   router.push({ name: 'profile' })
+      //   console.log('submit!')
+      // }
+      // catch (error) {
+      //   console.log(error)
+      // }
+      // console.log(ruleForm.nickname)
+      // console.log(ruleForm.phone)
     } else {
       console.log('error submit!')
       return false

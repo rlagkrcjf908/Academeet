@@ -55,7 +55,14 @@
 
 <script setup>
 import { ref } from 'vue'
+import { onMounted } from 'vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
+
+onMounted (() => {
+    store.dispatch('accountStore/requestProfileAction', store.state.userid)
+    })
 const profile = ref(
   {
     profileImg: require("@/assets/images/user.png"),
