@@ -6,7 +6,7 @@ import profileDetail from '@/components/layouts/ProfileDetail'
 import profileUpdate from '@/components/layouts/ProfileUpdate'
 import changePassword from '@/components/layouts/ChangePassword'
 import MeetingCreate from '@/views/MeetingCreate'
-import AfterMeeting from '@/components/layouts/AfterMeeting'
+import meetingEnd from '@/components/layouts/meeting-end'
 import NotFound from '@/views/NotFound.vue'
 
 const routes = [
@@ -65,9 +65,9 @@ const routes = [
     component: MeetingCreate
   },
   {
-    path: '/aftermeeting',
-    name: 'aftermeeting',
-    component: AfterMeeting
+    path: '/meeting-end',
+    name: 'meeting-end',
+    component: meetingEnd
   },
   {
     // 404 page
