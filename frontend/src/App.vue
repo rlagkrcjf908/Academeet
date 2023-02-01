@@ -1,17 +1,17 @@
 <template>
-  <the-header></the-header>
+<sub-main></sub-main>
 </template>
+
 <script>
-import TheHeader from "./components/layouts/TheHeader.vue";
+import SubMain from './views/SubMain.vue';
 
 export default {
-  components: { TheHeader },
+  components: { SubMain  },
 };
 </script>
 
 <style lang="scss">
 #app {
-  // font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
