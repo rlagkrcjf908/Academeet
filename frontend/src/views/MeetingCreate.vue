@@ -8,9 +8,9 @@
         class="demo-ruleForm"
         >
       <div style="border: 1px solid black; padding: 40px;">
-        <!-- 그룹이름 -->
-        <el-form-item label="그룹이름" prop="groupName" required>
-          <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
+        <!-- 회의이름 -->
+        <el-form-item label="회의이름" prop="groupName" required>
+          <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="회의이름을 입력해 주세요." maxlength="45"/>
         </el-form-item>
 
         <!-- 시간 -->
@@ -44,17 +44,19 @@
 
     <div style="border: 1px solid black; padding: 40px;">
         <!-- 그룹선택 -->
+        <!-- 내가 호스트인 그룹만 데려옴 -->
         <el-form-item label="그룹 선택" prop="group">
-          <el-radio-group v-model="ruleForm.group">
-            <el-radio label="선택안함" />
-            <el-radio label="1반" />
-            <el-radio label="2반" />
-            <el-radio label="3반" />
+          <el-radio-group v-model="ruleForm.group" @change="selectGroup">
+            <el-radio label="선택안함" name="no"/>
+            <el-radio label="1">1반</el-radio>
+            <el-radio label="2">2반</el-radio>
+            <el-radio label="3">3반</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <!-- 멤버 선택 -->
-        <el-form-item label="멤버 선택" prop="guest">
+        <!-- 선택안함을 누르면 멤버검색 창이 보임 -->
+        <el-form-item label="멤버 선택" prop="guest" v-if="!isSelectGroup">
           <el-select-v2
             v-model="ruleForm.guest"
             style="width: 700px"
@@ -72,7 +74,10 @@
     </el-form>
 
     <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">그룹생성</el-button>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">미팅생성</el-button>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">미팅생성예약</el-button>
     </el-form-item>
 </template>
 
@@ -138,6 +143,18 @@ const states = [
   'Wyoming',
 ]
 
+const  isSelectGroup = ref(true)
+
+const selectGroup = (data) => {
+  if (data === '선택안함'){
+    isSelectGroup.value = false
+    console.log(isSelectGroup.value)
+  }else{
+    isSelectGroup.value = true
+    console.log(isSelectGroup.value)
+  }
+
+}
 // 그룹이름 유효성 검사
 const validategroupName = (rule, value, callback) => {
   if (value === '') {
@@ -184,6 +201,9 @@ const remoteMethod = (query) => {
   }
 }
 
+
+
+
 // 유효성 검사 규칙
 const rules = reactive({
   groupName: [{ validator: validategroupName, trigger: 'blur' }],
@@ -197,6 +217,8 @@ const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid && guestList.value ) {
+      console.log('뭐야..:',ruleForm)
+      console.log('???',ruleForm.group)
       console.log('참가자:',guestList.value)
       console.log('submit!')
     } else {
@@ -216,8 +238,4 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-.demo-ruleForm{
-  display: flex;
-  flex-direction: row;
-}
 </style>

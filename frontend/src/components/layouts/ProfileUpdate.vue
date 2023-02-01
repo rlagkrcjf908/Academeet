@@ -77,32 +77,29 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 // import { profileUpdate } from '@/common/api/accountAPI.js'
-import { onMounted } from 'vue'
+// import { onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
 const ruleFormRef = ref()
 const router = useRouter()
 
-onMounted (() => {
-      store.dispatch('accountStore/requestProfileAction', store.state.userid)
+const { ...profile } = toRefs(store.state.accountStore.profile)
+
+const ruleForm = reactive({
+  nickname: profile.nickname,
+  phone: profile.phone,
+})
+
+// onMounted (() => {
+//       store.dispatch('accountStore/requestProfileAction', store.state.userid)
       
-    })
-// store에 프로필 정보 저장해서 들고오기
-const profile = ref(
-  {
-    profileImg: store.state.profile.profileImg,
-    username: store.state.profile.username,
-    email: 'ssafy8@gmail.com',
-    nickname: '뉴진스하니',
-    phone: '010-1234-5678',
-    birthday: '2004.10.06'
-  }
-)
+//     })
+
 
 // 연락처 유효성 검사
 const checkPhone = (rule, value, callback) => {
@@ -134,10 +131,6 @@ const validateNickname = (rule, value, callback) => {
   }
 }
 
-const ruleForm = reactive({
-  nickname: profile.value.nickname,
-  phone: profile.value.phone
-})
 
 const rules = reactive({
   nickname: [{ validator: validateNickname, trigger: 'blur' }],
@@ -150,18 +143,17 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
       const profileData = {
-        profileImg: profile.value.profileImg,
-        username: profile.value.username,
-        email: profile.value.email,
+        profileImg: profile.profileImg,
+        username: profile.username,
+        email: profile.email,
         nickname: ruleForm.nickname,
         phone: ruleForm.phone,
-        birthday: profile.value.birthday
+        birthday: profile.birthday
       }
       await store.dispatch('accountStore/profileUpdateAction', profileData)
         router.push({ name: 'profile' })
-        console.log('submit!')
-      // try {
-      //   profileUpdate(data)
+        // try {
+          //   profileUpdate(data)
       //   router.push({ name: 'profile' })
       //   console.log('submit!')
       // }
@@ -170,6 +162,7 @@ const submitForm = (formEl) => {
       // }
       // console.log(ruleForm.nickname)
       // console.log(ruleForm.phone)
+      console.log('submit!')
     } else {
       console.log('error submit!')
       return false

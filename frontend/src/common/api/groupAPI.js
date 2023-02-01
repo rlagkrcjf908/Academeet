@@ -1,10 +1,10 @@
 import $axios from "axios";
 
-const groupCreate = (payload) => $axios.post("/group//{user_id}", payload);
+const groupCreate = (payload) => $axios.post("/group/{user_id}", payload);
 
-const requestGroupList = (payload) => $axios.get("/group/{id}/list", payload);
+const requestGroupList = () => $axios.get("/group/{id}/list");
 
-const requestGroup = (groupid) => $axios.get("/group/{group_id}", groupid);
+const requestGroup = () => $axios.get("/group/{group_id}");
 
 const groupDelete = (payload) => $axios.delete("/group/{group_id}/delete", payload);
 

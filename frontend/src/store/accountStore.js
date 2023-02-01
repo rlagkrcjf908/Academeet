@@ -3,14 +3,13 @@ import { requestLogin, profileUpdate, requestProfile  } from "../common/api/acco
 const state = {
   token: null,
   userid: null,
-  username: null,
   profile: {
-    profileImg: '@/assets/images/user.png',
-    username: '김하니',
-    email: 'ssafy8@gmail.com',
-    nickname: '뉴진스하니',
-    phone: '010-1234-5678',
-    birthday: '2004.10.06'
+    profileImg:null,
+    username: null,
+    email: null,
+    nickname: null,
+    phone: null,
+    birthday: null
   },
 };
 
@@ -42,8 +41,8 @@ const actions = {
     const response = await profileUpdate(profileData);
     commit("SET_USER_PROFILE", response.data.profile);
   },
-  requestProfileAction: async ({ commit }, profileData) => {
-    const response = await requestProfile(profileData);
+  requestProfileAction: async ({ commit }) => {
+    const response = await requestProfile();
     commit("SET_USER_PROFILE", response.data.profile);
   }
 };

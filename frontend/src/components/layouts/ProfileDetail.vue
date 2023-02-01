@@ -1,5 +1,4 @@
 <template>
-  <!-- 폼 시작 -->
   <el-row :span="24" justify="center">
     <el-col>
           <el-row :span="24" justify="center">
@@ -54,25 +53,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { onMounted } from 'vue'
+// import { onMounted } from 'vue'
 import { useStore } from 'vuex'
-
+import { onMounted } from 'vue';
 const store = useStore()
 
 onMounted (() => {
-    store.dispatch('accountStore/requestProfileAction', store.state.userid)
+    store.dispatch('accountStore/requestProfileAction', store.state.accountStore.userid)
     })
-const profile = ref(
-  {
-    profileImg: require("@/assets/images/user.png"),
-    username: '김하니',
-    email: 'ssafy8@gmail.com',
-    nickname: '뉴진스하니',
-    phone: '010-1234-5678',
-    birthday: '2004.10.06'
-  }
-)
+
+const { ...profile } = store.state.accountStore.profile
 </script>
 
 <style>

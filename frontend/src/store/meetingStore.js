@@ -1,4 +1,4 @@
-import { meetingCreate, meetingEnd } from "../common/api/meetingAPI";
+import { meetingCreate } from "../common/api/meetingAPI";
 
 const state = {
   meetingInfo:null,

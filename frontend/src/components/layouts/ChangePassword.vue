@@ -36,7 +36,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const ruleFormRef = ref()
-const isChecked = false
+const isChecked = ref(false)
 
 // 현재 비밀번호 확인
 const validateCurrentpass = (rule, value, callback) => {
@@ -132,3 +132,10 @@ const submitForm = (formEl) => {
 
 
 </script>
+
+<style>
+.profile-container{
+  display: flex;
+  flex-direction: column;
+}
+</style>

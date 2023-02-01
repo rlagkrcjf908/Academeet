@@ -53,7 +53,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "groupCreate" */ '@/components/layouts/GroupCreate.vue')
       },
       {
-        path: 'users',
+        path: ':groupId',
         name: 'GroupUser',
         component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/layouts/GroupUser.vue')
       },

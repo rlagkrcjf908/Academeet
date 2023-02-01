@@ -81,6 +81,7 @@ const submitForm = (formEl) => {
     }
   })
 }
+
 const states = [
   'Alabama',
   'Alaska',
