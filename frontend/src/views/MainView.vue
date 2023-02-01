@@ -1,16 +1,13 @@
 <template>
-  <the-header></the-header>
-  <div class="main"></div>
+  <router-view></router-view>
   
 </template>
 
 <script>
 // @ is an alias to /src
-import TheHeader from "@/components/layouts/TheHeader.vue";
 
 export default {
   name: "MainView",
-  components: { TheHeader },
 };
 </script>
 
