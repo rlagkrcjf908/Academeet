@@ -14,7 +14,7 @@ export default createStore({
   getters:    modules.getters,
   mutations:  modules.mutations,
   actions:    modules.actions,
-  plugins:    [persistedState]
+  plugins:    [persistedState],
   modules: {
     accountStore,
     groupStore,
@@ -22,4 +22,4 @@ export default createStore({
   }
 });
 
-export default store;
+// export default store;

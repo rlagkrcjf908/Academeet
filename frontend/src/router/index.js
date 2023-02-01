@@ -10,7 +10,6 @@ import meetingEnd from '@/components/layouts/meeting-end'
 import NotFound from '@/views/NotFound.vue'
 import LoginView from '../views/LoginView'
 import JoinView from '../views/JoinView'
-import MainView from '../views/MainView'
 
 const routes = [
   {
