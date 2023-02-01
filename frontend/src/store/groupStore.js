@@ -1,14 +1,12 @@
-import { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate } from "../common/api/groupAPI";
+import { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList } from "../common/api/groupAPI";
 
 const state = {
   groupInfo: null,
   groupList:null,
+  groupUserList:null,
 };
 
 const getters = {
-  getToken: state => {
-    return state.token;
-  }
 };
 
 const mutations = {
@@ -17,6 +15,9 @@ const mutations = {
   },
   SET_GROUP_LIST: (state, payload) => {
     state.groupList = payload;
+  },
+  SET_GROUP_USER_LIST: (state, payload) => {
+    state.groupUserList = payload;
   },
   DELETE_GROUP_INFO: (state, payload) => {
     state.groupInfo = payload;
@@ -31,19 +32,23 @@ const actions = {
     const response = await groupCreate(groupData);
     commit("SET_GROUP_INFO", response.data.groupData);
   },
-  requestGroupList: async ({ commit }, groupData) => {
-    const response = await requestGroupList(groupData);
+  requestGroupListAction: async ({ commit }, id) => {
+    const response = await requestGroupList(id);
     commit("SET_GROUP_LIST", response.data.groupData);
   },
-  requestGroup: async ({ commit }, groupId) => {
-    const response = await requestGroup(groupId);
+  requestGroupAction: async ({ commit }, group_id) => {
+    const response = await requestGroup(group_id);
     commit("SET_GROUP_INFO", response.data.groupData);
   },
-  groupDelete: async ({ commit }, groupId) => {
+  requestUserListAction: async ({ commit }, group_id) => {
+    const response = await requestUserList(group_id);
+    commit("SET_GROUP_USER_LIST", response.data.groupData);
+  },
+  groupDeleteAction: async ({ commit }, groupId) => {
     const response = await groupDelete(groupId);
     commit("DELETE_GROUP_INFO", response.data.groupData);
   },
-  groupUpdate: async ({ commit }, groupId) => {
+  groupUpdateAction: async ({ commit }, groupId) => {
     const response = await groupUpdate(groupId);
     commit("UPDATE_GROUP_INFO", response.data.groupData);
   },

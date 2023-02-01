@@ -54,12 +54,12 @@
 
 <script setup>
 // import { onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { onMounted } from 'vue';
+import { useStore } from 'vuex'
 const store = useStore()
 
 onMounted (() => {
-    store.dispatch('accountStore/requestProfileAction', store.state.accountStore.userid)
+    store.dispatch('accountStore/requestProfileAction')
     })
 
 const { ...profile } = store.state.accountStore.profile

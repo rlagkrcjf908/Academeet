@@ -33,19 +33,22 @@
 import { reactive, ref } from 'vue'
 import { checkPassword, changePassword } from '@/common/api/accountAPI.js'
 import { useRouter } from 'vue-router';
-
+import { useStore } from 'vuex'
+const store = useStore()
 const router = useRouter();
 const ruleFormRef = ref()
 const isChecked = ref(false)
+
+const userid = router.state.accountStore.userid
 
 // 현재 비밀번호 확인
 const validateCurrentpass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('현재 비밀번호를 입력해주세요.'))
   } else {
-      const data = checkPassword(value)
+      const { data } = checkPassword(userid, value)
       console.log(data)
-      isChecked.value = data
+      isChecked.value = data.status
   }
     if (value.replace(' ','') !== value){
       callback(new Error('공백은 입력할 수 없습니다.'))
@@ -113,7 +116,7 @@ const submitForm = (formEl) => {
       console.log('submit!')
       const password = ruleForm.pass
       try {
-        changePassword(password)
+        changePassword(userid, password)
         router.push({ name: 'profile' })
       }
       catch (error) {

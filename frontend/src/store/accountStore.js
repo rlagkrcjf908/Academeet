@@ -38,7 +38,7 @@ const actions = {
     commit("SET_TOKEN", response.data.accessToken);
   },
   profileUpdateAction: async ({ commit}, profileData) => {
-    const response = await profileUpdate(profileData);
+    const response = await profileUpdate(state.userid, profileData);
     commit("SET_USER_PROFILE", response.data.profile);
   },
   requestProfileAction: async ({ commit }) => {

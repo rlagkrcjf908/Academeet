@@ -11,11 +11,22 @@
         </div>
     </div>
 </template>
+
 <script setup>
-import { ref } from 'vue'
 import GroupList from '@/components/layouts/GroupList'
-const groups = ref(['1반', '2반', '3', '4', '5', '6', '7', '8', '9'])
+import { ref } from 'vue'
+import { onMounted } from 'vue';
+import { useStore } from 'vuex'
+const store = useStore()
+
+onMounted (() => {
+    store.dispatch('groupStore/requestGroupListAction')
+    })
+
+const { ...groups } = store.state.groupStore.groupList
+
 </script>
+
 <style scoped>
 
 </style>

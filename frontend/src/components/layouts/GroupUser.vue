@@ -7,9 +7,17 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
 import GroupUserItem from '@/components/layouts/GroupUserItem'
-const members = ref(['김싸피 kimsamsung999@naver.com', '김싸피 kimsamsung999@naver.com', '김싸피 kimsamsung999@naver.com', '김싸피 kimsamsung999@naver.com', '김싸피 kimsamsung999@naver.com', '김싸피 kimsamsung999@naver.com'])
+import { ref } from 'vue'
+import { onMounted } from 'vue';
+import { useStore } from 'vuex'
+const store = useStore()
+
+onMounted (() => {
+    store.dispatch('groupStore/requestUserListAction')
+    })
+
+const { ...members} = store.state.groupStore.groupUserList
 </script>
 <style>
 
