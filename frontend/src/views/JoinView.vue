@@ -9,7 +9,7 @@
       <!-- 이메일 중복없음이 확인되면 일단 새로 입력하는 건 막는다 -->
       <div id="Email">
         <div v-if = "dupli">
-          <div v-if = "state.authPin">
+          <div v-if = "authen">
             <label for="joinEmail">
               <span>이메일 </span>
               <input type="email" id="joinEmail" v-model="email" readonly/>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div id="Auth">
-        <div v-if = "authPin">
+        <div v-if = "authen">
           <label for="joinAuth">
             <span>인증번호</span>
             <input type="text" id="joinAuth" v-model="authPin" readonly/>
@@ -103,6 +103,8 @@ export default {
   name: "JoinView",
   data () {
     return{
+      isDupli : false,
+      isCheck : false,
       email: "",
       password: "",
       name: "",
@@ -117,6 +119,10 @@ export default {
 
   methods: {
     dupliCheck(){
+      axios.get("http://localhost:8080/signup")
+      .then(res => {
+        
+      })
       const params = {
         "email": this.email
       }
