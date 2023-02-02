@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "Meet")
@@ -27,10 +27,10 @@ public class Meet{
     java.util.Date date;
     @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    LocalTime starttime;
+    Date starttime;
     @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    LocalTime endtime;
+    Date endtime;
 
     @Column(columnDefinition = "TEXT")
     String chat;

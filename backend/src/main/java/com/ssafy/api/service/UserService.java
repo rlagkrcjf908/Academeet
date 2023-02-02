@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.response.UserMeetRes;
 import com.ssafy.db.entity.User;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface UserService {
     List<User> getAllUser();
 
     User passCheck(int id, UserPassPostReq userPassPostReq);
+
+    List<UserMeetRes> getUserMeetList(int userId);
+
+    List<User> searchUser(String name);
 }

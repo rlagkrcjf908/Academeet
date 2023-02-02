@@ -1,7 +1,7 @@
 package com.ssafy.api.response;
 
 import com.ssafy.common.model.response.BaseResponseBody;
-
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -17,13 +17,15 @@ public class UserLoginPostRes extends BaseResponseBody{
 	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
 	String accessToken;
 
+	User user;
 //	@ApiModelProperty(name="JWT 인증 refresh 토큰")
 //	String refreshToken;
-	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken/*,String refreshToken*/) {
+	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken/*,String refreshToken*/,User user) {
 		UserLoginPostRes res = new UserLoginPostRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
 		res.setAccessToken(accessToken);
+		res.setUser(user);
 //		res.setRefreshToken(refreshToken);
 		return res;
 	}

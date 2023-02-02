@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
 
-    List<Attendance> findAttendanceByUseridaAndGroupid(User user, Group group);
+    List<Attendance> findAttendanceByUseridAndGroupid(User user, Group group);
 }

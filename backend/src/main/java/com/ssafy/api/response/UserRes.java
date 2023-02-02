@@ -17,7 +17,7 @@ import java.net.MalformedURLException;
 @ApiModel("UserResponse")
 public class UserRes{
 	@ApiModelProperty(name="User Email")
-	String userEmail;
+	String email;
 	@ApiModelProperty(name="name", example="your_name")
 	String name;
 	@ApiModelProperty(name="birth", example="your_birth")
@@ -31,7 +31,7 @@ public class UserRes{
 	
 	public static UserRes of(User user) throws MalformedURLException {
 		UserRes res = new UserRes();
-		res.setUserEmail(user.getEmail());
+		res.setEmail(user.getEmail());
 		res.setName(user.getName());
 		res.setBirth(user.getBirth());
 		res.setPhone(user.getPhone());

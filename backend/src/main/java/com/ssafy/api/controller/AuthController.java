@@ -6,11 +6,15 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.UserRepositorySupport;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -27,6 +31,9 @@ public class AuthController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private UserRepositorySupport userRepositorySupport;
+
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "<strong>아이디와 패스워드</strong>를 통해 로그인 한다.") 
     @ApiResponses({
@@ -45,10 +52,10 @@ public class AuthController {
 //			String accessToken = jwtTokenUtil.createAccessToken(userEmail);
 //			String refreshToken = jwtTokenUtil.createRefreshToken(userEmail);
 			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userEmail)));
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userEmail),user));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
+		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null,null));
 	}
 
 

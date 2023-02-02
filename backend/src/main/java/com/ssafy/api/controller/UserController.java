@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.response.UserAllRes;
+import com.ssafy.api.response.UserMeetRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.AttendService;
 import com.ssafy.api.service.UserService;
@@ -128,7 +129,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public Map<String, Object> passCheck(@PathVariable("id") int id, @RequestBody @ApiParam(value = "password")
+    public int passCheck(@PathVariable("id") int id, @RequestBody @ApiParam(value = "password")
     UserPassPostReq userPassPostReq) {
         Map<String, Object> response = new HashMap<>();
         User user = userService.passCheck(id, userPassPostReq);
@@ -138,14 +139,13 @@ public class UserController {
             res += 1;
         }
         if (res > 0) {
-            response.put("result", "SUCCESS");
+            return 1;
             //성공되었다는 값
         } else {
-            //실패되었다는 값 보내기
-            response.put("result", "FAIL");
+            return 0;
         }
 
-        return response;
+
     }
 
     // 비밀번호 변경
@@ -204,18 +204,14 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> emailConfirm() throws Exception {
-//		(
-//				@RequestBody @ApiParam(value="email", required = true)  String email)
-        String email = "rlagkrcjf9@naver.com";
-        System.out.println(email);
+    public ResponseEntity<? extends BaseResponseBody> emailConfirm(@RequestBody @ApiParam(value="email", required = true)  String email) throws Exception {
         String confirm = userService.sendSimpleMessage(email);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
     }
 
     // 입력한 이메일 인증코드가 맞는지 확인
-    @PostMapping("/email-auth")
+    @PostMapping("/emailCheck")
     @ApiOperation(value = "이메일 인증 확인", notes = "이메일 인증번호가 일치한지 확인")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -247,4 +243,15 @@ public class UserController {
         if (userRepositorySupport.findUserByUserId(id).get() == null) return 1;
         return 0;
     }
+
+    @GetMapping("/{user_id}/meetList")
+    public ResponseEntity<List<UserMeetRes>> getUserMeetList(@PathVariable("user_id")int userId){
+        List<UserMeetRes> umr = userService.getUserMeetList(userId);
+        return ResponseEntity.status(200).body(umr);
+    }
 }
+
+//회의 List
+/*
+* 그룹별? 당일 수업: /그룹이름 /회의이름 /회의시간 /종료시간 / 회의고유번호
+* */

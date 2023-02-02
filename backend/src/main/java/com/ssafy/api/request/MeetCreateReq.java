@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,10 +23,10 @@ public class MeetCreateReq {
     Date date;
     @ApiModelProperty(name="starttime")
     @JsonProperty("starttime")
-    LocalTime starttime = LocalTime.now();
+    Date starttime;
     @ApiModelProperty(name="endtime")
     @JsonProperty("endtime")
-    LocalTime endtime;
+    Date endtime;
 
     List<Group> groups;
 

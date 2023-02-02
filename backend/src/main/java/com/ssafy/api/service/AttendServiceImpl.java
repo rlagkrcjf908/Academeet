@@ -42,7 +42,7 @@ public class AttendServiceImpl implements AttendService{
             User user = userRepositorySupport.findUserById(id).get();
             Group group = groupRepositorySupport.findGroupById(groupId).get();
 
-            List<Attendance> attendance = attendanceRepository.findAttendanceByUseridaAndGroupid(user,group);
+            List<Attendance> attendance = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
             for (int j = 0; j<attendance.size();j++){
                 sumatt += attendance.get(i).getAttendance();
             }
@@ -64,7 +64,7 @@ public class AttendServiceImpl implements AttendService{
         Group group =  groupRepositorySupport.findGroupById(groupId).get();
 
         //해당유저가 진행한 모든 미팅룸 번호
-        List<Attendance> att = attendanceRepository.findAttendanceByUseridaAndGroupid(user,group);
+        List<Attendance> att = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
         //미팅룸 번호로 타이틀과 날짜과 미팅 그룹 사용자의 출석률
         for (int i = 0; i<att.size();i++){
             res.setTitle(att.get(i).getMeetid().getTitle());

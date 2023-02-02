@@ -7,6 +7,7 @@ import com.ssafy.api.response.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.api.service.AttendService;
 import com.ssafy.api.service.GroupService;
+import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Group;
@@ -42,6 +43,8 @@ public class GroupController {
     @Autowired
     private AttendService attendService;
 
+    @Autowired
+    private UserService userService;
     //그룹 API--------------------------------------------------------------------------
     //그룹생성
     @PostMapping("/{user_id}")
@@ -62,6 +65,12 @@ public class GroupController {
         insertUserTOGroup(group_id, createInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 
+    }
+    // 그룹생성시 유저이름으로 유저검색
+    @PostMapping("/search")
+    public ResponseEntity<List<User>> searchUser(@RequestBody String name){
+        List<User> users = userService.searchUser(name);
+        return ResponseEntity.status(200).body(users);
     }
 
     // 그룹안에 사용자 insert
@@ -86,7 +95,7 @@ public class GroupController {
 
 
     // 그룹 리스트
-    @GetMapping("/{id}/list") //user 로 변경
+    @GetMapping("/list") //user 로 변경
     @ApiOperation(value = "그룹 리스트 조회", notes = "회원 본인의 그룹리스트를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -94,11 +103,12 @@ public class GroupController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public List<Group> getGroupList(@ApiParam Authentication authentication) {
+    public ResponseEntity<List<Group>> getGroupList(@ApiParam Authentication authentication) {
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         int userId = userDetails.getUserId();
         List<Group> group = groupService.getGroupList(userId);
-        return group;
+        if (group==null) return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(200).body(group);
     }
 
     // 선택한 그룹 정보 조회(ownerId일때)
@@ -139,7 +149,7 @@ public class GroupController {
     }
 
     // 그룹 수정
-    @PutMapping("/{group_id}/update")
+    @PutMapping("/{group_id}/update")// 추가 삭제 유저 아이디만 받고 수정하는걸로
     @ApiOperation(value = "선택한 그룹 수정", notes = "선택한 그룹의 정보를 수정한다.")
     public Map<String, Object> updateUserInfo(@PathVariable("group_id") int group_id, @RequestBody
     @ApiParam(value = "회원가입 정보", required = true) GroupUpdatePostReq groupUpdateInfo) {
@@ -166,7 +176,7 @@ public class GroupController {
     // 그룹내 인원 추가(service)
     // 그룹내 인원 삭제(service)
     // 그룹내 인원 조회
-    @GetMapping("/{group_id}/list")
+    @GetMapping("/{group_id}/userList")
     public List<User> getGroupUser(@PathVariable("group_id") int group_id) {
         List<User> user = groupService.getGroupUser(group_id);
         return user;
@@ -176,7 +186,7 @@ public class GroupController {
     //그룹 관리자 API--------------------------------------------------------------------------
 
     //그룹 출석 조회(모든 사용자 list)
-    @GetMapping("/{group_id}/attendInfo")
+    @GetMapping("/{group_id}/allattend")
     public ResponseEntity<List<AttendGroupRes>> GroupAttendInfo(@PathVariable("group_id")int groupId){
         List<AttendGroupRes> agr = attendService.getGroupAttendInfo(groupId);
         return ResponseEntity.status(200).body(agr);
@@ -187,6 +197,7 @@ public class GroupController {
 //        List<AttendGroupRes> agr = attendService.getGroupAttendInfo(groupId);
 //        return ResponseEntity.status(200).body(agr);
 //    }
+
     @GetMapping("/{group_id}/{user_id}/attend")
     @ApiOperation(value = "개인 출석률 확인", notes = "본인 출석률 및 미팅 리스트들을 조회한다.")
     @ApiResponses({
@@ -254,3 +265,4 @@ public class GroupController {
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
 }
+

@@ -36,6 +36,9 @@ public class MeetController {
         }
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
+    //미팅룸 생성시 그룹오너이면 그룹리스트를 불러오고 아니면 말고
+
+    //사용자 검색해야겠죠
 
 
     //화상방 종료
@@ -54,4 +57,5 @@ public class MeetController {
         }
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
+
 }

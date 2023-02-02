@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,5 +24,5 @@ public class MeetEndReq {
     String video;
     @ApiModelProperty(name="endtime")
     @JsonProperty("endtime")
-    LocalTime endtime;
+    Date endtime;
 }
