@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import io.openvidu.java.client.*;
+import jdk.internal.org.jline.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,7 @@ public class OpenviduController {
 	@PostMapping("")
 	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
+		Log.debug("initializeSession");
 		SessionProperties properties = SessionProperties.fromJson(params).build();
 		Session session = openvidu.createSession(properties);
 		return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
@@ -60,6 +62,7 @@ public class OpenviduController {
 	public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
 			@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
+		Log.debug("createConnection");
 		Session session = openvidu.getActiveSession(sessionId);
 		if (session == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
