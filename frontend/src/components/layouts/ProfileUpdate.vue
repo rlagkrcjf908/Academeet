@@ -25,11 +25,11 @@
                 <p v-else class="avatar-uploader-icon">+</p>
               </el-upload>
               <!-- 유저이름 -->
-              <p>{{profile.username}}</p>
+              <p>{{profile.name}}</p>
 
             </el-col>
             
-            <el-col span="8">
+            <el-col :span="8">
               <div class="profileInfo-box">
   
                 <!-- 이메일 -->
@@ -42,7 +42,7 @@
                 <div class="profileInfo">
                   <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
                   <el-form-item prop="nickname">
-                    <el-input v-model.trim="ruleForm.nickname" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
+                    <el-input v-model.trim="ruleForm.nick" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
                   </el-form-item>
                 </div>
                 
@@ -58,7 +58,7 @@
                 <!-- 생일 -->
                 <div class="profileInfo">
                   <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.birthday}}</span>
+                  <span>{{profile.birth}}</span>
                 </div>
               </div>
 
@@ -91,9 +91,15 @@ const router = useRouter()
 const { ...profile } = toRefs(store.state.accountStore.profile)
 
 const ruleForm = reactive({
-  nickname: profile.nickname,
+  nick: profile.nick,
   phone: profile.phone,
 })
+
+// onMounted (() => {
+//       store.dispatch('accountStore/requestProfileAction', store.state.userid)
+      
+//     })
+
 
 // 연락처 유효성 검사
 const checkPhone = (rule, value, callback) => {
@@ -125,23 +131,23 @@ const validateNickname = (rule, value, callback) => {
   }
 }
 
+
 const rules = reactive({
-  nickname: [{ validator: validateNickname, trigger: 'blur' }],
+  nick: [{ validator: validateNickname, trigger: 'blur' }],
   phone: [{ validator: checkPhone, trigger: 'blur' }]
 })
-
 // 회원정보수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
       const profileData = {
-        profileImg: profile.profileImg,
-        username: profile.username,
-        email: profile.email,
-        nickname: ruleForm.nickname,
-        phone: ruleForm.phone,
-        birthday: profile.birthday
+        "img": profile.img.value,
+        "name": profile.name.value,
+        "email": profile.email.value,
+        "nick": ruleForm.nick,
+        "phone": ruleForm.phone,
+        "birth": profile.birth.value
       }
       await store.dispatch('accountStore/profileUpdateAction', profileData)
         router.push({ name: 'profile' })
@@ -164,7 +170,7 @@ const submitForm = (formEl) => {
 }
 
 // 프로필사진 업로드
-const imageUrl = ref('profile.value.profileImg')
+const imageUrl = ref('profile.value.img')
 const handleAvatarSuccess = (
   response,
   uploadFile

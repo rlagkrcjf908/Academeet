@@ -1,8 +1,6 @@
 import axios from 'axios'
 import router from '../../router/index'
 
-//isLogined 있으면 좋겠다.
-
 const state = {
   token: null,
   id: null,

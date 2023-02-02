@@ -8,7 +8,6 @@
 </template>
 <script setup>
 import GroupUserItem from '@/components/layouts/GroupUserItem'
-import { ref } from 'vue'
 import { onMounted } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()
@@ -18,6 +17,7 @@ onMounted (() => {
     })
 
 const { ...members} = store.state.groupStore.groupUserList
+
 </script>
 <style>
 

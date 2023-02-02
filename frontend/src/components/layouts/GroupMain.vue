@@ -11,22 +11,18 @@
         </div>
     </div>
 </template>
-
 <script setup>
 import GroupList from '@/components/layouts/GroupList'
-import { ref } from 'vue'
 import { onMounted } from 'vue';
 import { useStore } from 'vuex'
-const store = useStore()
 
+const store = useStore()
 onMounted (() => {
     store.dispatch('groupStore/requestGroupListAction')
     })
 
 const { ...groups } = store.state.groupStore.groupList
-
 </script>
-
 <style scoped>
 
 </style>

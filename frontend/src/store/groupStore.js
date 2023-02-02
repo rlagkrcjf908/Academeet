@@ -1,12 +1,13 @@
 import { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList } from "../common/api/groupAPI";
-
 const state = {
+  id: 9,
   groupInfo: null,
   groupList:null,
   groupUserList:null,
 };
 
 const getters = {
+
 };
 
 const mutations = {
@@ -29,27 +30,27 @@ const mutations = {
 
 const actions = {
   groupCreateAction: async ({ commit }, groupData) => {
-    const response = await groupCreate(groupData);
+    const response = await groupCreate(state.id,groupData);
     commit("SET_GROUP_INFO", response.data.groupData);
   },
-  requestGroupListAction: async ({ commit }, id) => {
-    const response = await requestGroupList(id);
+  requestGroupListAction: async ({ commit }) => {
+    const response = await requestGroupList(state.id);
     commit("SET_GROUP_LIST", response.data.groupData);
   },
-  requestGroupAction: async ({ commit }, group_id) => {
-    const response = await requestGroup(group_id);
+  requestGroupAction: async ({ commit }) => {
+    const response = await requestGroup(groupid);
     commit("SET_GROUP_INFO", response.data.groupData);
   },
-  requestUserListAction: async ({ commit }, group_id) => {
+    requestUserListAction: async ({ commit }, group_id) => {
     const response = await requestUserList(group_id);
     commit("SET_GROUP_USER_LIST", response.data.groupData);
   },
-  groupDeleteAction: async ({ commit }, groupId) => {
-    const response = await groupDelete(groupId);
+  groupDeleteAction: async ({ commit }) => {
+    const response = await groupDelete(groupid);
     commit("DELETE_GROUP_INFO", response.data.groupData);
   },
-  groupUpdateAction: async ({ commit }, groupId) => {
-    const response = await groupUpdate(groupId);
+  groupUpdateAction: async ({ commit }, groupData) => {
+    const response = await groupUpdate(groupid, groupData);
     commit("UPDATE_GROUP_INFO", response.data.groupData);
   },
 
