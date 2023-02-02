@@ -10,8 +10,10 @@
     <!-- </div> -->
     <nav>
       <ul>
+
         <li style="color: #94d82d">(nickname)님</li>
         <!--<small v-if="userInfo" class="text-muted">{{ userInfo.uid }}'s </small>-->
+        <li><router-link to="/meeting">Meeting</router-link></li>
         <li><router-link to="/">My Page</router-link></li>
         <li><router-link to="#">Group</router-link></li>
         <li><router-link to="#">Logout</router-link></li>

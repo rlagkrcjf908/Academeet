@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
+import MeetingView from '../views/MeetingView.vue'
+
 
 const routes = [
   {
     path: '/',
     name: 'main',
     component: MainView
+  },
+  {
+    path: '/meeting',
+    name: 'meeting',
+    component: MeetingView
   },
   // {
   //   path: '/about',
