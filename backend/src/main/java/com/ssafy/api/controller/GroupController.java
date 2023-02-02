@@ -8,7 +8,6 @@ import com.ssafy.api.service.ArticleService;
 import com.ssafy.api.service.AttendService;
 import com.ssafy.api.service.GroupService;
 import com.ssafy.api.service.UserService;
-import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Group;
 import com.ssafy.db.entity.User;
@@ -17,7 +16,6 @@ import com.ssafy.db.repository.GroupRepository;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -95,7 +93,7 @@ public class GroupController {
 
 
     // 그룹 리스트
-    @GetMapping("/list") //user 로 변경
+    @GetMapping("/{user_id}/list") //user 로 변경
     @ApiOperation(value = "그룹 리스트 조회", notes = "회원 본인의 그룹리스트를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -103,11 +101,11 @@ public class GroupController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<List<Group>> getGroupList(@ApiParam Authentication authentication) {
-        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        int userId = userDetails.getUserId();
+    public ResponseEntity<List<Group>> getGroupList(@PathVariable("user_id")int userId) {
+//        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+//        int userId = userDetails.getUserId();
         List<Group> group = groupService.getGroupList(userId);
-        if (group==null) return ResponseEntity.status(200).body(null);
+        if (group==null) return ResponseEntity.status(403).body(null);
         return ResponseEntity.status(200).body(group);
     }
 

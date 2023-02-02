@@ -1,24 +1,26 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.UserIdCheckReq;
 import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.api.response.UserAllRes;
 import com.ssafy.api.response.UserMeetRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.AttendService;
 import com.ssafy.api.service.UserService;
-import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -42,8 +44,10 @@ public class UserController {
     @Autowired
     UserRepositorySupport userRepositorySupport;
 
+    @Autowired
+    UserRepository userRepository;
     //회원가입
-    @PostMapping()
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -51,11 +55,11 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> register(
-            @RequestBody @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+    public ResponseEntity<User> register(
+            @RequestPart @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo, @RequestPart MultipartFile profile) {
 
-        User user = userService.createUser(registerInfo);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        User user = userService.createUser(registerInfo,profile);
+        return ResponseEntity.status(200).body(user);
     }
 
     @GetMapping("/me") //user 로 변경
@@ -66,13 +70,14 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<UserRes> getUserInfo(@ApiIgnore Authentication authentication) throws MalformedURLException {
+    public ResponseEntity<UserRes> getUserInfo(/*@ApiIgnore Authentication authentication*/) throws MalformedURLException {
         /**
          * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
          */
-        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        String userEmail = userDetails.getUsername();
+        /*SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+        String userEmail = userDetails.getUsername();*/
+        String userEmail = "rlagkrcjf6@naver.com";
         User user = userService.getUserByUserId(userEmail);
         return ResponseEntity.status(200).body(UserRes.of(user));
     }
@@ -100,24 +105,19 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public Map<String, Object> updateUserInfo(@PathVariable("id") int id, @RequestBody
-    @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+    public ResponseEntity<? extends BaseResponseBody> updateUserInfo(@PathVariable("id") int id, @RequestBody
+    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo) {
         /**
          * 요청받은 해당 유저의 고유아이디에 변경되어진 정보를 받으면 수정
          * 받은정보가 하나라도 비었을시 오류 발생
          */
-        Map<String, Object> response = new HashMap<>();
-        int res = userService.updateUser(id, registerInfo);
-        if (res > 0) {
-            response.put("result", "SUCCESS");
-            //성공되었다는 값
-        } else {
-            //실패되었다는 값 보내기
-            response.put("result", "FAIL");
-            response.put("reason", "일치하는 회원 정보가 없습니다. 사용자 id를 확인해주세요.");
-        }
 
-        return response;
+        int res = userService.updateUser(id, updateInfo);
+        System.out.println(updateInfo.getEmail());
+        if (res > 0) {
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403,"Fail"));
     }
 
     // 입력한 비밀번호 확인
@@ -129,7 +129,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public int passCheck(@PathVariable("id") int id, @RequestBody @ApiParam(value = "password")
+    public boolean passCheck(@PathVariable("id") int id, @RequestBody @ApiParam(value = "password")
     UserPassPostReq userPassPostReq) {
         Map<String, Object> response = new HashMap<>();
         User user = userService.passCheck(id, userPassPostReq);
@@ -139,10 +139,10 @@ public class UserController {
             res += 1;
         }
         if (res > 0) {
-            return 1;
+            return true;
             //성공되었다는 값
         } else {
-            return 0;
+            return false;
         }
 
 
@@ -160,13 +160,8 @@ public class UserController {
     public Map<String, Object> passChange(@PathVariable("id") int id, @RequestBody @ApiParam(value = "password")
     UserPassPostReq userPassPostReq) {
         Map<String, Object> response = new HashMap<>();
-        User user = userService.passCheck(id, userPassPostReq);
-        String password = userPassPostReq.getPassword();
-        int res = 0;
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            res += 1;
-        }
-        if (res > 0) {
+
+        if ( userService.passChange(id, userPassPostReq.getPassword())) {
             response.put("result", "SUCCESS");
             //성공되었다는 값
         } else {
@@ -205,8 +200,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> emailConfirm(@RequestBody @ApiParam(value="email", required = true)  String email) throws Exception {
-        String confirm = userService.sendSimpleMessage(email);
 
+        System.out.println(email);
+        String confirm = userService.sendSimpleMessage(email);
+        System.out.println(confirm);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
     }
 
@@ -219,17 +216,16 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> authEmail(@RequestBody Map<String, String> param) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> authEmail(@RequestBody String code) {
         /**
          * 단순 생성된 코드를 비교하는 것이지만
          */
-        String code = param.get("code");
+        System.out.println(code);
         int check = userService.authEmail(code);
         if (check > 0) {
             return new ResponseEntity<>("success", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("fail", HttpStatus.OK);
+            return new ResponseEntity<>("fail", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -239,8 +235,9 @@ public class UserController {
      */
     @PostMapping("/login/idCheck")
     @ResponseBody
-    public int idCheck(@RequestBody String id) {
-        if (userRepositorySupport.findUserByUserId(id).get() == null) return 1;
+    public int idCheck(@RequestBody UserIdCheckReq userIdCheckReq) {
+        System.out.println(userIdCheckReq.getEmail());
+        if (userRepository.findUserByEmail(userIdCheckReq.getEmail()) == null) return 1;
         return 0;
     }
 

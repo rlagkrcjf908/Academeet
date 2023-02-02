@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.api.response.UserMeetRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
@@ -22,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
 
     ValueOperations<String, String> operation;
     public static final String ePw = createKey();
+    public static String checkePw;
     @Autowired
     private MeetRepository meetRepository;
     @Autowired
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createUser(UserRegisterPostReq userRegisterInfo) {
+    public User createUser(UserRegisterPostReq userRegisterInfo,MultipartFile profile) {
         // 회원가입을위한 정보를 저장
         User user = new User();
         user.setEmail(userRegisterInfo.getEmail());
@@ -71,15 +72,14 @@ public class UserServiceImpl implements UserService {
         user.setBirth(userRegisterInfo.getBirth());
         user.setNick(userRegisterInfo.getNick());
         user.setPhone(userRegisterInfo.getPhone());
-        if (userRegisterInfo.getProfile() == null) {
+        if (profile == null) {
             return userRepository.save(user);
         } else {
-            MultipartFile img = userRegisterInfo.getProfile();
-            String imageFileName = img.getOriginalFilename();
+            String imageFileName = profile.getOriginalFilename();
             String path = "C:/Users/SSAFY/Pictures/";
             Path imagePath = Paths.get(path + imageFileName);
             try {
-                Files.write(imagePath, img.getBytes());
+                Files.write(imagePath, profile.getBytes());
                 user.setProfile(imageFileName);
 
             } catch (Exception e) {
@@ -100,34 +100,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateUser(int id, UserRegisterPostReq registerInfo) {
-        Optional<User> oUser = userRepository.findById(Long.valueOf(id));
-        if (oUser.isPresent()) return 0;
-        User user = new User();
+    public int updateUser(int id, UserUpdatePostReq registerInfo) {
+        User user = userRepository.findUserById(id);
+        if(user==null)return 0;
         user.setEmail(registerInfo.getEmail());
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-        user.setPassword(passwordEncoder.encode(registerInfo.getPassword()));
         user.setName(registerInfo.getName());
         user.setBirth(registerInfo.getBirth());
         user.setNick(registerInfo.getNick());
         user.setPhone(registerInfo.getPhone());
-        MultipartFile img = registerInfo.getProfile();
-        String path = "C:/Users/SSAFY/Pictures/";
-        if (oUser.get().getProfile() == path + img.getOriginalFilename()) {
-            userRepository.save(user);
-            return 1;
-        } else {
-            String imageFileName = img.getOriginalFilename();
-            Path imagePath = Paths.get(path + imageFileName);
-            try {
-                Files.write(imagePath, img.getBytes());
-                user.setProfile(imageFileName);
-
-            } catch (Exception e) {
-
-            }
-            user.setProfile(imageFileName);
-        }
+//        MultipartFile img = registerInfo.getProfile();
+//        String path = "C:/Users/SSAFY/Pictures/";
+//        if (user.getProfile() == path + img.getOriginalFilename()) {
+//            userRepository.save(user);
+//            return 1;
+//        } else {
+//            String imageFileName = img.getOriginalFilename();
+//            Path imagePath = Paths.get(path + imageFileName);
+//            try {
+//                Files.write(imagePath, img.getBytes());
+//                user.setProfile(imageFileName);
+//
+//            } catch (Exception e) {
+//
+//            }
+//            user.setProfile(imageFileName);
+//        }
         userRepository.save(user);
         return 1;
     }
@@ -155,7 +153,7 @@ public class UserServiceImpl implements UserService {
         msgg += ePw + "</strong><div><br/> ";
         msgg += "</div>";
         message.setText(msgg, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("ssafy@acdemeet.com", "Babble"));//보내는 사람
+        message.setFrom(new InternetAddress("ssafy@acdemeet.com", "acdemeet"));//보내는 사람
 
         return message;
     }
@@ -198,13 +196,17 @@ public class UserServiceImpl implements UserService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
+        checkePw = ePw;
         return ePw;
     }
 
     @Override
     public int authEmail(String code) {
 //		String key = operation.get(email);
-        if (ePw == code) {
+        String check = "\""+checkePw+"\"";
+        System.out.println(check);
+
+        if (check.equals(code)) {
             return 1;
         } else {
             return 0;
@@ -251,6 +253,14 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUser(String name) {
         List<User> users = userRepository.findUsersByName(name);
         return users;
+    }
+
+    @Override
+    public boolean passChange(int id, String password) {
+        User user = userRepository.findUserById(id);
+        if(user==null)return false;
+        user.setPassword(passwordEncoder.encode(password));
+        return true;
     }
 
 

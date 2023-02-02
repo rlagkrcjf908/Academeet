@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface User_MeetRepository extends JpaRepository<User_Meet,Long> {
+public interface User_MeetRepository extends JpaRepository<User_Meet,Integer> {
     List<User_Meet> findUser_MeetByUserid(User user);
 }

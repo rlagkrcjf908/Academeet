@@ -57,7 +57,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> getGroupList(int userId) {
-        List<User_Group> ug = user_groupRepository.findByUserid(userId);
+        User user = userRepository.findUserById(userId);
+        List<User_Group> ug = user_groupRepository.findByUserid(user);
+        if(ug==null)return null;
         List<Group> group = new ArrayList<>();
         for (int i = 0; i < ug.size(); i++) {
             int gid = ug.get(i).getGroupid().getId();
@@ -78,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
         if (ogroup == null) {
             return 0;
         }
-        groupRepository.deleteById(Long.valueOf(groupId));
+        groupRepository.deleteById(groupId);
         return 1;
     }
 
@@ -112,7 +114,7 @@ public class GroupServiceImpl implements GroupService {
         for (int i = 0; i < delUsers.size(); i++) {
             User user = userRepositorySupport.findUserById(delUsers.get(i).getId()).get();
             if(ug.getUserid().getId()==user.getId()){
-                user_groupRepository.deleteById(Long.valueOf(ug.getId()));
+                user_groupRepository.deleteById(ug.getId());
             }
         }
 
@@ -120,7 +122,7 @@ public class GroupServiceImpl implements GroupService {
 
     private void groupUserAdd(int groupId, List<User> users) {
         User_Group ug = new User_Group();
-        Optional<Group> ogroup = groupRepository.findById(Long.valueOf(groupId));
+        Optional<Group> ogroup = groupRepository.findById(groupId);
         for (int i = 0; i < users.size(); i++) {
             User user = userRepositorySupport.findUserById(users.get(i).getId()).get();
             ug.setGroupid(ogroup.get());

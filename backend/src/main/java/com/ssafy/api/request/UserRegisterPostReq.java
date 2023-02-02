@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 유저 회원가입 API ([POST] /api/v1/users) 요청에 필요한 리퀘스트 바디 정의.
@@ -32,8 +31,8 @@ public class UserRegisterPostReq {
 	@ApiModelProperty(name="phone", example="your_phone")
 	@JsonProperty("phone")
 	String phone;
-	@ApiModelProperty(name="profile", example="your_profile")
-	@JsonProperty("profile")
-	MultipartFile profile;
+//	@ApiModelProperty(name="profile", example="your_profile")
+//	@JsonProperty("profile")
+//	MultipartFile profile;
 }
 
