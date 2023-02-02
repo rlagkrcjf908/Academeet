@@ -9,6 +9,7 @@
             <p>그룹을 만들어 보세요.</p>
             <el-button type="success" round @click="$router.push('/group/create')">그룹생성</el-button>
         </div>
+        {{ groups.length }}
     </div>
 </template>
 <script setup>
@@ -18,10 +19,10 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 onMounted (() => {
-    store.dispatch('groupStore/requestGroupListAction')
+    store.dispatch('groupStore/requestGroupListAction', store.state.accountStore.id)
     })
-
-const { ...groups } = store.state.groupStore.groupList
+const groups = store.state.groupStore.groupList
+console.log("메인의그룹스",groups)
 </script>
 <style scoped>
 

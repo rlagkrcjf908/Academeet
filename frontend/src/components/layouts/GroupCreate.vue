@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { groupCreate } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
 // import { ElMessage } from 'element-plus'
 const ruleFormRef = ref()
@@ -72,9 +73,14 @@ const submitForm = (formEl) => {
   formEl.validate((valid) => {
     if (valid) {
       console.log('참가자:',ruleForm.groupMember)
+      console.log('참가자2:',{...ruleForm.groupMember})
       console.log('그룹명:',ruleForm.groupName)
       console.log('submit!')
-
+      const groupData = {
+        groupname : ruleForm.groupName,
+        ...ruleForm.groupMember,
+      }
+      console.log('넘길정보',groupData)
     } else {
       // alert('초대된 사용자가 없습니다!')
       // ElMessage({
