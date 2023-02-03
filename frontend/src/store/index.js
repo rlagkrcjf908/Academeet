@@ -23,5 +23,3 @@ export default createStore({
 });
 
 // export default store;
-
-export default store;

@@ -10,12 +10,13 @@
     label-width="120px"
     class="demo-ruleForm"
   >
-    <el-form-item label="groupName" prop="groupName">
+    <el-form-item label="그룹이름" prop="groupName">
       <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
     </el-form-item>
     
+    <el-form-item label="멤버" prop="groupMember">
     <el-select-v2
-      v-model="value"
+      v-model="ruleForm.groupMember"
       style="width: 700px"
       multiple
       filterable
@@ -26,6 +27,7 @@
       :loading="loading"
       placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
     />
+    </el-form-item>
 
     <el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)"
@@ -35,13 +37,24 @@
     </el-form>
 
   
-  <p>선택된 아이템:{{ value.length }}</p>
-  <p>선택된 아이템:{{ value }}</p>
+  <p>선택된 아이템:{{ ruleForm.groupMember.length }}</p>
+  <p>선택된 아이템:{{ ruleForm.groupMember }}</p>
 </template>
 
 <script setup>
+// import { groupCreate, userSearch } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { onBeforeMount } from 'vue';
+import { useStore } from 'vuex'
+const store = useStore()
+
+// onBeforeMount (() => {
+//     store.dispatch('groupStore/requestUserSearchAction')
+//     })
+
+// const userSearch = store.state.groupStore.searchUserList
+
+// console.log('받앗다',userSearch)
 const ruleFormRef = ref()
 
 const validategroupName = (rule, value, callback) => {
@@ -57,25 +70,28 @@ const validategroupName = (rule, value, callback) => {
 
 const ruleForm = reactive({
   groupName: '',
+  groupMember: []
 })
 
 const rules = reactive({
   groupName: [{ validator: validategroupName, trigger: 'blur' }],
+  groupMember: [{ required: true, message: '멤버를 선택하세요', trigger: 'change' }],
 })
 
 const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
-    if (valid && value.value.length ) {
-      console.log('참가자:',value.value)
+    if (valid) {
+      console.log('참가자:',ruleForm.groupMember)
+      console.log('참가자2:',{...ruleForm.groupMember})
+      console.log('그룹명:',ruleForm.groupName)
       console.log('submit!')
+      const groupData = {
+        "groupname" : ruleForm.groupName,
+        "user": ruleForm.groupMember,
+      }
+      console.log('넘길정보',groupData)
     } else {
-      // alert('초대된 사용자가 없습니다!')
-      ElMessage({
-        showClose: true,
-        message: '초대된 사용자가 없습니다!',
-        type: 'error',
-      })
       console.log('error submit!')
       return false
     }
@@ -134,6 +150,9 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ]
+// const list = userSearch.map((item) => {
+//   return { value: `value:${item}`, label: `label:${item}` }
+// })
 const list = states.map((item) => {
   return { value: `value:${item}`, label: `label:${item}` }
 })
@@ -145,17 +164,25 @@ const remoteMethod = (query) => {
   if (query !== '') {
     loading.value = true
     setTimeout(() => {
+
+      // store.dispatch('groupStore/requestUserSearchAction')
+      // const userSearch = store.state.groupStore.searchUserList
+
+      // const list = userSearch.map((item) => {
+      // return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
+      // })
+      const list = states.map((item) => {
+      return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
+      })
       loading.value = false
       options.value = list.filter((item) => {
         return item.label.toLowerCase().includes(query.toLowerCase())
       })
+      options.value = list.value
     }, 200)
   } else {
     options.value = []
   }
 }
-
-console.log(value.value)
-
 
 </script>
