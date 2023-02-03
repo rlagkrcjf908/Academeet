@@ -1,9 +1,7 @@
 <template>
-  <!-- <el-container> -->
     <el-aside>
       <el-button type="success" round> Create Group </el-button>
     </el-aside>
-  <!-- </el-container>  -->
 </template>
 
 <script>

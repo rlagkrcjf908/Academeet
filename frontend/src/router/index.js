@@ -2,11 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import GroupView from '../views/GroupView.vue'
-import profileDetail from '@/components/layouts/ProfileDetail'
-import profileUpdate from '@/components/layouts/ProfileUpdate'
-import changePassword from '@/components/layouts/ChangePassword'
 import MeetingCreate from '@/views/MeetingCreate'
-import meetingEnd from '@/components/layouts/meeting-end'
 import NotFound from '@/views/NotFound.vue'
 import LoginView from '../views/LoginView'
 import JoinView from '../views/JoinView'
@@ -14,6 +10,7 @@ import JoinView from '../views/JoinView'
 const routes = [
   {
     path: '/login',
+<<<<<<< HEAD
     name: 'login',
     component: LoginView
   },
@@ -24,6 +21,8 @@ const routes = [
   },
   {
     path: '/',
+=======
+>>>>>>> 20cc6deffe573f8c3e77d0bc59cd6b4ebf53d7bf
     name: 'login',
     component: LoginView
   },
@@ -33,53 +32,60 @@ const routes = [
     component: JoinView
   },
   {
-    path: '/main',
+    path: '/',
     name: 'main',
-    component: MainView
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: ProfileView,
-    children: [
+    component: MainView,
+    children:[
       {
         path: '',
-        name: 'profileDetail',
-        component: profileDetail
+        name: 'submain',
+        component: () => import(/* webpackChunkName: "SubMain" */ '@/views/SubMain.vue')
       },
       {
-        path: 'update',
-        name: 'profileUpdate',
-        component: profileUpdate
+        path: 'profile',
+        name: 'profile',
+        component: ProfileView,
+        children: [
+          {
+            path: '',
+            name: 'profileDetail',
+            component: () => import(/* webpackChunkName: "groupMain" */ '@/components/account/ProfileDetail')
+          },
+          {
+            path: 'update',
+            name: 'profileUpdate',
+            component: () => import(/* webpackChunkName: "groupMain" */ '@/components/account/ProfileUpdate.vue')
+          },
+          {
+            path: 'changepassword',
+            name: 'changePassword',
+            component: () => import(/* webpackChunkName: "groupMain" */ '@/components/account/ChangePassword.vue')
+          },
+        ]
       },
       {
-        path: 'changepassword',
-        name: 'changePassword',
-        component: changePassword
+        path: 'group',
+        name: 'group',
+        component: GroupView,
+        children: [
+          {
+            path: '',
+            name: 'groupMain',
+            component: () => import(/* webpackChunkName: "groupMain" */ '@/components/group/GroupMain.vue')
+          },
+          {
+            path: 'create',
+            name: 'groupCreate',
+            component: () => import(/* webpackChunkName: "groupCreate" */ '@/components/group/GroupCreate.vue')
+          },
+          {
+            path: ':groupId',
+            name: 'GroupUser',
+            component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/group/GroupUser.vue')
+          },
+        ],
       },
     ]
-  },
-  {
-    path: '/group',
-    name: 'group',
-    component: GroupView,
-    children: [
-      {
-        path: '',
-        name: 'groupMain',
-        component: () => import(/* webpackChunkName: "groupMain" */ '@/components/layouts/GroupMain.vue')
-      },
-      {
-        path: 'create',
-        name: 'groupCreate',
-        component: () => import(/* webpackChunkName: "groupCreate" */ '@/components/layouts/GroupCreate.vue')
-      },
-      {
-        path: ':groupId',
-        name: 'GroupUser',
-        component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/layouts/GroupUser.vue')
-      },
-    ],
   },
   {
     path: '/meetingCreate',
@@ -89,7 +95,7 @@ const routes = [
   {
     path: '/meeting-end',
     name: 'meeting-end',
-    component: meetingEnd
+    component: () => import(/* webpackChunkName: "meetingEnd" */ '@/components/meeting/meeting-end.vue')
   },
   {
     // 404 page

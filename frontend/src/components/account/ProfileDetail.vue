@@ -5,14 +5,14 @@
 
             <el-col :span="4">
               <!-- 프로필사진 -->
-              <img :src="profile.profileImg"  alt="프로필사진" style="height:5em;">
+              <img :src="profile.img"  alt="프로필사진" style="height:5em;">
 
               <!-- 유저이름 -->
-              <p>{{profile.username}}</p>
+              <p>{{profile.name}}</p>
 
             </el-col>
             
-            <el-col span="8">
+            <el-col :span="8">
               <div class="profileInfo-box">
   
                 <!-- 이메일 -->
@@ -24,7 +24,7 @@
                 <!-- 닉네임 -->
                 <div class="profileInfo">
                   <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.nickname}}</span>
+                  <span>{{profile.nick}}</span>
                 </div>
                 
 
@@ -37,7 +37,7 @@
                 <!-- 생일 -->
                 <div class="profileInfo">
                   <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.birthday}}</span>
+                  <span>{{profile.birth}}</span>
                 </div>
               </div>
 
@@ -45,7 +45,6 @@
             
           </el-row>
 
-          
         </el-col>
       </el-row>
       <!-- 수정버튼 -->
@@ -54,15 +53,16 @@
 
 <script setup>
 // import { onMounted } from 'vue'
+import { onBeforeMount } from 'vue';
 import { useStore } from 'vuex'
-import { onMounted } from 'vue';
 const store = useStore()
 
-onMounted (() => {
-    store.dispatch('accountStore/requestProfileAction', store.state.accountStore.userid)
+onBeforeMount (() => {
+    store.dispatch('accountStore/requestProfileAction')
     })
 
 const { ...profile } = store.state.accountStore.profile
+console.log('받앗다',profile)
 </script>
 
 <style>
