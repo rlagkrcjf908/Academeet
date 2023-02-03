@@ -14,21 +14,4 @@ const groupUpdate = (group_id, payload) => $axios.put(`/group/${group_id}/update
 
 const userSearch = (payload) => $axios.post(`/group/search`,payload);
 
-// 출석관련 API
-//그룹 내 유저들의 모든 리스트
-const groupAttdList = () => $axios.get("/group/{group_id}/allattend");
-//그룹 내 회원 출석 상세정보
-const groupAttdUser = () => $axios.get("/group/{group_id}/{user_id}/attend");
-//그룹 내 회원 출석 상세정보 수정
-const groupAttdModify = (payload) => $axios.put("/group/{group_id)/{user_id}/update", payload);
-
-export {
-groupCreate,
-requestGroupList,
-requestGroup,
-groupDelete,
-groupUpdate,
-groupAttdUser,
-groupAttdList,
-groupAttdModify,
-};
+export { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList, userSearch };
