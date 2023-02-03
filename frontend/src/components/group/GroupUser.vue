@@ -7,7 +7,7 @@
     </div>
 </template>
 <script setup>
-import GroupUserItem from '@/components/layouts/GroupUserItem'
+import GroupUserItem from '@/components/group/GroupUserItem'
 import { onMounted } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()

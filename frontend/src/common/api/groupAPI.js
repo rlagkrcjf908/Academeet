@@ -12,4 +12,6 @@ const groupDelete = (group_id, payload) => $axios.delete(`/group/${group_id}/del
 
 const groupUpdate = (group_id, payload) => $axios.put(`/group/${group_id}/update`, payload);
 
-export { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList };
+const userSearch = (payload) => $axios.post(`/group/search`,payload);
+
+export { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList, userSearch };

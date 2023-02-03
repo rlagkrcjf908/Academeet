@@ -42,9 +42,19 @@
 </template>
 
 <script setup>
-import { groupCreate } from '@/common/api/groupAPI'
+// import { groupCreate, userSearch } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
-// import { ElMessage } from 'element-plus'
+import { onBeforeMount } from 'vue';
+import { useStore } from 'vuex'
+const store = useStore()
+
+// onBeforeMount (() => {
+//     store.dispatch('groupStore/requestUserSearchAction')
+//     })
+
+// const userSearch = store.state.groupStore.searchUserList
+
+// console.log('받앗다',userSearch)
 const ruleFormRef = ref()
 
 const validategroupName = (rule, value, callback) => {
@@ -77,17 +87,11 @@ const submitForm = (formEl) => {
       console.log('그룹명:',ruleForm.groupName)
       console.log('submit!')
       const groupData = {
-        groupname : ruleForm.groupName,
-        ...ruleForm.groupMember,
+        "groupname" : ruleForm.groupName,
+        "user": ruleForm.groupMember,
       }
       console.log('넘길정보',groupData)
     } else {
-      // alert('초대된 사용자가 없습니다!')
-      // ElMessage({
-      //   showClose: true,
-      //   message: '초대된 사용자가 없습니다!',
-      //   type: 'error',
-      // })
       console.log('error submit!')
       return false
     }
@@ -146,6 +150,9 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ]
+// const list = userSearch.map((item) => {
+//   return { value: `value:${item}`, label: `label:${item}` }
+// })
 const list = states.map((item) => {
   return { value: `value:${item}`, label: `label:${item}` }
 })
@@ -157,10 +164,21 @@ const remoteMethod = (query) => {
   if (query !== '') {
     loading.value = true
     setTimeout(() => {
+
+      // store.dispatch('groupStore/requestUserSearchAction')
+      // const userSearch = store.state.groupStore.searchUserList
+
+      // const list = userSearch.map((item) => {
+      // return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
+      // })
+      const list = states.map((item) => {
+      return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
+      })
       loading.value = false
       options.value = list.filter((item) => {
         return item.label.toLowerCase().includes(query.toLowerCase())
       })
+      options.value = list.value
     }, 200)
   } else {
     options.value = []

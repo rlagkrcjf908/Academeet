@@ -38,7 +38,7 @@ const actions = {
           "email": email,
           "password": password
       }
-      axios.post("http://192.168.100.191:8080/api/v1/auth/login/", JSON.stringify(params), {
+      axios.post("http://localhost:8080/api/v1/auth/login/", JSON.stringify(params), {
         headers: { 'content-type': 'application/json' }
       }).then(res => {
         alert("정보가 확인되었습니다.\n환영합니다!")

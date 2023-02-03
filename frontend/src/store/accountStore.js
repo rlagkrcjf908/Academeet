@@ -50,7 +50,6 @@ const actions = {
   },
   requestProfileAction: async ({ commit }) => {
     const response = await requestProfile();
-    console.log(response)
     console.log(response.data)
 
     commit("SET_USER_PROFILE", response.data);
