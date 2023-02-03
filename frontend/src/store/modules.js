@@ -38,20 +38,12 @@ const actions = {
           "email": email,
           "password": password
       }
-<<<<<<< HEAD
-      axios.post("http://192.168.100.191:8080/api/v1/auth/login", JSON.stringify(params), {
-=======
       axios.post("http://localhost:8080/api/v1/auth/login/", JSON.stringify(params), {
->>>>>>> 20cc6deffe573f8c3e77d0bc59cd6b4ebf53d7bf
         headers: { 'content-type': 'application/json' }
       }).then(res => {
         alert("정보가 확인되었습니다.\n환영합니다!")
         commit('login', res)
-<<<<<<< HEAD
-        router.push("/main")
-=======
         router.push("/profile")
->>>>>>> 20cc6deffe573f8c3e77d0bc59cd6b4ebf53d7bf
       }).catch(e => {
         console.log(e)
         alert("로그인 요청에 문제가 발생했습니다.")

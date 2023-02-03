@@ -20,9 +20,7 @@ const routes = [
     component: JoinView
   },
   {
-    path: '/',
-=======
->>>>>>> 20cc6deffe573f8c3e77d0bc59cd6b4ebf53d7bf
+    path: '/login',
     name: 'login',
     component: LoginView
   },
