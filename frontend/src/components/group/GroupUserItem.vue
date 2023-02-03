@@ -15,5 +15,5 @@ const props = defineProps({
 
 </script>
 <style lang="">
-    
+
 </style>

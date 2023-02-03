@@ -1,14 +1,26 @@
-import { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList, userSearch } from "../common/api/groupAPI";
+import {
+  groupCreate,
+  requestGroupList,
+  requestGroup,
+  groupDelete,
+  groupUpdate,
+} from "../common/api/groupAPI";
+
+//변수들의 집합
 const state = {
   groupInfo: null,
-  groupList:[],
-  groupUserList:null,
-  searchUserList:[],
+  groupList: null,
+  attdList: null, //그룹의 전체 출석
+  attdUser: null, //유저 출석
 };
+
 const getters = {
-
+  getToken: state => {
+    return state.token;
+  }
 };
 
+//변수를 조작하는 함수들을 선언
 const mutations = {
   // 그룹 정보
   SET_GROUP_INFO: (state, payload) => {
@@ -32,12 +44,9 @@ const mutations = {
   UPDATE_GROUP_INFO: (state, payload) => {
     state.groupInfo = payload;
   },
-  // 유저 검색 리스트
-  USER_SEARCH_USER_LIST: (state, payload) => {
-    state.searchUserList = payload;
-  },
 };
 
+//비동기 처리를 하는 함수들
 const actions = {
   // 그룹생성
   groupCreateAction: async ({ commit }, groupData) => {
@@ -76,6 +85,7 @@ const actions = {
     const response = await userSearch(usrname);
     commit("UPDATE_SEARCH_USER_LIST", response.data);
   },
+
 };
 
 export default {
@@ -83,5 +93,5 @@ export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

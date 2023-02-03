@@ -9,14 +9,14 @@ import JoinView from '../views/JoinView'
 
 const routes = [
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView
+    path: "/",
+    name: "login",
+    component: LoginView,
   },
   {
-    path: '/join',
-    name: 'join',
-    component: JoinView
+    path: "/join",
+    name: "join",
+    component: JoinView,
   },
   {
     path: '/',
@@ -75,9 +75,9 @@ const routes = [
     ]
   },
   {
-    path: '/meetingCreate',
-    name: 'meetingCreate',
-    component: MeetingCreate
+    path: "/meetingCreate",
+    name: "meetingCreate",
+    component: MeetingCreate,
   },
   {
     path: '/meeting-end',
@@ -86,14 +86,14 @@ const routes = [
   },
   {
     // 404 page
-    path: '/404',
-    name: 'NotFound',
-    component: NotFound
+    path: "/404",
+    name: "NotFound",
+    component: NotFound,
   },
   {
-    path: '/:pathMatch(.*)*',
-    redirect: { name: 'NotFound' }
-  }
+    path: "/:pathMatch(.*)*",
+    redirect: { name: "NotFound" },
+  },
   // {
   //   path: '/about',
   //   name: 'about',
@@ -102,11 +102,11 @@ const routes = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   // }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
