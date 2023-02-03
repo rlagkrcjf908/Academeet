@@ -43,7 +43,7 @@ const actions = {
       }).then(res => {
         alert("정보가 확인되었습니다.\n환영합니다!")
         commit('login', res)
-        router.push("/profile")
+        router.push("/posts")
       }).catch(e => {
         console.log(e)
         alert("로그인 요청에 문제가 발생했습니다.")

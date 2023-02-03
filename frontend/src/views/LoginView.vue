@@ -45,7 +45,7 @@ export default {
       }
     },
     goMain(){
-      router.push('/')
+      router.push('/main')
     },
     goJoin(){
       router.push('/join')

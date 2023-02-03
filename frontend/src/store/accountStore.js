@@ -2,14 +2,14 @@ import { requestLogin, profileUpdate, requestProfile  } from "../common/api/acco
 
 const state = {
   token: null,
-  id: 9,
+  userid: null,
   profile: {
-    img:null,
-    name: null,
+    profileImg:null,
+    username: null,
     email: null,
-    nick: null,
+    nickname: null,
     phone: null,
-    birth: null
+    birthday: null
   },
 };
 
@@ -18,7 +18,7 @@ const getters = {
     return state.token;
   },
   getUserProfile: state => {
-    return state.profile;
+    return state.Profile;
   },
 
 };
@@ -28,8 +28,7 @@ const mutations = {
     state.token = token;
   },
   SET_USER_PROFILE: (state, profile) => {
-    state.profile = profile;
-    console.log(state.profile)
+    state.Profile = profile;
   },
 };
 
@@ -38,21 +37,13 @@ const actions = {
     const response = await requestLogin(loginData);
     commit("SET_TOKEN", response.data.accessToken);
   },
-  profileUpdateAction: async ({ commit }, profileData) => {
-
-    console.log('보낼데이터',profileData)
-    console.log('보낼데이터2',JSON.stringify(profileData))
-
-    const response = await profileUpdate(state.id, JSON.stringify(profileData));
-    console.log('응답',response)
-    console.log('응답2',response.data)
-    // commit("SET_USER_PROFILE", response.data.profile);
+  profileUpdateAction: async ({ commit}, profileData) => {
+    const response = await profileUpdate(profileData);
+    commit("SET_USER_PROFILE", response.data.profile);
   },
   requestProfileAction: async ({ commit }) => {
     const response = await requestProfile();
-    console.log(response.data)
-
-    commit("SET_USER_PROFILE", response.data);
+    commit("SET_USER_PROFILE", response.data.profile);
   }
 };
 

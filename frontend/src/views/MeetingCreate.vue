@@ -76,7 +76,9 @@
     <el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)">미팅생성</el-button>
     </el-form-item>
-    
+    <el-form-item>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">미팅생성예약</el-button>
+    </el-form-item>
 </template>
 
 <script setup>

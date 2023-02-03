@@ -4,22 +4,22 @@
       로그인했으면 가입을 못 하지!!!
     </div>
     <div v-else> -->
-      <router-link to="/login">AcadeMeet</router-link>
+      <router-link to="/">AcadeMeet</router-link>
       <hr>
       <!-- 이메일 중복없음이 확인되면 일단 새로 입력하는 건 막는다 -->
       <div id="Email">
-        <div v-if = "isDupli">
-          <div v-if = "isCheck">
+        <div v-if = "isdupli">
+          <div v-if = "isAuth">
             <label for="joinEmail">
               <span>이메일 </span>
-              <input type="text" id="joinEmail" v-model="email" readonly/>
+              <input type="email" id="joinEmail" v-model="email" readonly/>
               <h5>확인완료</h5>
             </label>
           </div>
           <div v-else>
             <label for="joinEmail">
               <span>이메일 </span>
-              <input type="text" id="joinEmail" v-model="email" readonly/>
+              <input type="email" id="joinEmail" v-model="email" readonly/>
               <button @click="reCheck()">인증번호 재발급</button>
             </label>
           </div>
@@ -27,14 +27,13 @@
         <div v-else>
           <label for="joinEmail">
             <span>이메일 </span>
-            <input type="text" id="joinEmail" v-model="email" />
+            <input type="email" id="joinEmail" v-model="email" />
             <button @click="dupliCheck()">인증번호 발급받기</button>
           </label>
         </div>
       </div>
-      <hr>
       <div id="Auth">
-        <div v-if = "isCheck">
+        <div v-if = "isAuth">
           <label for="joinAuth">
             <span>인증번호</span>
             <input type="text" id="joinAuth" v-model="authPin" readonly/>
@@ -50,7 +49,6 @@
         </div>
       </div>
       <hr>
-      <!-- 엘리먼트 적용시키면서 패스워드 일치 걸어줘야됨 -->
       <label for="joinPw">
         <span>패스워드 </span>
         <input type="password" id="joinPw" v-model="password" />
@@ -68,7 +66,7 @@
       <hr>
       <label for="joinPhone">
         <span>연락처 </span>
-        <input type="text" id="joinPhone" placeholder="01234567890" v-model="phone" />
+        <input type="text" id="joinPhone" placeholder="012-3456-7890" v-model="phone" />
       </label>
       <hr>
       <label for="joinNick">
@@ -80,7 +78,6 @@
         <span>생일 </span>
         <el-date-picker
           v-model="birth"
-          value-format="YYYY-MM-DD"
           type="date"
           placeholder="날짜를 고르세요"
           :size="size"
@@ -88,16 +85,14 @@
       </label>
       <hr>
       <label for="joinProfile">
-        <span>프로필 설정</span>
-        <hr>
-        <!-- 이미지업로드는 되나 세로가 더 길면 사이드가 짤려 나감 -->
-        <el-avatar
-          :size = "300"
-          :src = "profile"     
+        <el-image
+          style="width: 100px; height: 100px;"
+          :src="onFileSelected()"
+          :preview-src-list="srcList"
+          :initial-index="1"
+          fit="cover"
         />
-        <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
-        <img src="profile" alt="">
-        
+        <input type="file" id="profile" accept="image/*">
       </label>
       <hr>
       <button @click="submit()">가입하기</button>
@@ -107,19 +102,17 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { reactive } from "vue";
 import router from "../router/index";
 import axios from 'axios'
-
 export default {
   name: "JoinView",
   data () {
     return{
       isDupli : false,
-      isCheck : false,
+      isAuth : false,
       email: "",
       password: "",
-      passwordCheck: "",
       name: "",
       phone: "",
       nick: "",
@@ -130,133 +123,51 @@ export default {
   },
 
   methods: {
-    uploadImg(){
-      var profile = this.$refs["image"].files[0];
-      const url = URL.createObjectURL(profile);
-      this.profile = url;
-      console.log(this.$refs["image"].files[0])
-    },
-
-    dupliCheck(){
-      const param = {
-        "email": this.email,
-      }
-      console.log(this.email);
-      axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
-        headers: { 'content-type': 'application/json' }})
+    async dupliCheck(){
+      let data = await axios.get("http://localhost:8080/api/v1/user/login/idCheck")
+      console.log(data)
       .then(res => {
-        console.log(res);
-        if (res.data === 1) {
-          axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
-          alert("인증번호가 전송되었습니다.")
-          this.isDupli = true
-        } else {
-          alert("이미 가입되거나 유효하지 않은 이메일입니다.")
-        }
+        
       })
+      const params = {
+        "email": this.email
+      }
     },
     reCheck(){
-      axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
-      alert("인증번호가 전송되었습니다.")
+      const params = {
+        "email": this.email
+      }
     },
     authCheck(){
-      // const parauth = {
-      //   "authPin": this.authPin
-      // }
-      console.log(this.authPin);
-      axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", this.authPin)
-      .then(res => {
-        if (res.status === 200) {
-          alert("인증이 성공적으로 완료되었습니다.");
-          this.isCheck = true
-        } else {
-          alert(res.status)
-        }
-      }).catch(err => {
-        console.log(err);
-      })
+      const params = {
+
+      }
+    },
+    onFileSelected(event){
+      this.profile
     },
     submit() {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      };
-
-      const registerInfo = {
-        email: this.email,
-        password: this.password,
-        name: this.name,
-        phone: this.phone,
-        nick: this.nick,
-        birth: this.birth,
-      };
-
-      const frm = new FormData();
-      frm.append("profile", this.$refs["image"].files[0]);
-      frm.append(
-        "registerInfo", 
-        new Blob([JSON.stringify(registerInfo)], {type: 'application/json'})
-      );
-      if (this.isCheck === true && this.password === this.passwordCheck) {
-        axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
-        .then(res => {
-          if (res.status === 200) {
-            alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");
-            router.push("/login");
-          } else {
-            alert(res.status)   
-          }
-        }).catch(err => {
-          console.log(err);
-        })
-      } else if (this.isCheck === true && this.password!== this.passwordCheck) {
-        alert("비밀번호가 일치하지 않습니다.");
-      } else {
-        alert("인증이 필요합니다.");
+      const params = {
+        "email": this.email,
+        "password": this.password,
+        "name": this.name,
+        "phone": this.phone,
+        "nick": this.nick,
+        "birth": this.birth,
+        "profile": this.profile,
       }
-      
-      // const joinImage = new FormData();
-
-      // joinData.append("file", data.file);
-      // joinData.append(
-      //   "key",
-      //   new Blob([JSON.stringify(data.info)], { type: "application/json" })
-      // );
-
-      // joinData.append("email", this.email);
-      // joinData.append("password", this.password);
-      // joinData.append("name", this.name);
-      // joinData.append("phone", this.phone);
-      // joinData.append("nick", this.nick);
-      // joinData.append("birth", this.birth);
-      // joinData.append("profile", this.profile);
-      
-      // console.log(joinData)
-      // if (this.isAuth = true && this.password === this.passwordCheck) {
-      //   // axios.post("http://192.168.100.191:8080/api/v1/user", joinData, joinImage,{
-      //   //   headers: {'Content-Type': 'multipart/form-data'},
-      //   //   headers: {'content-Type': 'resgister'}
-
-      //   // })
-      //   try{
-      //     axios.post("http://192.168.100.191:8080/api/v1/user", joinData,{
-      //       headers: {'Content-Type': 'multipart/form-data'},
-      //     })
-      //     .then((res => console.log(res)))
-      //   } catch (err) {
-      //     console.log(err);
-      //   }
-        // .then(() => {
-        //   alert("성공")
-        // })
-        // .catch(err => {
-        // })
-      // }
+      axios.post("http://localhost:8080/signup", JSON.stringify(params), {
+          headers: { 'content-type': 'application/json' }
+      }).then(() => {
+        alert("회원가입이 정상적으로 완료되었습니다.")
+        router.push("/")
+      }).catch(() =>{
+        alert("문제가 있습니다.")
+      })
     }
   },
 } 
 </script>
-<style>
 
+<style>
 </style>

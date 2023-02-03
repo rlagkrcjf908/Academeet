@@ -1,8 +1,6 @@
 <template>
   <!-- Sub main 자리 -->
   <!-- 아진언니가 만든 nav로 바꾸기 -->
-  <el-header style="background-color: rgb(252, 252, 164);">Header</el-header>
-
   <el-main>
     <el-tabs type="border-card">
         <el-tab-pane label="구미1반">구미1반</el-tab-pane>

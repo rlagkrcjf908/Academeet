@@ -1,7 +1,7 @@
 <template>
   <header>
-    <!-- router-link 넣으니까 css 망가짐 -->
-    <router-link to="/" >
+    <!-- router-link 넣으니까 css 망가짐 마진이 더 들어감;;-->
+    <router-link :to="{name: 'main'}" >
       <img src="@/assets/images/logo.png" />
       <h1>
         <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
