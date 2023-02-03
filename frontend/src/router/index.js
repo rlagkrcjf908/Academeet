@@ -10,17 +10,6 @@ import JoinView from '../views/JoinView'
 const routes = [
   {
     path: '/login',
-<<<<<<< HEAD
-    name: 'login',
-    component: LoginView
-  },
-  {
-    path: '/join',
-    name: 'join',
-    component: JoinView
-  },
-  {
-    path: '/login',
     name: 'login',
     component: LoginView
   },
