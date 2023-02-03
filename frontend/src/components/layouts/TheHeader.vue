@@ -1,31 +1,32 @@
 <template>
   <header>
-    <!-- <div class="title" :to="{ name: '#' }"> -->
-    <img src="@/assets/images/logo.png" />
-    <h1>
-      <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
+    <!-- router-link 넣으니까 css 망가짐 -->
+    <router-link :to="{name: 'main'}" >
+      <img src="@/assets/images/logo.png" />
+      <h1>
+        <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
         >M</span
-      >eet
-    </h1>
-    <!-- </div> -->
+        >eet
+      </h1>
+    </router-link>
+    
     <nav>
       <ul>
         <li style="color: #94d82d">(nickname)님</li>
         <!--<small v-if="userInfo" class="text-muted">{{ userInfo.uid }}'s </small>-->
-        <li><router-link to="/">My Page</router-link></li>
-        <li><router-link to="#">Group</router-link></li>
+        <li><router-link to="/profile">My Page</router-link></li>
+        <li><router-link to="/group">Group</router-link></li>
         <li><router-link to="#">Logout</router-link></li>
       </ul>
     </nav>
   </header>
-  <hr />
 </template>
 
 <script>
 export default {};
 </script>
 
-<style>
+<style scoped>
 header {
   display: flex;
   justify-content: space-between;
@@ -33,6 +34,7 @@ header {
   width: 99%;
   height: 64px;
   padding: 10px;
+  position: relative;
 }
 
 h1 {
@@ -72,6 +74,7 @@ hr {
   height: 1.6px;
   border: 0;
   width: 99%;
+  margin: 0px;
 }
 /* user-id는 로그인 했을때 닉네임 보이게 하려고 나둔거 */
 /* .user-id {
