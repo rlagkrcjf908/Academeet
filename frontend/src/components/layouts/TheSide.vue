@@ -1,6 +1,6 @@
 <template>
     <el-aside>
-      <el-button type="success" round> Create Group </el-button>
+      <el-button type="success" round @click="$router.push({name:'groupCreate'})"> Create Group </el-button>
     </el-aside>
 </template>
 

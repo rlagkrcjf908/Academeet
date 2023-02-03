@@ -42,19 +42,12 @@
 </template>
 
 <script setup>
-// import { groupCreate, userSearch } from '@/common/api/groupAPI'
+import { groupCreate, userSearch } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
-import { onBeforeMount } from 'vue';
+// import { onBeforeMount } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()
 
-// onBeforeMount (() => {
-//     store.dispatch('groupStore/requestUserSearchAction')
-//     })
-
-// const userSearch = store.state.groupStore.searchUserList
-
-// console.log('받앗다',userSearch)
 const ruleFormRef = ref()
 
 const validategroupName = (rule, value, callback) => {
@@ -82,10 +75,12 @@ const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      
       console.log('참가자:',ruleForm.groupMember)
       console.log('참가자2:',{...ruleForm.groupMember})
       console.log('그룹명:',ruleForm.groupName)
       console.log('submit!')
+
       const groupData = {
         "groupname" : ruleForm.groupName,
         "user": ruleForm.groupMember,
@@ -153,32 +148,37 @@ const states = [
 // const list = userSearch.map((item) => {
 //   return { value: `value:${item}`, label: `label:${item}` }
 // })
-const list = states.map((item) => {
-  return { value: `value:${item}`, label: `label:${item}` }
-})
+// const list = states.map((item) => {
+//   return { value: `value:${item}`, label: `label:${item}` }
+// })
 
 const value = ref([])
 const options = ref([])
 const loading = ref(false)
+
 const remoteMethod = (query) => {
   if (query !== '') {
     loading.value = true
-    setTimeout(() => {
+    setTimeout( async () => {
+      
+      const username ={ 'name' : query }
 
-      // store.dispatch('groupStore/requestUserSearchAction')
-      // const userSearch = store.state.groupStore.searchUserList
+      const res = await userSearch(JSON.stringify(username))
+      const searchUserList =res.data
+      console.log('저장해서 불러온 검색결과',searchUserList)
 
-      // const list = userSearch.map((item) => {
-      // return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
+      const list = searchUserList.map((item) => {
+      return { value: `value:${item.id}`, label: `label:${item.name}:${item.email}` }
+      })
+      console.log(list)
+      // const list = states.map((item) => {
+      // return { value: `value:${item}`, label: `label:${item}` }
       // })
-      const list = states.map((item) => {
-      return { value: `value:${item,id}`, label: `label:${item.name}:${item.email}` }
-      })
-      loading.value = false
-      options.value = list.filter((item) => {
-        return item.label.toLowerCase().includes(query.toLowerCase())
-      })
-      options.value = list.value
+      // loading.value = false
+      // options.value = list.filter((item) => {
+      //   return item.label.toLowerCase().includes(query.toLowerCase())
+      // })
+      options.value = list
     }, 200)
   } else {
     options.value = []

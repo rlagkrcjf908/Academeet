@@ -5,7 +5,6 @@ import {
   groupDelete, 
   groupUpdate, 
   requestUserList, 
-  userSearch 
 } from "../common/api/groupAPI";
 
 //변수들의 집합
@@ -13,12 +12,13 @@ const state = {
   groupInfo: null,
   groupList:[],
   groupUserList:null,
-  searchUserList:[],
   attdList: null, //그룹의 전체 출석
   attdUser: null, //유저 출석
 };
 const getters = {
-
+  getGroupList: state => {
+    return state.groupList;
+  },
 };
 
 //변수를 조작하는 함수들을 선언
@@ -45,10 +45,7 @@ const mutations = {
   UPDATE_GROUP_INFO: (state, payload) => {
     state.groupInfo = payload;
   },
-  // 유저 검색 리스트
-  USER_SEARCH_USER_LIST: (state, payload) => {
-    state.searchUserList = payload;
-  },
+
     //출석관련
     SET_ATTD_LIST: (state, payload) => {
       state.attdList = payload; //그룹 전체 리스트
@@ -56,7 +53,7 @@ const mutations = {
     SET_ATTD_USER: (state, payload) => {
       state.attdUser = payload; //유저 한명의 출석 리스트
     },
-    UPDATE_ATTD_USER: (state, payload) => {
+    _ATTD_USER: (state, payload) => {
       state.attdUser = payload; //유저 한명 수정
     },
 };
@@ -94,11 +91,6 @@ const actions = {
   groupUpdateAction: async ({ commit }, groupData) => {
     const response = await groupUpdate(groupid, groupData);
     commit("UPDATE_GROUP_INFO", response.data);
-  },
-  // 회원 검색
-  requestUserSearchAction: async ({ commit }, usrname) => {
-    const response = await userSearch(usrname);
-    commit("UPDATE_SEARCH_USER_LIST", response.data);
   },
     //출석관련
     requestAttdList: async ({ commit }, groupId) => {

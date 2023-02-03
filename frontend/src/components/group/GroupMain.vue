@@ -7,7 +7,7 @@
         <div v-else>
             <p>속한 그룹이 없습니다.</p>
             <p>그룹을 만들어 보세요.</p>
-            <el-button type="success" round @click="$router.push('/main/group/create')">그룹생성</el-button>
+            <el-button type="success" round @click="$router.push('/group/create')">그룹생성</el-button>
         </div>
         {{ groups.length }}
     </div>
