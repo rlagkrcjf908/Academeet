@@ -38,12 +38,12 @@ const actions = {
           "email": email,
           "password": password
       }
-      axios.post("http://localhost:8080/signin", JSON.stringify(params), {
+      axios.post("http://192.168.100.191:8080/api/v1/auth/login", JSON.stringify(params), {
         headers: { 'content-type': 'application/json' }
       }).then(res => {
         alert("정보가 확인되었습니다.\n환영합니다!")
         commit('login', res)
-        router.push("/posts")
+        router.push("/main")
       }).catch(e => {
         console.log(e)
         alert("로그인 요청에 문제가 발생했습니다.")

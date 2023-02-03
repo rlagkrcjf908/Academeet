@@ -5,7 +5,7 @@ import MainView from '../views/MainView'
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: LoginView
   },
@@ -15,7 +15,7 @@ const routes = [
     component: JoinView
   },
   {
-    path: '/main',
+    path: '/',
     name: 'main',
     component: MainView
   },
