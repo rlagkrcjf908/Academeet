@@ -31,10 +31,4 @@ nav {
   }
 }
 
-    &.router-link-exact-active {
-      color: black;
-      // color: #42b983;
-    }
-  }
-}
 </style>
