@@ -95,11 +95,6 @@ const ruleForm = reactive({
   phone: profile.phone,
 })
 
-// onMounted (() => {
-//       store.dispatch('accountStore/requestProfileAction', store.state.userid)
-//     })
-
-
 // 연락처 유효성 검사
 const checkPhone = (rule, value, callback) => {
   if (!value) {

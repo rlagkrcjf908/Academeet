@@ -67,7 +67,7 @@ const routes = [
           },
           {
             path: ':groupId',
-            name: 'GroupUser',
+            name: 'groupUser',
             component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/group/GroupUser.vue')
           },
           // 출석 관련 routes

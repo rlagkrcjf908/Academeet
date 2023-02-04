@@ -52,6 +52,9 @@ import { userSearch } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
 import { toRaw } from 'vue';
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const store = useStore()
 const ruleFormRef = ref()
@@ -131,7 +134,7 @@ const submitForm = (formEl) => {
       }
       console.log('넘길정보',groupData)
       await store.dispatch('groupStore/groupCreateAction',groupData)
-        router.push({ name: 'group' })
+        router.push({ name: 'main' })
       
       console.log('submit!')
     } else {

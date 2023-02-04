@@ -90,7 +90,9 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { toRaw } from 'vue';
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const store = useStore()
 const ruleFormRef = ref()
 

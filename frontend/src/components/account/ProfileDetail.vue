@@ -53,15 +53,16 @@
 
 <script setup>
 // import { onMounted } from 'vue'
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()
+const profile =ref({})
 
-onBeforeMount (() => {
-    store.dispatch('accountStore/requestProfileAction')
-    })
+onBeforeMount (async () => {
+  await store.dispatch('accountStore/requestProfileAction')
+   profile.value = {...store.state.accountStore.profile}
+  })
 
-const { ...profile } = store.state.accountStore.profile
 console.log('받앗다',profile)
 </script>
 

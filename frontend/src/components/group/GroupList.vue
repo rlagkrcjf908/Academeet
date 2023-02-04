@@ -1,16 +1,24 @@
 <template>
-    <div style="border-bottom: 1px solid rgba(217, 217, 217, 1); display: flex; align-self: start;">
-        <p>{{ props.group.name }}</p>
+    <div>
+        <GroupListItem v-for="group in groups" :key="group.id" :group="group"/>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
-const props = defineProps({
-    group: String
+import GroupListItem from '@/components/group/GroupListItem'
+import { onMounted, ref } from 'vue';
+import { useStore } from 'vuex'
+
+const store = useStore()
+const groups = ref()
+onMounted (async () => {
+    await store.dispatch('groupStore/requestGroupListAction', store.state.accountStore.id)
+    groups.value = store.state.groupStore.groupList  
 })
 
+
 </script>
-<style lang="">
-    
+<style scoped>
+
 </style>
+

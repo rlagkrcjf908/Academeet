@@ -30,9 +30,7 @@ const mutations = {
   },
   // 그룹 리스트
   SET_GROUP_LIST: (state, payload) => {
-    console.log("페이로드",payload)
     state.groupList = payload;
-    console.log("그룹리스트",state.groupList);
   },
   // 그룹 유저 리스트
   SET_GROUP_USER_LIST: (state, payload) => {
@@ -69,7 +67,6 @@ const actions = {
   // 그룹 리스트 요청
   requestGroupListAction: async ({ commit }, id) => {
     const response = await requestGroupList(id);
-    console.log("받은데이터",response.data)
     commit("SET_GROUP_LIST", response.data);
   },
   // 그룹 정보 요청
