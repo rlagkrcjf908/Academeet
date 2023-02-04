@@ -1,7 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   devServer: {
-    https: false,
+    https: true,
     port: 8080,
     open: true,
     proxy: {
@@ -10,7 +10,8 @@ module.exports = defineConfig({
       }
     },
     historyApiFallback: true,
-    hot: true
+    hot: true,
+    disableHostCheck: true,
   },
   // css: {
   //   requireModuleExtension: false // import 시에 경로에 .module 포함 안해도 됨.
