@@ -47,7 +47,8 @@ public class AttendServiceImpl implements AttendService{
 
             List<Attendance> attendance = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
             for (int j = 0; j<attendance.size();j++){
-                sumatt += attendance.get(i).getAttendance();
+                System.out.println(attendance.get(j).getAttendance());
+                sumatt += attendance.get(j).getAttendance();
             }
             allatt = sumatt/attendance.size();
 
