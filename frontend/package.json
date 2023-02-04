@@ -36,6 +36,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:OpenVidu/openvidu-tutorials.git"
-  }
+    "url": "git+ssh://git@github.com/OpenVidu/openvidu-tutorials.git"
+  },
+  "description": "## Project setup ``` npm install ```",
+  "bugs": {
+    "url": "https://github.com/OpenVidu/openvidu-tutorials/issues"
+  },
+  "homepage": "https://github.com/OpenVidu/openvidu-tutorials#readme",
+  "main": ".eslintrc.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
