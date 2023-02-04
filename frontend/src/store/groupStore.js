@@ -1,5 +1,5 @@
 import { 
-  groupCreate, 
+  groupCreate,
   requestGroupList, 
   requestGroup, 
   groupDelete, 
@@ -9,6 +9,7 @@ import {
 
 //변수들의 집합
 const state = {
+  id: 9,
   groupInfo: null,
   groupList:[],
   groupUserList:null,
@@ -62,7 +63,7 @@ const mutations = {
 const actions = {
   // 그룹생성
   groupCreateAction: async ({ commit }, groupData) => {
-    const response = await groupCreate(state.id,groupData);
+    const response = await groupCreate(state.id,JSON.stringify(groupData));
     commit("SET_GROUP_INFO", response.data);
   },
   // 그룹 리스트 요청

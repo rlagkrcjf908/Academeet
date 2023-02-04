@@ -10,46 +10,53 @@
     label-width="120px"
     class="demo-ruleForm"
   >
+  <!-- 그룹 이름 생성 폼  -->
     <el-form-item label="그룹이름" prop="groupName">
       <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
     </el-form-item>
-    
-    <el-form-item label="멤버" prop="groupMember">
-    <el-select-v2
-      v-model="ruleForm.groupMember"
-      style="width: 700px"
-      multiple
-      filterable
-      remote
-      :remote-method="remoteMethod"
-      clearable
-      :options="options"
-      :loading="loading"
-      placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
-    />
-    </el-form-item>
 
+    <el-form-item label="멤버" prop="user">
+      <el-select
+        v-model="ruleForm.user"
+        multiple
+        filterable
+        remote
+        reserve-keyword
+        placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
+        :remote-method="remoteMethod"
+        clearable
+        :loading="loading"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <!-- 그룹 생성 버튼 -->
     <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)"
+      <el-button type="success" round @click="submitForm(ruleFormRef)"
         >그룹생성</el-button
       >
     </el-form-item>
     </el-form>
 
-  
-  <p>선택된 아이템:{{ ruleForm.groupMember.length }}</p>
-  <p>선택된 아이템:{{ ruleForm.groupMember }}</p>
+  <p>선택된 아이템:{{ ruleForm.user.length }}</p>
+  <p>선택된 아이템:{{ ruleForm.user }}</p>
 </template>
 
 <script setup>
-import { groupCreate, userSearch } from '@/common/api/groupAPI'
+import { userSearch } from '@/common/api/groupAPI'
 import { reactive, ref } from 'vue'
-// import { onBeforeMount } from 'vue';
+import { toRaw } from 'vue';
 import { useStore } from 'vuex'
-const store = useStore()
 
+const store = useStore()
 const ruleFormRef = ref()
 
+// 그룹이름 유효성 검사
 const validategroupName = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('그룹이름을 입력해 주세요.'))
@@ -61,31 +68,72 @@ const validategroupName = (rule, value, callback) => {
   }
 }
 
+// 유저검색
+const options = ref([])
+const user = ref([])
+const loading = ref(false)
+
+// 회의 참여자 목록
+let guestList = null
+
+// 유저 검색
+const remoteMethod = (query) => {
+  if (query !== '') {
+    loading.value = true
+    setTimeout( async () => {
+
+      // 검색요청
+      const username ={ "name" : query }
+      const res = await userSearch(JSON.stringify(username))
+
+      const searchUserList = res.data
+      console.log('저장해서 불러온 검색결과',searchUserList)
+      let list = searchUserList.map((item) => {
+        return { value: item.id, label: `${item.name}:${item.email}` }
+      })
+
+      loading.value = false
+      options.value = list
+      
+      // 요청결과 리스트
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+
+
 const ruleForm = reactive({
   groupName: '',
-  groupMember: []
+  user: []
 })
 
+// 유효성 검사 규칙
 const rules = reactive({
   groupName: [{ validator: validategroupName, trigger: 'blur' }],
-  groupMember: [{ required: true, message: '멤버를 선택하세요', trigger: 'change' }],
+  user: [{ required: true, message: '멤버를 선택하세요', trigger: 'change' }],
 })
 
+// 그룹생성
 const submitForm = (formEl) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      
-      console.log('참가자:',ruleForm.groupMember)
-      console.log('참가자2:',{...ruleForm.groupMember})
+      // 유저정보는 받은 그대로
       console.log('그룹명:',ruleForm.groupName)
-      console.log('submit!')
-
+      const rawArray = toRaw(ruleForm.user)
+      guestList = rawArray
+      console.log('멤버리스트',guestList)
+      
       const groupData = {
-        "groupname" : ruleForm.groupName,
-        "user": ruleForm.groupMember,
+        "name" : ruleForm.groupName,
+        "users": guestList,
       }
       console.log('넘길정보',groupData)
+      await store.dispatch('groupStore/groupCreateAction',groupData)
+        router.push({ name: 'group' })
+      
+      console.log('submit!')
     } else {
       console.log('error submit!')
       return false
@@ -145,44 +193,5 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ]
-// const list = userSearch.map((item) => {
-//   return { value: `value:${item}`, label: `label:${item}` }
-// })
-// const list = states.map((item) => {
-//   return { value: `value:${item}`, label: `label:${item}` }
-// })
-
-const value = ref([])
-const options = ref([])
-const loading = ref(false)
-
-const remoteMethod = (query) => {
-  if (query !== '') {
-    loading.value = true
-    setTimeout( async () => {
-      
-      const username ={ 'name' : query }
-
-      const res = await userSearch(JSON.stringify(username))
-      const searchUserList =res.data
-      console.log('저장해서 불러온 검색결과',searchUserList)
-
-      const list = searchUserList.map((item) => {
-      return { value: `value:${item.id}`, label: `label:${item.name}:${item.email}` }
-      })
-      console.log(list)
-      // const list = states.map((item) => {
-      // return { value: `value:${item}`, label: `label:${item}` }
-      // })
-      // loading.value = false
-      // options.value = list.filter((item) => {
-      //   return item.label.toLowerCase().includes(query.toLowerCase())
-      // })
-      options.value = list
-    }, 200)
-  } else {
-    options.value = []
-  }
-}
 
 </script>

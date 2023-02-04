@@ -1,6 +1,6 @@
 import $axios from "axios";
 
-const groupCreate = (user_id) => $axios.post(`/group/${user_id}`, payload);
+const groupCreate = (user_id,payload) => $axios.post(`/group/${user_id}`, payload);
 
 const requestGroupList = (user_id) => $axios.get(`/group/${user_id}/list`);
 

@@ -1,6 +1,9 @@
 import $axios from "axios";
 
-const meetingCreate = (payload) => $axios.post("/meet/{user_id}", payload);
+const meetingCreate = (user_id, payload) => $axios.post(`/meet/${user_id}`, payload);
 
+const hostGroup = (user_id) => $axios.get(`/meet/${user_id}/getGroup`)
 
-export { meetingCreate };
+const userSearch = (payload) => $axios.post(`/meet/search`, payload)
+
+export { meetingCreate, hostGroup, userSearch };

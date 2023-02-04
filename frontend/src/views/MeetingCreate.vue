@@ -48,112 +48,63 @@
         <el-form-item label="그룹 선택" prop="group">
           <el-radio-group v-model="ruleForm.group" @change="selectGroup">
             <el-radio label="선택안함" name="no"/>
-            <el-radio label="1">1반</el-radio>
-            <el-radio label="2">2반</el-radio>
-            <el-radio label="3">3반</el-radio>
+            <div v-for="(item, index) in groupList" :key="index">
+              <el-radio :label="item.id">{{ item.name }}</el-radio>
+            </div>
           </el-radio-group>
+          
         </el-form-item>
-
-        <!-- 멤버 선택 -->
-        <!-- 선택안함을 누르면 멤버검색 창이 보임 -->
-        <el-form-item label="멤버 선택" prop="guest" v-if="!isSelectGroup">
-          <el-select-v2
-            v-model="ruleForm.guest"
-            style="width: 700px"
+        <!-- 그룹 선택 안할 시 유저 검색 -->
+        <el-form-item label="user 선택" prop="user" v-if="!isSelectGroup">
+          <el-select
+            v-model="ruleForm.user"
             multiple
             filterable
             remote
+            reserve-keyword
+            placeholder="Please enter a keyword"
             :remote-method="remoteMethod"
-            clearable
-            :options="options"
             :loading="loading"
-            placeholder="초대하고 싶은 참여자를 검색해주세요"
-          />
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </div>
     </el-form>
 
     <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">미팅생성</el-button>
+      <el-button type="success" round @click="submitForm(ruleFormRef)">미팅생성</el-button>
     </el-form-item>
-    
+    <user-search/>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
 
-const startTime = ref('')
-const endTime = ref('')
+import { hostGroup, userSearch } from '@/common/api/meetingAPI'
+import { ref, reactive, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { toRaw } from 'vue';
+import { useStore } from 'vuex'
+
+const store = useStore()
 const ruleFormRef = ref()
 
+// 유효성 검사할 항목 이름
+const ruleForm = reactive({
+  groupName: '',
+  startTime: '',
+  endTime: '',
+  group: '',
+  guest: [],
+  user:[]
+})
 
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-]
-
-const  isSelectGroup = ref(true)
-
-const selectGroup = (data) => {
-  if (data === '선택안함'){
-    isSelectGroup.value = false
-    console.log(isSelectGroup.value)
-  }else{
-    isSelectGroup.value = true
-    console.log(isSelectGroup.value)
-  }
-
-}
-// 그룹이름 유효성 검사
+// 회의이름 유효성 검사
 const validategroupName = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('그룹이름을 입력해 주세요.'))
@@ -165,42 +116,61 @@ const validategroupName = (rule, value, callback) => {
   }
 }
 
-// 유효성 검사할 항목 이름
-const ruleForm = reactive({
-  groupName: '',
-  startTime: '',
-  endTime: '',
-  group: '',
-  guest: [],
+// 시간 입력
+const startTime = ref('')
+const endTime = ref('')
+const groupList = ref()
+// 내가 호스트인 그룹 목록 불러오는 엑시오스 
+onMounted(async() => {
+  const res = await hostGroup(4)
+  groupList.value = res.data
 })
+
+// 그룹선택
+const  isSelectGroup = ref(true)
+  
+const selectGroup = (data) => {
+  if (data === '선택안함'){
+    isSelectGroup.value = false
+  }else{
+    isSelectGroup.value = true
+  }
+}
+
+// 유저검색
+// const list = ref([])
+const options = ref([])
+const user = ref([])
+const loading = ref(false)
 
 // 회의 참여자 목록
-const guestList = ref([])
-
-// 유저 목록
-const list = states.map((item) => {
-  return { value: `value:${item}`, label: `label:${item}` }
-})
+let guestList = null
 
 // 유저 검색
-const options = ref([])
-const loading = ref(false)
 const remoteMethod = (query) => {
   if (query !== '') {
     loading.value = true
-    setTimeout(() => {
-      loading.value = false
-      options.value = list.filter((item) => {
-        return item.label.toLowerCase().includes(query.toLowerCase())
+    setTimeout( async () => {
+
+      // 검색요청
+      const username ={ "name" : query }
+      const res = await userSearch(JSON.stringify(username))
+
+      const searchUserList = res.data
+      console.log('저장해서 불러온 검색결과',searchUserList)
+      let list = searchUserList.map((item) => {
+        return { value: item.id, label: `${item.name}:${item.email}` }
       })
+
+      loading.value = false
+      options.value = list
+      
+      // 요청결과 리스트
     }, 200)
   } else {
     options.value = []
   }
 }
-
-
-
 
 // 유효성 검사 규칙
 const rules = reactive({
@@ -208,30 +178,49 @@ const rules = reactive({
   group: [{ required: true, message: '그룹을 선택하세요', trigger: 'change' }],
   startTime: [{ required: true, message: '시작 시간을 선택하세요', trigger: 'change' }],
   endTime: [{ required: true, message: '마치는 시간을 선택하세요', trigger: 'change' }],
+  user: [{ required: true, message: '참여자를 선택하세요', trigger: 'change' }]
 })
+
+function getToday(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
+}
 
 // 회의 생성
 const submitForm = (formEl) => {
   if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid && guestList.value ) {
-      console.log('뭐야..:',ruleForm)
-      console.log('???',ruleForm.group)
-      console.log('참가자:',guestList.value)
+  formEl.validate(async (valid) => {
+    if (valid) {
+      // 보낼 회의 정보
+      const meetingData = {
+        "name" : ruleForm.groupName,
+        "starttime" : ruleForm.startTime,
+        "endtime" : ruleForm.endTime,
+        "date" : getToday(),
+      }
+      if (isSelectGroup.value === false){
+        const rawArray = toRaw(ruleForm.user)
+        guestList = rawArray
+        meetingData.users = guestList
+        
+      }else{
+        guestList = ruleForm.group
+        meetingData.groupid = guestList
+      }
+      // console.log(meetingData)
+      await store.dispatch('meetingStore/meetingCreateAction',meetingData)
+      router.push({ name: 'main' })
       console.log('submit!')
     } else {
-      ElMessage({
-        showClose: true,
-        message: '초대된 사용자가 없습니다!',
-        type: 'error',
-      })
       console.log('error submit!')
       return false
     }
   })
 }
-
-
 
 </script>
 

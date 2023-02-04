@@ -97,7 +97,6 @@ const ruleForm = reactive({
 
 // onMounted (() => {
 //       store.dispatch('accountStore/requestProfileAction', store.state.userid)
-      
 //     })
 
 
@@ -150,17 +149,7 @@ const submitForm = (formEl) => {
         "birth": profile.birth.value
       }
       await store.dispatch('accountStore/profileUpdateAction', profileData)
-        router.push({ name: 'profile' })
-        // try {
-          //   profileUpdate(data)
-      //   router.push({ name: 'profile' })
-      //   console.log('submit!')
-      // }
-      // catch (error) {
-      //   console.log(error)
-      // }
-      // console.log(ruleForm.nickname)
-      // console.log(ruleForm.phone)
+      router.push({ name: 'profile' })
       console.log('submit!')
     } else {
       console.log('error submit!')
