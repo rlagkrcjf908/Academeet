@@ -75,10 +75,10 @@ public class GroupController {
 
     // 그룹안에 사용자 insert
     public Map<String, Object> insertUserTOGroup(int group_id, GroupCreatePostReq createInfo) {
-        List<User> users = createInfo.getUsers();
+        List<Integer> users = createInfo.getUsers();
         int res = 0;
         for (int i = 0; i < users.size(); i++) {
-            int user_id = users.get(i).getId();
+            int user_id = users.get(i);
             res += groupService.insertUserToGroup(group_id, user_id);
         }
         Map<String, Object> response = new HashMap<>();

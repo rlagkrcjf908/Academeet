@@ -1,7 +1,6 @@
 package com.ssafy.api.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -19,6 +18,6 @@ public class GroupCreatePostReq {
 
     //유저의 값 받아오기
     @JsonProperty("users")
-    List<User> users;
+    List<Integer> users;
 
 }
