@@ -10,10 +10,6 @@ const persistedState = createPersistedState({
 })
 
 export default createStore({
-  state:      modules.state,
-  getters:    modules.getters,
-  mutations:  modules.mutations,
-  actions:    modules.actions,
   plugins:    [persistedState],
   modules: {
     accountStore,

@@ -213,7 +213,7 @@ const submitForm = (formEl) => {
         guestList = ruleForm.group
         meetingData.groupid = guestList
       }
-      // console.log(meetingData)
+      console.log(meetingData)
       await store.dispatch('meetingStore/meetingCreateAction',meetingData)
       router.push({ name: 'main' })
       console.log('submit!')

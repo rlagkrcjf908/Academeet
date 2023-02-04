@@ -1,15 +1,13 @@
 <template>
     <el-aside>
       <el-button type="success" round @click="$router.push({name:'groupCreate'})"> Create Group </el-button>
+      <group-list/>
     </el-aside>
 </template>
 
-<script>
+<script setup>
+import GroupList from '@/components/group/GroupList'
 
-
-export default {
-
-}
 </script>
 
 <style>
@@ -17,7 +15,6 @@ export default {
   width:304px;
   height: 90vh;
   background-color: #CDE59B;
-
 }
 /* .el-main{
   width: 65vw;

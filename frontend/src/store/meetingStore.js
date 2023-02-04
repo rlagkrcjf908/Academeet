@@ -1,6 +1,7 @@
 import { meetingCreate } from "../common/api/meetingAPI";
 
 const state = {
+  id:4,
   meetingInfo:null,
 };
 
@@ -18,7 +19,7 @@ const mutations = {
 const actions = {
   // 회의 생성
   meetingCreateAction: async ({ commit }, meetingData) => {
-    const response = await meetingCreate(JSON.stringify(meetingData));
+    const response = await meetingCreate(state.id,JSON.stringify(meetingData));
     commit("SET_MEETINGINFO", response.data);
   },
 };

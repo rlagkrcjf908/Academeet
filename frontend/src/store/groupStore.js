@@ -16,9 +16,13 @@ const state = {
   attdList: null, //그룹의 전체 출석
   attdUser: null, //유저 출석
 };
+
 const getters = {
   getGroupList: state => {
     return state.groupList;
+  },
+  getGroupListLength: state => {
+    return state.groupList.length;
   },
 };
 
@@ -45,16 +49,16 @@ const mutations = {
     state.groupInfo = payload;
   },
 
-    //출석관련
-    SET_ATTD_LIST: (state, payload) => {
-      state.attdList = payload; //그룹 전체 리스트
-    },
-    SET_ATTD_USER: (state, payload) => {
-      state.attdUser = payload; //유저 한명의 출석 리스트
-    },
-    _ATTD_USER: (state, payload) => {
-      state.attdUser = payload; //유저 한명 수정
-    },
+  //출석관련
+  SET_ATTD_LIST: (state, payload) => {
+    state.attdList = payload; //그룹 전체 리스트
+  },
+  SET_ATTD_USER: (state, payload) => {
+    state.attdUser = payload; //유저 한명의 출석 리스트
+  },
+  _ATTD_USER: (state, payload) => {
+    state.attdUser = payload; //유저 한명 수정
+  },
 };
 
 //비동기 처리를 하는 함수들
@@ -70,8 +74,8 @@ const actions = {
     commit("SET_GROUP_LIST", response.data);
   },
   // 그룹 정보 요청
-  requestGroupAction: async ({ commit }) => {
-    const response = await requestGroup(groupid);
+  requestGroupAction: async ({ commit }, groupId) => {
+    const response = await requestGroup(groupId);
     commit("SET_GROUP_INFO", response.data);
   },
   // 그룹 사용자 리스트 요청

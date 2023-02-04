@@ -43,8 +43,6 @@
     </el-form-item>
     </el-form>
 
-  <p>선택된 아이템:{{ ruleForm.user.length }}</p>
-  <p>선택된 아이템:{{ ruleForm.user }}</p>
 </template>
 
 <script setup>
