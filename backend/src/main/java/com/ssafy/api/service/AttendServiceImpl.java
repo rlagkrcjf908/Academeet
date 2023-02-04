@@ -28,11 +28,14 @@ public class AttendServiceImpl implements AttendService{
     private UserRepository userRepository;
     @Autowired
     private User_GroupRepository user_GroupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Override
     public List<AttendGroupRes> getGroupAttendInfo(int groupId) {
         List<AttendGroupRes> attendGroupRes = new ArrayList<>();
-        List<User_Group> ug = user_GroupRepository.findByGroupid(groupId);
+        Group gp  = groupRepository.findGroupById(groupId);
+        List<User_Group> ug = user_GroupRepository.findByGroupid(gp);
         for (int i = 0; i<ug.size();i++){
             AttendGroupRes agr = new AttendGroupRes();
             int id = ug.get(i).getUserid().getId();

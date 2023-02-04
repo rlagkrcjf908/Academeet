@@ -21,4 +21,6 @@ public interface GroupService {
     int updateGroup(int groupId, GroupUpdatePostReq groupUpdateInfo);
 
     List<User> getGroupUser(int groupId);
+
+    List<Group> getGroupinMeet(int userId);
 }

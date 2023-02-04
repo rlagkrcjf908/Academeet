@@ -4,9 +4,7 @@ import com.ssafy.api.request.ArticlePostReq;
 import com.ssafy.db.entity.Article;
 import com.ssafy.db.entity.Group;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.ArticleRepository;
-import com.ssafy.db.repository.GroupRepositorySupport;
-import com.ssafy.db.repository.UserRepositorySupport;
+import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public boolean writeArticle(int groupId, int userId, ArticlePostReq articlePostReq) {
         if(articlePostReq.getTitle()==null||articlePostReq.getContent()==null){
@@ -41,7 +44,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> listArticle(int groupId, int userId) {
-        List<Article> articles = articleRepository.findArticleByGroupidAndUserid(groupId,userId);
+        Group group = groupRepository.findGroupById(groupId);
+        User user = userRepository.findUserById(userId);
+        List<Article> articles = articleRepository.findArticleByGroupidAndUserid(group,user);
         return articles;
     }
 

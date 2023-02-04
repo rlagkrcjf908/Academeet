@@ -4,9 +4,11 @@ import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.api.response.UserMeetRes;
+import com.ssafy.api.response.UserRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.MailException;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(user);
         } else {
             String imageFileName = profile.getOriginalFilename();
-            String path = "C:/Users/SSAFY/Pictures/";
+            String path = "C:/Users/SSAFY/Pictures/img";
             Path imagePath = Paths.get(path + imageFileName);
             try {
                 Files.write(imagePath, profile.getBytes());
@@ -100,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateUser(int id, UserUpdatePostReq registerInfo) {
+    public int updateUser(int id, UserUpdatePostReq registerInfo,MultipartFile profile) {
         User user = userRepository.findUserById(id);
         if(user==null)return 0;
         user.setEmail(registerInfo.getEmail());
@@ -109,23 +112,22 @@ public class UserServiceImpl implements UserService {
         user.setBirth(registerInfo.getBirth());
         user.setNick(registerInfo.getNick());
         user.setPhone(registerInfo.getPhone());
-//        MultipartFile img = registerInfo.getProfile();
-//        String path = "C:/Users/SSAFY/Pictures/";
-//        if (user.getProfile() == path + img.getOriginalFilename()) {
-//            userRepository.save(user);
-//            return 1;
-//        } else {
-//            String imageFileName = img.getOriginalFilename();
-//            Path imagePath = Paths.get(path + imageFileName);
-//            try {
-//                Files.write(imagePath, img.getBytes());
-//                user.setProfile(imageFileName);
-//
-//            } catch (Exception e) {
-//
-//            }
-//            user.setProfile(imageFileName);
-//        }
+        String path = "C:/Users/SSAFY/Pictures/img";
+        if (user.getProfile() == path + profile.getOriginalFilename()) {
+            userRepository.save(user);
+            return 1;
+        } else {
+            String imageFileName = profile.getOriginalFilename();
+            Path imagePath = Paths.get(path + imageFileName);
+            try {
+                Files.write(imagePath, profile.getBytes());
+                user.setProfile(imageFileName);
+
+            } catch (Exception e) {
+
+            }
+            user.setProfile(imageFileName);
+        }
         userRepository.save(user);
         return 1;
     }
@@ -214,9 +216,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
-        List<User> users = new ArrayList<>();
-        users = userRepository.findAll();
+    public List<UserRes> getAllUser() throws MalformedURLException {
+        List<UserRes> users = new ArrayList<>();
+        List<User> user = userRepository.findAll();
+        for (int i = 0; i<user.size() ;i++){
+            UserRes userRes = new UserRes();
+            userRes.setName(user.get(i).getName());
+            userRes.setEmail(user.get(i).getEmail());
+            userRes.setNick(user.get(i).getNick());
+            userRes.setBirth(user.get(i).getBirth());
+            userRes.setPhone(user.get(i).getPhone());
+            String path = "C:/Users/SSAFY/Pictures/";
+            userRes.setProfile(new UrlResource(path+user.get(i).getProfile()));
+        }
         return users;
     }
 
@@ -233,7 +245,7 @@ public class UserServiceImpl implements UserService {
         List<UserMeetRes> umrs = new ArrayList<>();
         for (int i = 0; i< um.size();i++){
             Meet meet = meetRepository.findMeetById(um.get(i).getMeetid().getId());
-            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet.getId());
+            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
             Group group = groupRepositorySupport.findGroupById(gm.getGroupid().getId()).get();
             UserMeetRes umr = new UserMeetRes();
 
@@ -251,7 +263,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUser(String name) {
-        List<User> users = userRepository.findUsersByName(name);
+        List<User> users = userRepository.findUsersByNameContains(name);
         return users;
     }
 

@@ -28,7 +28,7 @@ public class MeetCreateReq {
     @JsonProperty("endtime")
     Date endtime;
 
-    List<Group> groups;
+    Group group;
 
     List<User> users;
 }

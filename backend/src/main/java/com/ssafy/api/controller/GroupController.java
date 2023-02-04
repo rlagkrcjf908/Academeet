@@ -66,7 +66,9 @@ public class GroupController {
     }
     // 그룹생성시 유저이름으로 유저검색
     @PostMapping("/search")
-    public ResponseEntity<List<User>> searchUser(@RequestBody String name){
+    public ResponseEntity<List<User>> searchUser(@RequestBody Map<String,String> nameMap){
+        System.out.println(nameMap.get("name"));
+        String name = nameMap.get("name");
         List<User> users = userService.searchUser(name);
         return ResponseEntity.status(200).body(users);
     }

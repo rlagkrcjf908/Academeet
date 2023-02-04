@@ -100,13 +100,22 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<User> getGroupUser(int groupId) {
-        List<User_Group> ug = user_groupRepository.findByGroupid(groupId);
+        Group group = groupRepository.findGroupById(groupId);
+        List<User_Group> ug = user_groupRepository.findByGroupid(group);
         List<User> user = new ArrayList<>();
         for (int i = 0; i<ug.size();i++){
             int id =ug.get(i).getUserid().getId();
             user.add( userRepositorySupport.findUserById(id).get());
         }
         return user;
+    }
+
+    @Override
+    public List<Group> getGroupinMeet(int userId) {
+        User user = userRepository.findUserById(userId);
+        List<Group> groups = groupRepository.findGroupsByOwnerid(user);
+        return groups;
+
     }
 
     private void groupUserDelete(int groupId, List<User> delUsers) {

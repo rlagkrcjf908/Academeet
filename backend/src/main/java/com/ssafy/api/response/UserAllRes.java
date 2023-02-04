@@ -1,6 +1,5 @@
 package com.ssafy.api.response;
 
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -13,9 +12,9 @@ import java.util.List;
 @ApiModel("UserAllResponse")
 public class UserAllRes {
     @ApiModelProperty(name="users")
-    List<User> users;
+    List<UserRes> users;
 
-    public static UserAllRes of(List<User> users) {
+    public static UserAllRes of(List<UserRes> users) {
         UserAllRes res = new UserAllRes();
         res.setUsers(users);
         return res;

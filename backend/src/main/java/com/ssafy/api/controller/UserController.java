@@ -75,8 +75,10 @@ public class UserController {
          * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
          */
-        /*SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        String userEmail = userDetails.getUsername();*/
+
+      /*  SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+        String userEmail = userDetails.getUsername();
+        System.out.println(userEmail);*/
         String userEmail = "rlagkrcjf6@naver.com";
         User user = userService.getUserByUserId(userEmail);
         return ResponseEntity.status(200).body(UserRes.of(user));
@@ -91,8 +93,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<UserAllRes> getAllUserInfo() {
-        List<User> users = userService.getAllUser();
+    public ResponseEntity<UserAllRes> getAllUserInfo() throws MalformedURLException {
+        List<UserRes> users = userService.getAllUser();
         return ResponseEntity.status(200).body(UserAllRes.of(users));
     }
 
@@ -105,14 +107,14 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> updateUserInfo(@PathVariable("id") int id, @RequestBody
-    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo) {
+    public ResponseEntity<? extends BaseResponseBody> updateUserInfo(@PathVariable("id") int id, @RequestPart
+    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo,@RequestPart MultipartFile profile) {
         /**
          * 요청받은 해당 유저의 고유아이디에 변경되어진 정보를 받으면 수정
          * 받은정보가 하나라도 비었을시 오류 발생
          */
 
-        int res = userService.updateUser(id, updateInfo);
+        int res = userService.updateUser(id, updateInfo,profile);
         System.out.println(updateInfo.getEmail());
         if (res > 0) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
@@ -134,8 +136,11 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         User user = userService.passCheck(id, userPassPostReq);
         String password = userPassPostReq.getPassword();
+        System.out.println(id);
+        System.out.println(password);
+        System.out.println(passwordEncoder.matches(password,user.getPassword()));
         int res = 0;
-        if (passwordEncoder.matches(password, user.getPassword())) {
+        if (passwordEncoder.matches(password,user.getPassword())) {
             res += 1;
         }
         if (res > 0) {

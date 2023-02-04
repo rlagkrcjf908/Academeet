@@ -4,9 +4,11 @@ import com.ssafy.api.request.UserPassPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.api.response.UserMeetRes;
+import com.ssafy.api.response.UserRes;
 import com.ssafy.db.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -16,14 +18,14 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo, MultipartFile profile);
 	User getUserByUserId(String useremail);
 
-	int updateUser(int id, UserUpdatePostReq registerInfo);
+	int updateUser(int id, UserUpdatePostReq registerInfo,MultipartFile profile);
 
 	String sendSimpleMessage(String to)throws Exception;
 
 
 	int authEmail(String code);
 
-    List<User> getAllUser();
+    List<UserRes> getAllUser() throws MalformedURLException;
 
     User passCheck(int id, UserPassPostReq userPassPostReq);
 
