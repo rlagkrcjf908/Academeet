@@ -1,7 +1,7 @@
 package com.ssafy.api.controller;
 
 import io.openvidu.java.client.*;
-import jdk.internal.org.jline.utils.Log;
+//import jdk.internal.org.jline.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
