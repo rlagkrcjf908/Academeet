@@ -3,7 +3,7 @@ module.exports = defineConfig({
   devServer: {
     // disableHostCheck: true,
     allowedHosts: "all",
-    https: true,
+    https: false,
     port: 8080,
     open: true,
     proxy: {
