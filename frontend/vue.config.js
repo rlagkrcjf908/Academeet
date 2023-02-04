@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   devServer: {
     // disableHostCheck: true,
-    allowHosts: "all",
+    allowedHosts: "all",
     https: true,
     port: 8080,
     open: true,
