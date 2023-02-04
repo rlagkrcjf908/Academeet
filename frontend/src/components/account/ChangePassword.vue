@@ -38,9 +38,13 @@ const store = useStore()
 const router = useRouter();
 const ruleFormRef = ref()
 const isChecked = ref(false)
-const id = store.state.accountStore.id
+const id = JSON.parse(localStorage.getItem('userInfo')).id
+
+
 // 현재 비밀번호 확인
+
 const validateCurrentpass = async (rule, value, callback) => {
+  console.log(id)
   if (value === '') {
     callback(new Error('현재 비밀번호를 입력해주세요.'))
   } else {

@@ -5,7 +5,8 @@
 
             <el-col :span="4">
               <!-- 프로필사진 -->
-              <img :src="profile.img"  alt="프로필사진" style="height:5em;">
+              <img id="profile.profile" src="profilImg" alt="" style="height:5em;">
+              <span>{{ profile.profile }}</span>
 
               <!-- 유저이름 -->
               <p>{{profile.name}}</p>
@@ -57,12 +58,15 @@ import { onBeforeMount } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()
 
-onBeforeMount (() => {
-    store.dispatch('accountStore/requestProfileAction')
-    })
+// onBeforeMount (() => {
+//     store.dispatch('accountStore/requestProfileAction')
+//     })
 
-const { ...profile } = store.state.accountStore.profile
+const { ...profile } = JSON.parse(localStorage.getItem('userInfo'))
+
+console.log(localStorage.getItem('profile'))
 console.log('받앗다',profile)
+
 </script>
 
 <style>

@@ -9,6 +9,13 @@ import i18n from './common/lib/i18n'
 // element-plus와 icon을사용하기 위한 import
 import ElementPlus from "element-plus";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import setAuthHeader from "./common/api/AxiosToken";
+
+if(localStorage.token) {
+  setAuthHeader(localStorage.token);
+} else {
+  setAuthHeader(false);
+}
 
 createApp(App)
   .use(store)
