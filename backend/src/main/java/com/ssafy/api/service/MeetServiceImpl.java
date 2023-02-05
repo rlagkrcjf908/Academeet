@@ -22,52 +22,81 @@ public class MeetServiceImpl implements MeetService {
     private User_MeetRepository user_MeetRepository;
     @Autowired
     private User_GroupRepository user_GroupRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private Group_MeetRepository group_MeetRepository;
 
     @Override
     public boolean createMeet(int userId, MeetCreateReq createReq) {
         Meet meet = new Meet();
-        User user = userRepositorySupport.findUserById(userId).get();
-        if (createReq.getGroup()!=null) {
+        User user = userRepository.findUserById(userId);
+        Group gp = groupRepository.findGroupById(createReq.getGroupid());
+        System.out.println(gp);
+        if (gp!=null) {
             if (meetRepository.findMeetByTitle(createReq.getTitle()) != null) return false;
             meet.setTitle(createReq.getTitle());
             meet.setDate(createReq.getDate());
             meet.setStarttime(createReq.getStarttime());
             meet.setEndtime(createReq.getEndtime());
             meet.setUserid(user);
-            Group group = createReq.getGroup();
-            meet.setGroupid(group);
-            List<User_Group> ug = user_GroupRepository.findByGroupid(group);
-            List<User> users = new ArrayList<>();
+            meet.setGroupid(gp);
+            List<User_Group> ug = user_GroupRepository.findByGroupid(gp);
+            List<Integer> users = new ArrayList<>();
             for (int i = 0; i<ug.size();i++){
-                users.add(ug.get(i).getUserid());
+                int getId = ug.get(i).getUserid().getId();
+                users.add(getId);
             }
+
             createReq.setUsers(users);
-            insertMeetMember(userId, createReq);
             meetRepository.save(meet);
+
+            Group_Meet gm = new Group_Meet();
+            gm.setGroupid(gp);
+            gm.setMeetid(meetRepository.findMeetByTitle(createReq.getTitle()));
+
+            group_MeetRepository.save(gm);
+            insertMeetMember(userId, createReq);
+            return true;
+        }else {
+            if (meetRepository.findMeetByTitle(createReq.getTitle()) != null) return false;
+            meet.setTitle(createReq.getTitle());
+            meet.setDate(createReq.getDate());
+            meet.setStarttime(createReq.getStarttime());
+            meet.setEndtime(createReq.getEndtime());
+            meet.setUserid(user);
+
+            meetRepository.save(meet);
+            insertMeetMember(userId, createReq);
+
             return true;
         }
-        if (meetRepository.findMeetByTitle(createReq.getTitle()) != null) return false;
-        meet.setTitle(createReq.getTitle());
-        meet.setDate(createReq.getDate());
-        meet.setStarttime(createReq.getStarttime());
-        meet.setEndtime(createReq.getEndtime());
-        meet.setUserid(user);
-        insertMeetMember(userId, createReq);
-        meetRepository.save(meet);
-        return true;
-
     }
 
     @Override
     public void insertMeetMember(int userId, MeetCreateReq createReq) {
-        User user = userRepositorySupport.findUserById(userId).get();
+        User user = userRepository.findUserById(userId);
         Meet meet = meetRepository.findMeetByTitle(createReq.getTitle());
-        User_Meet um = new User_Meet();
-        if(user.getId()==meet.getId()){
-            List<User> users = createReq.getUsers();
-            for (int i = 0; i<users.size();i++){
+        Group group = groupRepository.findGroupById(createReq.getGroupid());
+        if(group != null) {
+            List<User_Group> ugs = user_GroupRepository.findByGroupid(group);
+            for (int i = 0; i< ugs.size();i++){
+                User_Meet um = new User_Meet();
                 um.setMeetid(meet);
-                um.setUserid(users.get(i));
+                um.setUserid(ugs.get(i).getUserid());
+                user_MeetRepository.save(um);
+            }
+
+        }
+        if(user.getId()==meet.getUserid().getId()){
+            List<Integer> users = createReq.getUsers();
+            for (int i = 0; i<users.size();i++){
+                User_Meet um = new User_Meet();
+                User addUser = userRepository.findUserById(users.get(i));
+                um.setMeetid(meet);
+                um.setUserid(addUser);
                 user_MeetRepository.save(um);
             }
         }
@@ -77,12 +106,18 @@ public class MeetServiceImpl implements MeetService {
     @Override
     public boolean endMeet(int meetId, MeetEndReq endReq) {
         Meet meet = meetRepository.findMeetById(meetId);
+        List<User_Meet> um = user_MeetRepository.findByMeetid(meet);
+
         if(meet == null) return false;
         meet.setEndtime(endReq.getEndtime());
         meet.setChat(endReq.getChat());
         meet.setStt(endReq.getStt());
         meet.setVideo(endReq.getVideo());
         meetRepository.save(meet);
+        // 출석율 저장 개인의 출석율을 저장하는 것
+//        for (int i = 0; i<um.size();i++){
+//
+//        }
         return true;
     }
 }

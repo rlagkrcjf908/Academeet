@@ -11,6 +11,7 @@ import com.ssafy.api.service.AttendService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.MeetRepository;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 import io.swagger.annotations.*;
@@ -46,6 +47,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private MeetRepository meetRepository;
+
     //회원가입
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
@@ -245,9 +249,10 @@ public class UserController {
         if (userRepository.findUserByEmail(userIdCheckReq.getEmail()) == null) return 1;
         return 0;
     }
-
+    // 자신의 미팅리스트 불러오기
     @GetMapping("/{user_id}/meetList")
     public ResponseEntity<List<UserMeetRes>> getUserMeetList(@PathVariable("user_id")int userId){
+
         List<UserMeetRes> umr = userService.getUserMeetList(userId);
         return ResponseEntity.status(200).body(umr);
     }

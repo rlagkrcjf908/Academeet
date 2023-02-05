@@ -1,13 +1,12 @@
 package com.ssafy.api.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ssafy.db.entity.Group;
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
@@ -18,17 +17,21 @@ public class MeetCreateReq {
     @ApiModelProperty(name="title", example="ssafy_web")
     @JsonProperty("title")
     String title;
-    @ApiModelProperty(name="Date")
-    @JsonProperty("Date")
+    @ApiModelProperty(name="date")
+    @JsonProperty("date")
     Date date;
     @ApiModelProperty(name="starttime")
     @JsonProperty("starttime")
-    Date starttime;
+    Time starttime;
     @ApiModelProperty(name="endtime")
     @JsonProperty("endtime")
-    Date endtime;
+    Time endtime;
 
-    Group group;
+    @ApiModelProperty(name="groupid")
+    @JsonProperty("groupid")
+    int groupid;
 
-    List<User> users;
+    @ApiModelProperty(name="users")
+    @JsonProperty("users")
+    List<Integer> users;
 }

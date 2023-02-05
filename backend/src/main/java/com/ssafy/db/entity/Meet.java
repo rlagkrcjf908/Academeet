@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 
 @Entity
 @Table(name = "Meet")
 @Getter
 @Setter
-public class Meet{
+public class Meet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -20,17 +21,17 @@ public class Meet{
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group groupid;
-    @Column(length = 45,nullable = false)
+    @Column(length = 45, nullable = false)
     String title;
-    @Temporal(TemporalType.DATE)
+    //    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    java.util.Date date;
-    @Temporal(TemporalType.TIME)
+    Date date;
+    //    @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    Date starttime;
-    @Temporal(TemporalType.TIME)
+    Time starttime;
+    //    @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    Date endtime;
+    Time endtime;
 
     @Column(columnDefinition = "TEXT")
     String chat;

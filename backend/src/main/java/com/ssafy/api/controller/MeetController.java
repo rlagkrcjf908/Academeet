@@ -43,6 +43,10 @@ public class MeetController {
     })
     public ResponseEntity<? extends BaseResponseBody> createMeet(@PathVariable("user_id") int userId,
                                                                  @RequestBody @ApiParam(value = "미팅룸 정보", required = true) MeetCreateReq createReq) {
+        System.out.println(createReq.getTitle());
+        System.out.println(createReq.getDate());
+        System.out.println(createReq.getStarttime());
+        System.out.println(createReq.getGroupid());
         if (meetService.createMeet(userId, createReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }

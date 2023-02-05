@@ -10,7 +10,6 @@ import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     RedisTemplate redisTemplate;
 
-    ValueOperations<String, String> operation;
+
     public static final String ePw = createKey();
     public static String checkePw;
     @Autowired
@@ -62,6 +61,9 @@ public class UserServiceImpl implements UserService {
     private GroupRepositorySupport groupRepositorySupport;
     @Autowired
     private Group_MeetRepository group_MeetRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
 
     @Override
@@ -227,7 +229,7 @@ public class UserServiceImpl implements UserService {
             userRes.setBirth(user.get(i).getBirth());
             userRes.setPhone(user.get(i).getPhone());
             String path = "C:/Users/SSAFY/Pictures/";
-            userRes.setProfile(new UrlResource(path+user.get(i).getProfile()));
+            userRes.setImg(new UrlResource(path+user.get(i).getProfile()));
         }
         return users;
     }
@@ -240,23 +242,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserMeetRes> getUserMeetList(int userId) {
-        User user = userRepositorySupport.findUserById(userId).get();
+        User user = userRepository.findUserById(userId);
         List<User_Meet> um = userMeetRepository.findUser_MeetByUserid(user);
+        List<Meet> ownerum = meetRepository.findMeetsByUserid(user);
         List<UserMeetRes> umrs = new ArrayList<>();
         for (int i = 0; i< um.size();i++){
             Meet meet = meetRepository.findMeetById(um.get(i).getMeetid().getId());
             Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
-            Group group = groupRepositorySupport.findGroupById(gm.getGroupid().getId()).get();
+            Group group = groupRepository.findGroupById(gm.getGroupid().getId());
             UserMeetRes umr = new UserMeetRes();
 
             umr.setMeetId(meet.getId());
             umr.setGroupTitle(group.getName());
+            umr.setDate(meet.getDate());
             umr.setMeetTitle(meet.getTitle());
             umr.setStartTime(meet.getStarttime());
             umr.setEndTime(meet.getEndtime());
 
             umrs.add(umr);
+        }
 
+        for (int i = 0; i<ownerum.size() ;i++){
+            Meet meet = ownerum.get(i);
+            Group group = groupRepository.findGroupById(meet.getGroupid().getId());
+            UserMeetRes umr = new UserMeetRes();
+            umr.setMeetId(meet.getId());
+            umr.setGroupTitle(group.getName());
+            umr.setDate(meet.getDate());
+            umr.setMeetTitle(meet.getTitle());
+            umr.setStartTime(meet.getStarttime());
+            umr.setEndTime(meet.getEndtime());
+
+            umrs.add(umr);
         }
         return umrs;
     }

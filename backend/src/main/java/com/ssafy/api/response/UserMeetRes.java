@@ -5,21 +5,24 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.util.Date;
 
 @Getter
 @Setter
 @ApiModel("UserMeetResponse")
 public class UserMeetRes {
-    @ApiModelProperty(name="Meet Id")
+    @ApiModelProperty(name="meetid")
     int meetId;
-    @ApiModelProperty(name="Group Title")
+    @ApiModelProperty(name="grouptitle")
     String groupTitle;
-    @ApiModelProperty(name="Meet Title")
+    @ApiModelProperty(name="meettitle")
     String meetTitle;
-    @ApiModelProperty(name="Start Time")
-    Date startTime;
-    @ApiModelProperty(name="End Time")
-    Date endTime;
+    @ApiModelProperty(name = "date")
+    Date date;
+    @ApiModelProperty(name="starttime")
+    Time startTime;
+    @ApiModelProperty(name="endtime")
+    Time endTime;
 
 }

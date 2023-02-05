@@ -13,5 +13,5 @@ public interface User_GroupRepository extends JpaRepository<User_Group,Integer> 
     List<User_Group> findByUserid(User user);
     List<User_Group> findByGroupid(Group group);
 
-
+    User_Group findUser_GroupByGroupid(Group group);
 }

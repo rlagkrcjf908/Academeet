@@ -56,10 +56,11 @@ public class GroupController {
     public ResponseEntity<? extends BaseResponseBody> createGroup(@PathVariable("user_id") int userid,
                                                                   @RequestBody @ApiParam(value = "그룹 정보", required = true) GroupCreatePostReq createInfo) {
 
-        if(groupRepository.findGroupByName(createInfo.getName())) return ResponseEntity.status(200).body(BaseResponseBody.of(401, "그룹명이 중복되었습니다."));
+        if(groupRepository.findGroupByName(createInfo.getName()) !=null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "그룹명이 중복되었습니다."));
         Group group = groupService.createGroup(userid, createInfo);
         int group_id = group.getId();
         //그룹테이블이 만들어지면은 해당 그룹의 인원들의 데이터를 받아서 저장
+        System.out.println(group_id);
         insertUserTOGroup(group_id, createInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 
