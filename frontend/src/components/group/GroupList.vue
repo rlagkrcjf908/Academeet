@@ -10,9 +10,12 @@ import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex'
 
 const store = useStore()
+const userid = store.state.accountStore.userId
+console.log('유져아이디',userid)
+
 const groups = ref()
 onMounted (async () => {
-    await store.dispatch('groupStore/requestGroupListAction', store.state.accountStore.id)
+    await store.dispatch('groupStore/requestGroupListAction', userid)
     groups.value = store.state.groupStore.groupList  
 })
 

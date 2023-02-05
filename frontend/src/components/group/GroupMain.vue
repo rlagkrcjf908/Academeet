@@ -10,9 +10,10 @@
             {{ groupLen }}
             <el-button type="success" round @click="$router.push('/group/create')">그룹생성</el-button>
         </div>
-
+        <group-list/>
     </div>
 </template>
+
 <script setup>
 import GroupList from '@/components/group/GroupList'
 import { useStore } from 'vuex'

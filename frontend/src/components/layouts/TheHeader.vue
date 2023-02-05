@@ -16,14 +16,20 @@
         <!--<small v-if="userInfo" class="text-muted">{{ userInfo.uid }}'s </small>-->
         <li><router-link to="/profile">My Page</router-link></li>
         <li><router-link to="/group">Group</router-link></li>
-        <li><router-link to="#">Logout</router-link></li>
+        <li @click="logout()">Logout</li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logout(){
+      this.$store.dispatch('accountStore/logout')
+    }
+  }
+};
 </script>
 
 <style scoped>

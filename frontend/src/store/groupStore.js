@@ -9,7 +9,6 @@ import {
 
 //변수들의 집합
 const state = {
-  id: 9,
   groupInfo: null,
   groupList:[],
   groupUserList:null,

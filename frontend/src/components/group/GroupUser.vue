@@ -8,17 +8,18 @@
 </template>
 <script setup>
 import GroupUserItem from '@/components/group/GroupUserItem'
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex'
+
 const store = useStore()
-
-onMounted (() => {
-    store.dispatch('groupStore/requestUserListAction')
-    })
-
-const { ...members} = store.state.groupStore.groupUserList
-
+const members = ref()
+onMounted (async () => {
+    await store.dispatch('groupStore/requestUserListAction', store.state.accountStore.id)
+    members.value = store.state.groupStore.groupUserList  
+})
+    
 </script>
+
 <style>
 
 </style>
