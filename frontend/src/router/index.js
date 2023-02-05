@@ -7,16 +7,36 @@ import NotFound from '@/views/NotFound.vue'
 import LoginView from '../views/LoginView'
 import JoinView from '../views/JoinView'
 
+import store from "@/store/index"
+
 const routes = [
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: LoginView,
+    beforeEnter: (to, from, next) => {
+      const isAuthenticated = store.state.accountStore.isAuthenticated
+      if ( isAuthenticated === true ) {
+        console.log('로그인 된 사용자입니다');
+        next({ name : 'submain' })
+      }else{
+        next()
+      }
+    }
   },
   {
     path: '/join',
     name: 'join',
-    component: JoinView
+    component: JoinView,
+    beforeEnter: (to, from, next) => {
+      const isAuthenticated = store.state.accountStore.isAuthenticated
+      if ( isAuthenticated === true ) {
+        console.log('로그인 된 사용자입니다');
+        next({ name : 'submain' })
+      }else{
+        next()
+      }
+    }
   },
   {
     path: '/',
@@ -116,19 +136,18 @@ const routes = [
     path: '/:pathMatch(.*)*',
     redirect: { name: 'NotFound' }
   }
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.state.accountStore.isAuthenticated
+  console.log('라우터가드',isAuthenticated)
+  if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
+  else next()
+})
+
 
 export default router

@@ -7,13 +7,14 @@ const state = {
   token : null,
   userInfo : null,
   userId : null,
-  isLogined : false,
+  isAuthenticated : false,
 };
 
 const getters = {
   token: state => state.token,
   userInfo: state => state.userInfo,
-  userId : state => state.userId
+  userId : state => state.userId,
+  isAuthenticated : state => state.isAuthenticated
 }
 
 const mutations = {
@@ -26,10 +27,16 @@ const mutations = {
   SET_USERID : (state, item) => {
     state.userId = item
   },
-  // {
-  // SET_LOGIN : 
-
-  // },
+  SET_AUTHENTICATED : (state) => {
+    state.isAuthenticated = true
+  },
+  LOGOUT : (state) => {
+    state.token = null
+    state.userInfo = null
+    state.userId = null
+    state.isAuthenticated = false
+    console.log("로그아웃 후",state.isAuthenticated)
+  },
 };
 
 const actions = {
@@ -46,10 +53,10 @@ const actions = {
       commit('SET_USERINFO', res.data)
       commit('SET_TOKEN', res)
       commit('SET_USERID', res.data.user.id)
+      commit('SET_AUTHENTICATED')
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('userInfo', JSON.stringify(res.data.user));
       setAuthHeader(res.data.accessToken)
-      
       router.push("/")
     }).catch(e => {
       console.log(e)
@@ -57,11 +64,12 @@ const actions = {
     })
   },
   
-  logout(){
+  logout({commit}){
     axios.get("http://192.168.219.112:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     localStorage.removeItem('vuex')
+    commit('LOGOUT')
     alert("로그아웃이 성공적으로 이루어졌습니다.")
     router.push("/login")
   },
