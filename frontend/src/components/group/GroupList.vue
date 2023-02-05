@@ -11,7 +11,6 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 const userid = store.state.accountStore.userId
-console.log('유져아이디',userid)
 
 const groups = ref()
 onMounted (async () => {

@@ -1,4 +1,5 @@
 import { meetingCreate } from "../common/api/meetingAPI";
+import router from '../router/index'
 
 const state = {
   id:4,
@@ -19,8 +20,19 @@ const mutations = {
 const actions = {
   // 회의 생성
   meetingCreateAction: async ({ commit }, meetingData) => {
-    const response = await meetingCreate(state.id,JSON.stringify(meetingData));
-    commit("SET_MEETINGINFO", response.data);
+    const payload = {
+      "title" : meetingData.name,
+      "starttime" : meetingData.starttime,
+      "endtime" : meetingData.endtime,
+      "date" : meetingData.date,
+    }
+    if (meetingData.users){
+      payload.users = meetingData.users 
+    }else{
+      payload.groupid = meetingData.groupid 
+    }
+    const response = await meetingCreate(meetingData.userid,JSON.stringify(payload))
+    commit("SET_MEETINGINFO", response.data)
   },
 };
 

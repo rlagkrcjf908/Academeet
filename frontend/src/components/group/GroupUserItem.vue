@@ -9,7 +9,7 @@
 <script setup>
 import { defineProps } from "vue";
 const props = defineProps({
-    member: String
+    member: Object
 })
 </script>
 

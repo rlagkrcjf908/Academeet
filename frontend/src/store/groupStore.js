@@ -64,7 +64,11 @@ const mutations = {
 const actions = {
   // 그룹생성
   groupCreateAction: async ({ commit }, groupData) => {
-    const response = await groupCreate(state.id,JSON.stringify(groupData));
+    const payload = {
+      "name" : groupData.name,
+      "users": groupData.users,
+    } 
+    const response = await groupCreate(groupData.userid, JSON.stringify(payload));
     commit("SET_GROUP_INFO", response.data);
   },
   // 그룹 리스트 요청
@@ -84,7 +88,7 @@ const actions = {
   },
   // 그룹삭제
   groupDeleteAction: async ({ commit }) => {
-    const response = await groupDelete(groupid);
+    const response = await groupDelete(groupid)
     console.log(response);
     commit("DELETE_GROUP_INFO");
   },

@@ -4,17 +4,15 @@ import groupStore from "./groupStore";
 import meetingStore from "./meetingStore";
 import createPersistedState from "vuex-persistedstate";
 
-const persistedState = createPersistedState({
-  paths: ['token', 'userId', 'name', 'nick']
-})
-
 export default createStore({
-  plugins:    [persistedState],
+  plugins: [
+    createPersistedState({
+      paths: ['accountStore'],
+    })
+  ],
   modules: {
     accountStore,
     groupStore,
     meetingStore,
   }
 });
-
-// export default store;

@@ -7,10 +7,8 @@
         <div v-else>
             <p>속한 그룹이 없습니다.</p>
             <p>그룹을 만들어 보세요.</p>
-            {{ groupLen }}
             <el-button type="success" round @click="$router.push('/group/create')">그룹생성</el-button>
         </div>
-        <group-list/>
     </div>
 </template>
 
@@ -20,7 +18,7 @@ import { useStore } from 'vuex'
 import { computed } from "vue"
 
 const store = useStore()
-const groupLen = computed(() => store.getters.getGroupListLength)
+const groupLen = computed(() => store.getters["groupStore/getGroupListLength"])
 console.log(store.getters.getGroupList)
 console.log(groupLen)
 </script>

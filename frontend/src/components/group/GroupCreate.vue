@@ -14,7 +14,7 @@
     <el-form-item label="그룹이름" prop="groupName">
       <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
     </el-form-item>
-
+    <!-- 유저 검색 -->
     <el-form-item label="멤버" prop="user">
       <el-select
         v-model="ruleForm.user"
@@ -24,8 +24,8 @@
         reserve-keyword
         placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
         :remote-method="remoteMethod"
-        clearable
         :loading="loading"
+        clearable
       >
         <el-option
           v-for="item in options"
@@ -37,12 +37,9 @@
     </el-form-item>
     <!-- 그룹 생성 버튼 -->
     <el-form-item>
-      <el-button type="success" round @click="submitForm(ruleFormRef)"
-        >그룹생성</el-button
-      >
+      <el-button type="success" round @click="submitForm(ruleFormRef)">그룹생성</el-button>
     </el-form-item>
     </el-form>
-
 </template>
 
 <script setup>
@@ -53,8 +50,8 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
 const store = useStore()
+const userid = store.state.accountStore.userId
 const ruleFormRef = ref()
 
 // 그룹이름 유효성 검사
@@ -62,9 +59,6 @@ const validategroupName = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('그룹이름을 입력해 주세요.'))
   } else {
-    if (value.replace(' ','') !== value){
-      callback(new Error('공백은 입력할 수 없습니다.'))
-    }
     callback()
   }
 }
@@ -127,13 +121,13 @@ const submitForm = (formEl) => {
       console.log('멤버리스트',guestList)
       
       const groupData = {
+        "userid" : userid,
         "name" : ruleForm.groupName,
         "users": guestList,
       }
       console.log('넘길정보',groupData)
       await store.dispatch('groupStore/groupCreateAction',groupData)
-        router.push({ name: 'main' })
-      
+      router.push('/')
       console.log('submit!')
     } else {
       console.log('error submit!')
@@ -141,58 +135,5 @@ const submitForm = (formEl) => {
     }
   })
 }
-
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-]
 
 </script>

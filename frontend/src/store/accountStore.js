@@ -7,6 +7,7 @@ const state = {
   token : null,
   userInfo : null,
   userId : null,
+  isLogined : false,
 };
 
 const getters = {
@@ -24,7 +25,11 @@ const mutations = {
   },
   SET_USERID : (state, item) => {
     state.userId = item
-  }
+  },
+  // {
+  // SET_LOGIN : 
+
+  // },
 };
 
 const actions = {
@@ -34,7 +39,7 @@ const actions = {
         "email": email,
         "password": password
     }
-    axios.post("http://172.30.1.19:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post("http://192.168.219.112:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       alert("정보가 확인되었습니다.\n환영합니다!")
@@ -53,7 +58,7 @@ const actions = {
   },
   
   logout(){
-    axios.get("http://172.30.1.19:8080/api/v1/auth/logout/")
+    axios.get("http://192.168.219.112:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     localStorage.removeItem('vuex')
@@ -63,7 +68,7 @@ const actions = {
   
   // 토큰 가져오기
   getToken(){
-    axios.get("http://172.30.1.19:8080/api/v1/")
+    axios.get("http://192.168.219.112:8080/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정

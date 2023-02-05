@@ -2,11 +2,11 @@
     <el-form
     ref="ruleFormRef"
     :model="ruleForm"
-        status-icon
-        :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
-        >
+    status-icon
+    :rules="rules"
+    label-width="120px"
+    class="demo-ruleForm"
+    >
       <div style="border: 1px solid black; padding: 40px;">
         <!-- 회의이름 -->
         <el-form-item label="회의이름" prop="groupName" required>
@@ -25,7 +25,6 @@
               end="24:00"
               id="startTime"
             />
-            {{ startTime }}
           </el-form-item>
           <!-- 마치는 시간 -->
           <el-form-item label="회의 마치는 시간" required prop="endTime">
@@ -37,7 +36,6 @@
               end="24:00"
               id="endTime"
             />
-            {{ endTime }}
           </el-form-item>
         </div>
     </div>
@@ -49,13 +47,12 @@
           <el-radio-group v-model="ruleForm.group" @change="selectGroup">
             <el-radio label="선택안함" name="no"/>
             <div v-for="(item, index) in groupList" :key="index">
-              <el-radio :label="item.id">{{ item.name }}</el-radio>
+              <el-radio :label="item?.id">{{ item?.name }}</el-radio>
             </div>
           </el-radio-group>
-          
         </el-form-item>
         <!-- 그룹 선택 안할 시 유저 검색 -->
-        <el-form-item label="user 선택" prop="user" v-if="!isSelectGroup">
+        <el-form-item label="멤버 선택" prop="user" v-if="!isSelectGroup">
           <el-select
             v-model="ruleForm.user"
             multiple
@@ -65,6 +62,7 @@
             placeholder="Please enter a keyword"
             :remote-method="remoteMethod"
             :loading="loading"
+            clearable
           >
             <el-option
               v-for="item in options"
@@ -76,18 +74,17 @@
         </el-form-item>
       </div>
     </el-form>
-
+    <!-- 회의 생성 버튼 -->
     <el-form-item>
       <el-button type="success" round @click="submitForm(ruleFormRef)">미팅생성</el-button>
     </el-form-item>
-    <user-search/>
 </template>
 
 <script setup>
 
 import { hostGroup, userSearch } from '@/common/api/meetingAPI'
+// import { userSearch } from '@/common/api/groupAPI'
 import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { toRaw } from 'vue';
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';
@@ -96,6 +93,7 @@ const router = useRouter();
 const store = useStore()
 const ruleFormRef = ref()
 
+const userid = store.state.accountStore.userId
 // 유효성 검사할 항목 이름
 const ruleForm = reactive({
   groupName: '',
@@ -111,9 +109,6 @@ const validategroupName = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('그룹이름을 입력해 주세요.'))
   } else {
-    if (value.replace(' ','') !== value){
-      callback(new Error('공백은 입력할 수 없습니다.'))
-    }
     callback()
   }
 }
@@ -124,7 +119,7 @@ const endTime = ref('')
 const groupList = ref()
 // 내가 호스트인 그룹 목록 불러오는 엑시오스 
 onMounted(async() => {
-  const res = await hostGroup(4)
+  const res = await hostGroup(userid)
   groupList.value = res.data
 })
 
@@ -145,8 +140,6 @@ const options = ref([])
 const user = ref([])
 const loading = ref(false)
 
-// 회의 참여자 목록
-let guestList = null
 
 // 유저 검색
 const remoteMethod = (query) => {
@@ -199,24 +192,30 @@ const submitForm = (formEl) => {
     if (valid) {
       // 보낼 회의 정보
       const meetingData = {
+        "userid": userid,
         "name" : ruleForm.groupName,
-        "starttime" : ruleForm.startTime,
-        "endtime" : ruleForm.endTime,
+        "starttime" : `${ruleForm.startTime}:00`,
+        "endtime" : `${ruleForm.endTime}:00`,
         "date" : getToday(),
       }
       if (isSelectGroup.value === false){
         const rawArray = toRaw(ruleForm.user)
-        guestList = rawArray
+        const guestList = rawArray
         meetingData.users = guestList
-        
       }else{
-        guestList = ruleForm.group
+        rules.user[0].required = false
+        const guestList = ruleForm.group
         meetingData.groupid = guestList
       }
       console.log(meetingData)
-      await store.dispatch('meetingStore/meetingCreateAction',meetingData)
-      router.push({ name: 'main' })
-      console.log('submit!')
+      try {
+        await store.dispatch('meetingStore/meetingCreateAction',meetingData)
+        router.push('/')
+        console.log('submit!')
+      }
+      catch (error) {
+        console.log(error)
+      }
     } else {
       console.log('error submit!')
       return false
