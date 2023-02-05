@@ -60,7 +60,7 @@ const validateCurrentpass = async (rule, value, callback) => {
     }
   }
 
-
+// 새 비밀번호 유효성 검사
 const validatePass = (rule, value, callback) => {
   const reg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/
   if (value === '') {
@@ -81,6 +81,7 @@ const validatePass = (rule, value, callback) => {
   }
 }
 
+// 비밀번호 일치 확인
 const validatePass2 = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('비밀번호 확인을 위해 한번 더 입력해주세요'))
@@ -102,12 +103,14 @@ const ruleForm = reactive({
   checkPass: ''
 })
 
+// 유효성 검사 룰
 const rules = reactive({
   currentpass: [{ validator: validateCurrentpass, trigger: 'blur' }],
   pass: [{ validator: validatePass, trigger: 'blur' }],
   checkPass: [{ validator: validatePass2, trigger: 'blur' }]
 })
 
+// 비밀번호 수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
     formEl.validate( async (valid) => {
@@ -133,7 +136,6 @@ const submitForm = (formEl) => {
     }
   })
 }
-
 
 </script>
 

@@ -35,16 +35,15 @@ const mutations = {
     state.userInfo = null
     state.userId = null
     state.isAuthenticated = false
-    console.log("로그아웃 후",state.isAuthenticated)
   },
 };
 
 const actions = {
   // 로그인
-  login ({commit}, {email, password}) {
+  login ({commit}, loginData) {
     const params = {
-        "email": email,
-        "password": password
+        "email": loginData.email,
+        "password": loginData.password
     }
     axios.post("http://192.168.219.112:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }

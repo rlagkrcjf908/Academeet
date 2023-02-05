@@ -144,7 +144,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = store.state.accountStore.isAuthenticated
-  console.log('라우터가드',isAuthenticated)
   if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
   else next()
 })

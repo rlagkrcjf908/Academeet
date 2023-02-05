@@ -1,59 +1,106 @@
 <template>
   <div class="loginBox">
-    <!-- <div v-if="state.token">
-      <h1>잘못된접근입니다.</h1>
-      <button @click="goMain()">메인으로돌아가기</button>
-    </div>
-    <div v-else> -->
-      <label for="loginEmail">
-        <span>아이디</span>
-        <input type="text" id="loginEmail" v-model="email" />
-      </label>
-      <label for="loginPw">
-        <span>패스워드</span>
-        <input type="password" id="loginPw" v-model="password" />
-      </label>
-      <hr />
-      <button @click="submit()">로그인</button>
-      <hr>
-      <h5 @click="goJoin()">회원가입</h5>
+    <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+      <!-- 이메일 -->
+      <el-form-item prop="email" label="EMAIL">
+        <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100"/>
+      </el-form-item>
+      <!-- 비밀번호 -->
+      <el-form-item  prop="password" label="PASSWORD">
+        <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요"/>
+      </el-form-item>
+    </el-form>
+
+      <!-- 로그인 버튼 -->
+      <el-button type="success" round @click="submitForm(ruleFormRef)">LOGIN</el-button>
+      <!-- 회원가입 -->
+      <router-link to="/join">회원가입</router-link>
     <!-- </div> -->
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import { reactive } from "vue";
-import router from "../router/index";
-export default {
-  name: "LoginView",
-  data () {
-    return {
-      email: "",
-      password: "",
+<script setup>
+import { reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const ruleFormRef = ref()
+const router = useRouter()
+
+const ruleForm = reactive({
+  email: '',
+  password: '',
+})
+
+// 이메일 유효성 검사
+const validateEmail = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('이메일을 입력해 주세요.'))
+  } else {
+    if (value.replace(' ','') !== value){
+      callback(new Error('공백은 입력할 수 없습니다.'))
     }
-  },
-  methods: {
-    submit(){
-      if (this.email && this.password){
-        const email = this.email
-        const password = this.password
-        this.$store.dispatch('accountStore/login', {email, password})
-      } else {
-        alert("이메일 또는 비밀번호가 입력되지 않았습니다.")
-        return false
-      }
-    },
-    goMain(){
-      router.push('/')
-    },
-    goJoin(){
-      router.push('/join')
-    },
+    callback()
   }
 }
+// 비밀번호 유효성 검사
+const validatePassword = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('비밀번호를 입력해주세요'))
+  } else {
+    if (value.replace(' ','') !== value){
+      callback(new Error('공백은 입력할 수 없습니다.'))
+    }else {
+    callback()
+    }
+  }
+}
+
+const rules = reactive({
+  email: [{ validator: validateEmail, trigger: 'blur' }],
+  password: [{ validator: validatePassword, trigger: 'blur' }]
+})
+
+// 로그인
+const submitForm = (formEl) => {
+  if (!formEl) return
+    formEl.validate( async (valid) => {
+    if (valid) {
+      const loginData = {
+        "email" : ruleForm.email,
+        "password" : ruleForm.password
+      }
+      try {
+        await store.dispatch('accountStore/login', loginData)
+        router.push({ name: 'profileDetail' })
+        console.log('submit!')
+      }
+      catch (error) {
+        console.log(error)
+      }
+    }
+    else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
 </script>
 
 <style>
-
+.loginBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>

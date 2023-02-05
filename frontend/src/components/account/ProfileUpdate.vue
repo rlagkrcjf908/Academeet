@@ -125,7 +125,6 @@ const validateNickname = (rule, value, callback) => {
   }
 }
 
-
 const rules = reactive({
   nick: [{ validator: validateNickname, trigger: 'blur' }],
   phone: [{ validator: checkPhone, trigger: 'blur' }]
