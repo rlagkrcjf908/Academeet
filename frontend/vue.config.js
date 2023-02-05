@@ -22,5 +22,5 @@ module.exports = defineConfig({
     'element-plus'
   ],
   lintOnSave: false,
-  // outputDir: '../backend/src/main/resources/dist'
+  outputDir: '../backend/src/main/resources/dist'
 })
