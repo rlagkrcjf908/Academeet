@@ -172,8 +172,8 @@ const APPLICATION_SERVER_URL = "http://15.165.74.132:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.0.10:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
 // const OPENVIDU_SERVER_URL = "https://localhost:4443";
-const OPENVIDU_SERVER_URL = "https://15.165.74.132:4443/";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = "https://15.165.74.132:8443/";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
 name: "App",
@@ -561,10 +561,16 @@ methods: {
 
     async createSession(sessionId) {
     const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions",
+        OPENVIDU_SERVER_URL + "openvidu/api/sessions",
         { customSessionId: sessionId },
         {
-        headers: { "Content-Type": "application/json" },
+            auth: {
+                username: 'OPENVIDUAPP',
+                password: OPENVIDU_SERVER_SECRET,
+            },
+            headers: { 
+                "Content-Type": "application/json" 
+            },
         }
     );
     return response.data; // The sessionId
@@ -572,10 +578,14 @@ methods: {
 
     async createToken(sessionId) {
     const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions/" + sessionId + "/connections",
+        OPENVIDU_SERVER_URL + "openvidu/api/sessions/" + sessionId + "/connections",
         {},
         {
-        headers: { "Content-Type": "application/json" },
+            auth: {
+                username: 'OPENVIDUAPP',
+                password: OPENVIDU_SERVER_SECRET,
+            },
+            headers: { "Content-Type": "application/json" },
         }
     );
     return response.data; // The token
