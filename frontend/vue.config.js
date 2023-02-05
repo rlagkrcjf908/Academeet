@@ -6,12 +6,14 @@ module.exports = defineConfig({
     https: false,
     port: 8080,
     open: true,
+
     proxy: {
       '/api/v1': {
         //target: 'http://172.26.4.186:5000/'
         target: 'http://localhost:5000/'
       }
     },
+
     historyApiFallback: true,
     hot: true,
   },
@@ -22,5 +24,5 @@ module.exports = defineConfig({
     'element-plus'
   ],
   lintOnSave: false,
-  outputDir: '../backend/src/main/resources/dist'
+  //outputDir: '../backend/src/main/resources/dist'
 })
