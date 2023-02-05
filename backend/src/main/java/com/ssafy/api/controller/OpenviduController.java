@@ -47,6 +47,7 @@ public class OpenviduController {
 	@PostMapping("")
 	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
+		System.out.println("initializeSession");
 		SessionProperties properties = SessionProperties.fromJson(params).build();
 		Session session = openvidu.createSession(properties);
 		return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
@@ -61,6 +62,7 @@ public class OpenviduController {
 	public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
 			@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
+		System.out.println("createConnection");
 		Session session = openvidu.getActiveSession(sessionId);
 		if (session == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
