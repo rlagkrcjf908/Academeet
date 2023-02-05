@@ -166,12 +166,13 @@ import UserVideo from "../components/UserVideo";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-// const APPLICATION_SERVER_URL = "http://localhost:5000/";
-const APPLICATION_SERVER_URL = "http://172.26.4.186:5000/";
+const APPLICATION_SERVER_URL = "http://localhost:5000/";
+// const APPLICATION_SERVER_URL = "http://15.165.74.132:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.0.10:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
 // const OPENVIDU_SERVER_URL = "https://localhost:4443";
+const OPENVIDU_SERVER_URL = "https://15.165.74.132:4443/";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
@@ -614,7 +615,7 @@ methods: {
         }
     );
     
-    this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
+    this.videoURL = OPENVIDU_SERVER_URL+ "openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
     document.getElementById('buttonStartRecording').style.visibility = "visible";
     document.getElementById('buttonStopRecording').style.visibility = "hidden";      
     },

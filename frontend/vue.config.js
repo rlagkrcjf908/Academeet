@@ -8,7 +8,8 @@ module.exports = defineConfig({
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://172.26.4.186:5000/'
+        //target: 'http://172.26.4.186:5000/'
+        target: 'http://localhost:5000/'
       }
     },
     historyApiFallback: true,
