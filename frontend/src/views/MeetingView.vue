@@ -166,7 +166,8 @@ import UserVideo from "../components/UserVideo";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
+// const APPLICATION_SERVER_URL = "http://localhost:5000/";
+const APPLICATION_SERVER_URL = "http://172.26.4.186:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.0.10:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
