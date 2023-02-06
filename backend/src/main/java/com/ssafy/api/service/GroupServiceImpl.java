@@ -59,11 +59,14 @@ public class GroupServiceImpl implements GroupService {
     public List<Group> getGroupList(int userId) {
         User user = userRepository.findUserById(userId);
         List<User_Group> ug = user_groupRepository.findByUserid(user);
-        if(ug==null)return null;
         List<Group> group = new ArrayList<>();
         for (int i = 0; i < ug.size(); i++) {
             int gid = ug.get(i).getGroupid().getId();
-            group.add(groupRepositorySupport.findGroupById(gid).get());
+            group.add(groupRepository.findGroupById(gid));
+        }
+        List<Group> groupbyOwner = groupRepository.findGroupsByOwnerid(user);
+        for (int i = 0; i<groupbyOwner.size() ; i++){
+            group.add(groupbyOwner.get(i));
         }
         return group;
     }

@@ -229,7 +229,7 @@ public class UserServiceImpl implements UserService {
             userRes.setBirth(user.get(i).getBirth());
             userRes.setPhone(user.get(i).getPhone());
             String path = "C:/Users/SSAFY/Pictures/";
-            userRes.setImg(new UrlResource(path+user.get(i).getProfile()));
+            userRes.setProfile(new UrlResource(path+user.get(i).getProfile()));
         }
         return users;
     }

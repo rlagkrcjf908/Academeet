@@ -2,10 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.response.AttendGroupRes;
 import com.ssafy.api.response.AttendRes;
-import com.ssafy.db.entity.Attendance;
-import com.ssafy.db.entity.Group;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.User_Group;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,20 +59,22 @@ public class AttendServiceImpl implements AttendService{
 
     @Override
     public List<AttendRes> getAttendance(int userId, int groupId) {
-        List<AttendRes> resList = new ArrayList<>();
-        AttendRes res = new AttendRes();
         User user = userRepositorySupport.findUserById(userId).get();
         Group group =  groupRepositorySupport.findGroupById(groupId).get();
 
         //해당유저가 진행한 모든 미팅룸 번호
         List<Attendance> att = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
         //미팅룸 번호로 타이틀과 날짜과 미팅 그룹 사용자의 출석률
+        List<AttendRes> resList = new ArrayList<>();
         for (int i = 0; i<att.size();i++){
-            res.setTitle(att.get(i).getMeetid().getTitle());
-            res.setDate(att.get(i).getMeetid().getDate());
+            Meet meet = att.get(i).getMeetid();
+            AttendRes res = new AttendRes();
+            res.setTitle(meet.getTitle());
+            res.setDate(meet.getDate());
             res.setAttendance(att.get(i).getAttendance());
             resList.add(res);
         }
+
         return resList;
     }
 }

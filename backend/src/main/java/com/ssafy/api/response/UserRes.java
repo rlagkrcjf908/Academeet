@@ -30,7 +30,7 @@ public class UserRes{
 	@ApiModelProperty(name="phone", example="your_phone")
 	String phone;
 	@ApiModelProperty(name="profile", example="your_profile")
-	Resource img;
+	Resource profile;
 	
 	public static UserRes of(User user) throws MalformedURLException {
 		UserRes res = new UserRes();
@@ -41,7 +41,8 @@ public class UserRes{
 		res.setPhone(user.getPhone());
 		res.setNick(user.getNick());
 		String path = "C:/Users/SSAFY/Pictures/img/";
-		res.setImg(new UrlResource("file:"+path+user.getProfile()));
+//		String path = "../../../resources/dist/img/";
+		res.setProfile(new UrlResource("file:"+path+user.getProfile()));
 		return res;
 	}
 }
