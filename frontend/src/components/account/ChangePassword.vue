@@ -127,7 +127,7 @@ const submitForm = (formEl) => {
       }
       try {
         await changePassword(id, password)
-        router.push({ name: 'profile' })
+        router.push({ name: 'profileDetail' })
         console.log('submit!')
       }
       catch (error) {

@@ -22,6 +22,8 @@ const requestAttdUser = (group_id, user_id) => $axios.get(`/group/${group_id}/${
 //그룹 내 회원 출석 상세정보 수정
 const attdUserUpdate = (group_id, user_id, payload) => $axios.put(`/group/${group_id}/${user_id}/update`, payload);
 
+const requestDeleteGroup = (group_id) => $axios.delete(`/group/${{group_id}}/delete`,group_id);
+
 export {
 groupCreate,
 requestGroupList,
@@ -33,7 +35,5 @@ userSearch,
 requestAttdUser,
 requestAttdList,
 attdUserUpdate,
+requestDeleteGroup,
 };
-const requestDeleteGroup = (group_id) => $axios.delete(`/group/${{group_id}}/delete`,group_id);
-
-export { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList, userSearch, requestDeleteGroup };

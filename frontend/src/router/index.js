@@ -7,6 +7,7 @@ import MeetingCreate from '@/views/MeetingCreate'
 import NotFound from '@/views/NotFound.vue'
 import LoginView from '../views/LoginView'
 import JoinView from '../views/JoinView'
+import ListView from '../views/ListView'
 
 import store from "@/store/index"
 

@@ -11,7 +11,6 @@ export default createStore({
     })
   ],
   modules: {
-    modules,
     accountStore,
     groupStore,
     meetingStore,

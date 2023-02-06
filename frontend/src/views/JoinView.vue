@@ -207,12 +207,12 @@ export default {
         "email": this.email,
       }
       console.log(this.email);
-      axios.post("http://192.168.0.8:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+      axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
         headers: { 'content-type': 'application/json' }})
       .then(res => {
         console.log(res);
         if (res.data === 1) {
-          axios.put("http://192.168.0.8:8080/api/v1/user/email", this.email)
+          axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
           alert("인증번호가 전송되었습니다.")
           this.isDupli = true
         } else {
@@ -221,7 +221,7 @@ export default {
       })
     },
     reCheck(){
-      axios.put("http://192.168.0.8:8080/api/v1/user/email", this.email)
+      axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
       alert("인증번호가 전송되었습니다.")
     },
     authCheck(){
@@ -229,7 +229,7 @@ export default {
       //   "authPin": this.authPin
       // }
       console.log(this.authPin);
-      axios.post("http://192.168.0.8:8080/api/v1/user/emailCheck", this.authPin)
+      axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", this.authPin)
       .then(res => {
         if (res.status === 200) {
           alert("인증이 성공적으로 완료되었습니다.");
@@ -268,7 +268,7 @@ export default {
       for(let value of frm.values())
         console.log(value)
       if (this.isCheck === true && this.password === this.passwordCheck) {
-        axios.post("http://192.168.0.8:8080/api/v1/user", frm, config)
+        axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
       
         .then(res => {
           if (res.status === 200) {
@@ -376,7 +376,7 @@ const validateEmail = (rule, value, callback) => {
 // 인증코드 확인
 const authCheck = () => {
   console.log(ruleForm.authPin);
-  axios.post("http://192.168.0.8:8080/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
       alert("인증이 성공적으로 완료되었습니다.");
@@ -392,7 +392,7 @@ const authCheck = () => {
 // 인증코드 재발급
 const reCheck = () => {
   console.log('ruleForm.email',ruleForm.email)
-  axios.put("http://192.168.0.8:8080/api/v1/user/email", ruleForm.email)
+  axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
   alert("인증번호가 전송되었습니다.")
   }
 
@@ -402,12 +402,12 @@ const dupliCheck= () => {
     "email": ruleForm.email,
   }
   console.log(ruleForm.email);
-  axios.post("http://192.168.0.8:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+  axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
     headers: { 'content-type': 'application/json' }})
   .then(res => {
     console.log(res);
     if (res.data === 1) {
-      axios.put("http://192.168.0.8:8080/api/v1/user/email", ruleForm.email)
+      axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
       alert("인증번호가 전송되었습니다.")
       isDupli.value = true
     } else {
@@ -493,7 +493,7 @@ const submitForm = (formEl) => {
       );
       for(let value of frm.values())
         console.log(value)
-      axios.post("http://192.168.0.8:8080/api/v1/user", frm, config)
+      axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");
