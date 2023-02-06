@@ -2,26 +2,43 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import GroupView from '../views/GroupView.vue'
+import MeetingView from '../views/MeetingView.vue'
 import MeetingCreate from '@/views/MeetingCreate'
 import NotFound from '@/views/NotFound.vue'
 import LoginView from '../views/LoginView'
 import JoinView from '../views/JoinView'
+import ListView from '../views/ListView'
+import store from '@/store'
+
+// const requireToken = () => (from, to, next) => {
+//   const token = localStorage.getItem('token')
+//   if (token) {
+//     store.state.isLogin = true
+//     return next()
+//   }
+//   next('/login')
+// }
+
 
 const routes = [
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: LoginView,
+    // beforeEnter: requireToken()
   },
   {
     path: '/join',
     name: 'join',
-    component: JoinView
+    component: JoinView,
+    // beforeEnter: requireToken()
   },
+
   {
     path: '/',
     name: 'main',
     component: MainView,
+    // beforeEnter: requireToken(),
     children:[
       {
         path: '',
@@ -94,7 +111,24 @@ const routes = [
           },
         ],
       },
+      {
+        path: 'list',
+        name: 'list',
+        component: ListView,
+        children: [
+          {
+            path: '',
+            name: 'listMain',
+            component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
+          },
+        ]
+      },
     ]
+  },
+  {
+    path: '/meeting',
+    name: 'meeting',
+    component: MeetingView
   },
   {
     path: '/meetingCreate',

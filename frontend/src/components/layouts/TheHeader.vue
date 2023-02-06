@@ -12,18 +12,32 @@
     
     <nav>
       <ul>
-        <li style="color: #94d82d">(nickname)님</li>
+        <li style="color: #94d82d">{{ userInfo.nick }} 님</li>
         <!--<small v-if="userInfo" class="text-muted">{{ userInfo.uid }}'s </small>-->
         <li><router-link to="/profile">My Page</router-link></li>
         <li><router-link to="/group">Group</router-link></li>
-        <li><router-link to="#">Logout</router-link></li>
+        <li @click="logout()">Logout</li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-export default {};
+
+export default {
+  data() {
+    return {
+        // getItem()을 사용하여 조회한다.
+        // 해당 키에 값이 없는 경우 ""로 할당한다.
+        userInfo: JSON.parse(localStorage.getItem("userInfo")),
+    };
+  },
+  methods: {
+    logout(){
+      this.$store.dispatch('accountStore/logout')
+    }
+  }
+};
 </script>
 
 <style scoped>

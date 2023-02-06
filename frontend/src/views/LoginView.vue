@@ -38,7 +38,7 @@ export default {
       if (this.email && this.password){
         const email = this.email
         const password = this.password
-        this.$store.dispatch('login', {email, password})
+        this.$store.dispatch('accountStore/login', {email, password})
       } else {
         alert("이메일 또는 비밀번호가 입력되지 않았습니다.")
         return false

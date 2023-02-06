@@ -3,7 +3,7 @@
     <div class="btn-group">
       <el-button type="success" plain circle @click="$router.push('/meetingcreate')">회의생성</el-button>
       <el-button type="success" plain circle @click="$router.push('/group/create')">그룹생성</el-button>
-      <el-button type="success" plain circle>리스트</el-button>
+      <el-button type="success" plain circle @click="$router.push('/list')">리스트</el-button>
     </div>
   </div>
 </template>
