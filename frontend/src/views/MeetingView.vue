@@ -171,9 +171,11 @@ const APPLICATION_SERVER_URL = "http://15.165.74.132:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
 // const APPLICATION_SERVER_URL = "http://192.168.0.10:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
+
 // const OPENVIDU_SERVER_URL = "https://localhost:4443";
+const OPENVIDU_SERVER_URL = "https://localhost:8443/";
 // const OPENVIDU_SERVER_URL = "https://15.165.74.132:8443/";
-const OPENVIDU_SERVER_URL = "https://academeet.shop:8443/";
+// const OPENVIDU_SERVER_URL = "https://academeet.shop:8443/";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
