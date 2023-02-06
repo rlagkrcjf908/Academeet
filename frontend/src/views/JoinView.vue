@@ -265,6 +265,8 @@ export default {
       );
       for(let value of frm.values())
         console.log(value)
+      for(let value of frm.values())
+        console.log(value)
       if (this.isCheck === true && this.password === this.passwordCheck) {
         axios.post("http://192.168.0.8:8080/api/v1/user", frm, config)
       

@@ -4,8 +4,14 @@ const setAuthHeader = (token) => {
     if (token) {
         axios.defaults.headers = {
             Authorization: `Bearer ${token}`,
+const setAuthHeader = (token) => {
+    if (token) {
+        axios.defaults.headers = {
+            Authorization: `Bearer ${token}`,
 
         }
+    } else {
+        delete axios.defaults.headers.Authorization;
     } else {
         delete axios.defaults.headers.Authorization;
     }

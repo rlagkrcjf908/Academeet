@@ -18,7 +18,7 @@
   
                 <!-- 이메일 -->
                 <div class="profileInfo">
-                  <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+                  <img :src="profile" alt="" style="height:1em; padding-right: 1em;">
                   <span>{{profile.email}}</span>
                 </div>
                 

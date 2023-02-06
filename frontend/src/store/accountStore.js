@@ -2,6 +2,10 @@ import { profileUpdate } from "../common/api/accountAPI";
 import axios from 'axios'
 import router from '../router/index'
 import setAuthHeader from '../common/api/AxiosToken'
+import { profileUpdate } from "../common/api/accountAPI";
+import axios from 'axios'
+import router from '../router/index'
+import setAuthHeader from '../common/api/AxiosToken'
 
 const state = {
   token : null,
@@ -36,6 +40,9 @@ const mutations = {
     state.userId = null
     state.isAuthenticated = false
   },
+  SET_USERID : (state, item) => {
+    state.userId = item
+  }
 };
 
 const actions = {
@@ -79,8 +86,10 @@ const actions = {
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정
+  // 프로필 수정
   profileUpdateAction: async ({ commit }, profileData) => {
     const response = await profileUpdate(state.id, JSON.stringify(profileData));
+    commit("SET_USER_PROFILE", profileData);
     commit("SET_USER_PROFILE", profileData);
   },
 };
