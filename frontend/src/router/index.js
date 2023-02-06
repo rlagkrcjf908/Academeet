@@ -87,30 +87,37 @@ const routes = [
           },
           {
             path: ':groupId',
-            name: 'groupUser',
-            component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/group/GroupUser.vue')
-          },
-          // 출석 관련 routes
-          {
-            //개인출석
-            path: `attdUser`,
-            // path: `attdUser/:{groupId}/:{userId}`,
-            name: "attdUser",
-            component: () => import("@/components/group/attendance/AttdUser.vue"),
-          },
-          {
-            //전체 출석보기
-            path: `attdList`,
-            // path: `attdList/:{groupId}`,
-            name: "attdList",
-            component: () => import("@/components/group/attendance/AttdList.vue"),
-          },
-          {
-            //상세출석 - 호스트
-            path: `attModify`,
-            // path: `attModify/:{groupId}/:{userId}`,
-            name: "attModify",
-            component: () => import("@/components/group/attendance/AttModify.vue"),
+            name: 'groupDetail',
+            component: () => import(/* webpackChunkName: "GroupDetail" */ '@/components/group/GroupDetail.vue'),
+            children: [
+              {
+                path: '',
+                name: 'groupUser',
+                component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/group/GroupUser.vue'),
+              },
+              // 출석 관련 routes
+              {
+                //개인출석
+                path: `attdUser`,
+                // path: `attdUser/:{groupId}/:{userId}`,
+                name: "attdUser",
+                component: () => import("@/components/group/attendance/AttdUser.vue"),
+              },
+              {
+                //전체 출석보기
+                path: `attdList`,
+                // path: `attdList/:{groupId}`,
+                name: "attdList",
+                component: () => import("@/components/group/attendance/AttdList.vue"),
+              },
+              {
+                //상세출석 - 호스트
+                path: `attModify`,
+                // path: `attModify/:{groupId}/:{userId}`,
+                name: "attModify",
+                component: () => import("@/components/group/attendance/AttModify.vue"),
+              },
+            ]
           },
         ],
       },
