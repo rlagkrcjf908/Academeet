@@ -40,9 +40,10 @@ const actions = {
       alert("정보가 확인되었습니다.\n환영합니다!")
       commit('SET_USERINFO', res.data)
       commit('SET_TOKEN', res)
-      commit('SET_USERID', res.data.user.id)
+      // commit('SET_USERID', res.data.user.id)
+      console.log(res.data)
       localStorage.setItem('token', res.data.accessToken)
-      localStorage.setItem('userInfo', JSON.stringify(res.data.user));
+      localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
       
       router.push("/")

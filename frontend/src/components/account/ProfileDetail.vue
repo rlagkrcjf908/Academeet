@@ -5,7 +5,7 @@
 
             <el-col :span="4">
               <!-- 프로필사진 -->
-              <!-- <img :src="request(profile.img)" alt="" style="height:5em;"> -->
+              <img :src = profile.p rofile.file  style="height:5em;">
               
 
               <!-- 유저이름 -->
@@ -18,7 +18,7 @@
   
                 <!-- 이메일 -->
                 <div class="profileInfo">
-                  <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+                  <img :src="profile" alt="" style="height:1em; padding-right: 1em;">
                   <span>{{profile.email}}</span>
                 </div>
                 
@@ -54,6 +54,7 @@
 
 <script setup>
 // import { onMounted } from 'vue'
+import axios from '@/common/lib/axios';
 import { imageEmits } from 'element-plus';
 import { onBeforeMount } from 'vue';
 import { useStore } from 'vuex'
@@ -66,8 +67,11 @@ const store = useStore()
 
 const profile = JSON.parse(localStorage.getItem('userInfo'))
 
-
 console.log('받앗다',profile)
+console.log(profile.profile.file)
+
+// const img = require('profile.profile.url')
+// axios.get("http://198.123")
 
 </script>
 
