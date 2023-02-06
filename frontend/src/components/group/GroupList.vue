@@ -18,7 +18,6 @@ onMounted (async () => {
     groups.value = store.state.groupStore.groupList  
 })
 
-
 </script>
 <style scoped>
 

@@ -176,6 +176,7 @@ const rules = reactive({
   user: [{ required: true, message: '참여자를 선택하세요', trigger: 'change' }]
 })
 
+// 현재시간
 function getToday(){
     var date = new Date();
     var year = date.getFullYear();

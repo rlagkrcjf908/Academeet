@@ -15,6 +15,9 @@ import GroupList from '@/components/group/GroupList'
   width:304px;
   height: 90vh;
   background-color: #CDE59B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 /* .el-main{
   width: 65vw;

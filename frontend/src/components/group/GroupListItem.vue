@@ -2,8 +2,6 @@
   <div style="border-bottom: 1px solid rgba(217, 217, 217, 1); display: flex; align-self: start;">
       <p @click="getGroupInfo(props.group?.id)">
         {{ props.group?.name }}
-        <br>
-        {{ props.group?.id }}
       </p>
   </div>
 </template>
@@ -22,8 +20,8 @@ const props = defineProps({
 })
 
 const getGroupInfo = async (groupId) => {
-  console.log(groupId);
   await store.dispatch("groupStore/requestUserListAction", groupId);
+  await store.dispatch("groupStore/requestGroupAction", groupId);
   router.push({ name: "groupUser", params: { groupId } });
 }
 

@@ -1,4 +1,5 @@
 <template>
+  
   <div>
     <p style="color: rgba(97, 178, 153, 1); border-bottom: 1px solid rgba(217, 217, 217, 1);">그룹생성</p>
   </div>
@@ -82,7 +83,6 @@ const remoteMethod = (query) => {
       const res = await userSearch(JSON.stringify(username))
 
       const searchUserList = res.data
-      console.log('저장해서 불러온 검색결과',searchUserList)
       let list = searchUserList.map((item) => {
         return { value: item.id, label: `${item.name}:${item.email}` }
       })
@@ -115,17 +115,14 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
       // 유저정보는 받은 그대로
-      console.log('그룹명:',ruleForm.groupName)
       const rawArray = toRaw(ruleForm.user)
       guestList = rawArray
-      console.log('멤버리스트',guestList)
       
       const groupData = {
         "userid" : userid,
         "name" : ruleForm.groupName,
         "users": guestList,
       }
-      console.log('넘길정보',groupData)
       await store.dispatch('groupStore/groupCreateAction',groupData)
       router.push('/')
       console.log('submit!')

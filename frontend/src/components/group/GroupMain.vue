@@ -19,8 +19,7 @@ import { computed } from "vue"
 
 const store = useStore()
 const groupLen = computed(() => store.getters["groupStore/getGroupListLength"])
-console.log(store.getters.getGroupList)
-console.log(groupLen)
+
 </script>
 <style>
 

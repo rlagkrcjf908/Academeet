@@ -11,9 +11,9 @@ import {
 const state = {
   groupInfo: null,
   groupList:[],
-  groupUserList:null,
-  attdList: null, //그룹의 전체 출석
-  attdUser: null, //유저 출석
+  groupUserList:[],
+  attdList: [], //그룹의 전체 출석
+  attdUser: [], //유저 출석
 };
 
 const getters = {
@@ -82,19 +82,19 @@ const actions = {
     commit("SET_GROUP_INFO", response.data);
   },
   // 그룹 사용자 리스트 요청
-  requestUserListAction: async ({ commit }, group_id) => {
-    const response = await requestUserList(group_id);
+  requestUserListAction: async ({ commit }, groupId) => {
+    const response = await requestUserList(groupId);
     commit("SET_GROUP_USER_LIST", response.data);
   },
   // 그룹삭제
   groupDeleteAction: async ({ commit }) => {
-    const response = await groupDelete(groupid)
+    const response = await groupDelete(groupId)
     console.log(response);
     commit("DELETE_GROUP_INFO");
   },
   // 그룹 수정
   groupUpdateAction: async ({ commit }, groupData) => {
-    const response = await groupUpdate(groupid, groupData);
+    const response = await groupUpdate(groupId, groupData);
     commit("UPDATE_GROUP_INFO", response.data);
   },
     //출석관련

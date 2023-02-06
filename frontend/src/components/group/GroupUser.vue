@@ -14,11 +14,13 @@ import { useStore } from 'vuex'
 const store = useStore()
 const userid = store.state.accountStore.userId
 
-const members = ref()
-onMounted (async () => {
-    await store.dispatch('groupStore/requestUserListAction', userid)
-    members.value = store.state.groupStore.groupUserList  
-})
+const members = store.state.groupStore.groupUserList  
+
+// const members = ref()
+// onMounted (async () => {
+//     await store.dispatch('groupStore/requestUserListAction', userid)
+//     members.value = store.state.groupStore.groupUserList  
+// })
     
 </script>
 
