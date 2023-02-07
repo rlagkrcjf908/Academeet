@@ -48,18 +48,18 @@ repositories {
 
 group 'com.ssafy'
 version '1.0-SNAPSHOT'
-//sourceCompatibility = '1.8'
+sourceCompatibility = '1.8'
 //sourceCompatibility = '11'
-sourceCompatibility = JavaVersion.VERSION_11
+//sourceCompatibility = JavaVersion.VERSION_11
 
-/*
+
 node {
     download = true
     version = '14.17.0'
     // Set the work directory where node_modules should be located
     nodeModulesDir = file("${project.projectDir}/../frontend")
 }
- */
+
 
 configurations {
     providedRuntime

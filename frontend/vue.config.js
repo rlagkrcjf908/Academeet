@@ -4,16 +4,17 @@ module.exports = defineConfig({
     // disableHostCheck: true,
     allowedHosts: "all",
     https: false,
-    port: 8080,
+    port: 80,
     open: true,
 
+    /*
     proxy: {
       '/api/v1': {
         //target: 'http://172.26.4.186:5000/'
         target: 'http://localhost:5000/'
       }
     },
-
+    */
     historyApiFallback: true,
     hot: true,
   },
