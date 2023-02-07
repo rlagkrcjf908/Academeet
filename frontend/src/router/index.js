@@ -110,15 +110,15 @@ const routes = [
               // },
               {
                 //개인출석테스트 중
-                path: `attdUser`,
-                // path: `attdUser/:{groupId}/:{userId}`,
+                // path: `attdUser`,
+                path: `attdUser/:userId`,
                 name: "attdUser",
                 component: () => import(/* webpackChunkName: "attdUser" */"@/components/group/attendance/AttdListUser.vue"),
               },
               {
                 //전체 출석보기
+                // path: `attdList`,
                 path: `attdList`,
-                // path: `attdList/:{groupId}`,
                 name: "attdList",
                 component: () => import(/* webpackChunkName: "attdList" */"@/components/group/attendance/AttdList.vue"),
               },
@@ -177,11 +177,11 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.state.accountStore.isAuthenticated
-  if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
-  else next()
-})
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = store.state.accountStore.isAuthenticated
+//   if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
+//   else next()
+// })
 
 
 export default router
