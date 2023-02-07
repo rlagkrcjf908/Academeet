@@ -1,34 +1,11 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <p>
-        여기는 그룹의 호스트아이디와 유저아이디를 비교하여 '수정'버튼 띄우고
-        수정하게하기
-      </p>
-      <el-header>
-        <p style="color: rgba(97, 178, 153, 1)">
-          구미1반 ({{ attdUserList.length }})
-          <el-button @click="remoteMethod">groupId: {{ groupId }}</el-button>
-        </p>
-      </el-header>
-      <el-main
-        ><!-- 테이블 테스트 -->
-        <el-table
-          :data="attdUserList"
-          style="width: 100%"
-          :row-class-name="attdColor"
-        >
-          <el-table-column prop="no" label="No." width="100" />
-          <el-table-column prop="title" label="제목" width="180" />
-          <el-table-column prop="date" label="날짜" width="180" />
-          <el-table-column prop="attendance" label="출석률" />
-        </el-table>
-      </el-main>
-    </el-container>
-  </div>
+  <section>
+    <h2 style="color: rgba(97, 178, 153, 1)">
+      참여 회의 ({{ attdUserList.length }})
+    </h2>
 
-  <!-- <div class="tabel2">
-      <table>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
         <thead>
           <tr>
             <th>No.</th>
@@ -37,31 +14,24 @@
             <th>출석률</th>
           </tr>
         </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
           <tr v-for="(item, index) in attdUserList" :key="index">
-            <td>{{ item.no }}</td>
+            <td>{{ index + 1 }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.attendance }}</td>
           </tr>
         </tbody>
       </table>
-    </div> -->
-  <!-- <div>
-            <p style="color: rgba(97, 178, 153, 1)">
-              출 석 ({{ attdUserList.length }})
-            </p>
-            <div style="border: 1px solid black; padding: 40px">
-              <tr
-                v-for="(attdUser, i) in attdUserList"
-                :key="i + 1"
-                :attdUser="attdUser"
-              >
-              {{ attdUser.title }}, {{ attdUser.date }},
-        {{ attdUser.attd }}
-            </tr>
-            </div>
-      </div> -->
+    </div>
+    <el-button @click="remoteMethod"
+      >UserID: {{ $route.params.userId }}</el-button
+    >
+  </section>
 </template>
   
   <script>
@@ -78,7 +48,9 @@ export default {
       allAtt: "",
       result: "",
       groupId: 2,
-      userId: 4,
+      userId: "",
+      // userId: this.$route.params.name,
+
       attdUserList: [],
     };
   },
@@ -95,7 +67,11 @@ export default {
   setup() {
     // const attdUserList = ref([])
   },
-  created() {},
+  created() {
+    this.userId = this.$route.params.userId;
+    console.log("created", this.userId);
+    console.log("this.$route.params:", this.$route.params);
+  },
   mounted() {},
   unmounted() {},
   methods: {
@@ -132,10 +108,8 @@ export default {
         console.log("개인 출석 res", res);
         const datas = res.data;
         console.log("개인 출석 datas", datas);
-        let no = 1;
         let list = datas.map((item) => {
           return {
-            no: no++,
             title: item.title,
             date: item.date.substr(0, 10),
             attendance: item.attendance,
@@ -152,25 +126,68 @@ export default {
 };
 </script>
   
-<style lang="scss" scoped>
-.el-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 99%;
-  height: 64px;
-  padding: 10px;
-  position: relative;
+<style>
+tr:hover {
+  background-color: rgba(97, 178, 153, 0.2);
+  font-weight: bolder;
+  /* color: #fdce7e; */
+  color: rgba(97, 178, 153, 1);
 }
-.common-layout {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100vw;
-  height: 88vh;
-  padding: 10px;
-  position: relative;
-  background-color: beige;
+h1 {
+  font-size: 30px;
+  /* color: #fff; */
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+.tbl-header {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.tbl-content {
+  height: 400px;
+  overflow-x: auto;
+  margin-top: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+th {
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  font-weight: bolder;
+  text-transform: uppercase;
+  /* background-color: #94d82d; */
+  background-color: rgba(97, 178, 153, 1);
+}
+td {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 400;
+  font-size: 15px;
+  /* color: #fff; */
+  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+}
+
+section {
+  margin: 50px;
+}
+
+/* for custom scrollbar for webkit browser  */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 .el-table .warning-row {
