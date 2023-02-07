@@ -93,7 +93,6 @@ const submitForm = (formEl) => {
       };
       try {
         await store.dispatch("accountStore/login", loginData);
-        router.push({ name: "profileDetail" });
         console.log("submit!");
       } catch (error) {
         console.log(error);

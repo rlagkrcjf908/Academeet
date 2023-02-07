@@ -142,6 +142,13 @@ const routes = [
             name: 'listMain',
             component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
           },
+          {
+            //전체 출석보기
+            // path: `meetingList`,
+            path: `meetingList`,
+            name: "meetingList",
+            component: () => import(/* webpackChunkName: "meetingList" */"@/components/list/MeetingList.vue"),
+          },
         ]
       },
     ]
@@ -177,11 +184,11 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = store.state.accountStore.isAuthenticated
-//   if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.state.accountStore.isAuthenticated
+  if (to.name !== 'login' && to.name !== 'join' && !isAuthenticated) next({ name: 'login' })
+  else next()
+})
 
 
 export default router

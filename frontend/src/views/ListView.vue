@@ -1,7 +1,8 @@
+<!-- 리스트 페이지 -->
 <template>
   <div class="common-layout">
     <el-container>
-      <!-- <TheSide/> -->
+      <TheMeetingSide/>
         <el-container>
           <router-view></router-view>
         </el-container>
@@ -10,9 +11,7 @@
 </template>
 
 <script setup>
-  // import TheHeader from '@/components/layouts/TheHeader.vue'
-import TheSide from '@/components/layouts/TheSide.vue'
-
+import TheMeetingSide from '@/components/layouts/TheMeetingSide.vue'
 </script>
 
 <style>

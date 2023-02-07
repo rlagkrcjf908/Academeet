@@ -6,4 +6,6 @@ const hostGroup = (user_id) => $axios.get(`/meet/${user_id}/getGroup`)
 
 const userSearch = (payload) => $axios.post(`/meet/search`, payload)
 
-export { meetingCreate, hostGroup, userSearch };
+const requestMeetingList = (user_id) => $axios.get(`/user/${user_id}/meetList`);
+
+export { meetingCreate, hostGroup, userSearch, requestMeetingList };
