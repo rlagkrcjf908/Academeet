@@ -5,7 +5,7 @@
 
             <el-col :span="4">
               <!-- 프로필사진 -->
-              <!-- <img :src="request(profile.img)" alt="" style="height:5em;"> -->
+              <img  :src = "'http://192.168.100.189:8080/image/'+profile.profile.filename"  style="height:5em;">
               
 
               <!-- 유저이름 -->
