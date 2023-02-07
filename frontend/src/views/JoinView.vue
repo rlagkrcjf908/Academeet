@@ -1,123 +1,36 @@
 <template>
-  <div class="joinBox">
-
-      <router-link to="/login">AcadeMeet</router-link>
-
-      <hr>
-      <!-- 이메일 중복없음이 확인되면 일단 새로 입력하는 건 막는다 -->
-      <div id="Email">
-        <div v-if = "isDupli">
-          <div v-if = "isCheck">
-            <label for="joinEmail">
-              <span>이메일 </span>
-              <input type="text" id="joinEmail" v-model="email" readonly/>
-              <h5>확인완료</h5>
-            </label>
-          </div>
-          <div v-else>
-            <label for="joinEmail">
-              <span>이메일 </span>
-              <input type="text" id="joinEmail" v-model="email" readonly/>
-              <button @click="reCheck()">인증번호 재발급</button>
-            </label>
-          </div>
-        </div>
-        <div v-else>
-          <label for="joinEmail">
-            <span>이메일 </span>
-            <input type="text" id="joinEmail" v-model="email" />
-            <button @click="dupliCheck()">인증번호 발급받기</button>
-          </label>
-        </div>
-      </div>
-      <hr>
-      <div id="Auth">
-        <div v-if = "isCheck">
-          <label for="joinAuth">
-            <span>인증번호</span>
-            <input type="text" id="joinAuth" v-model="authPin" readonly/>
-            <h5>인증완료</h5>
-          </label>
-        </div>
-        <div v-else>
-          <label for="joinAuth">
-            <span>인증번호</span>
-            <input type="text" id="joinAuth" v-model="authPin"/>
-            <button @click="authCheck()">인증하기</button>
-          </label>
-        </div>
-      </div>
-      <hr>
-      <!-- 엘리먼트 적용시키면서 패스워드 일치 걸어줘야됨 -->
-      <label for="joinPw">
-        <span>패스워드 </span>
-        <input type="password" id="joinPw" v-model="password" />
-      </label>
-      <hr>
-      <label for="joinCheck">
-        <span>패스워드확인 </span>
-        <input type="password" id="joinCheck" v-model="passwordCheck" />
-      </label>
-      <hr>
-      <label for="joinName">
-        <span>이름 </span>
-        <input type="text" id="joinName" v-model="name" />
-      </label>
-      <hr>
-      <label for="joinPhone">
-        <span>연락처 </span>
-        <input type="text" id="joinPhone" placeholder="01234567890" v-model="phone" />
-      </label>
-      <hr>
-      <label for="joinNick">
-        <span>닉네임 </span>
-        <input type="text" id="joinNick" v-model="nick" />
-      </label>
-      <hr>
-      <label for="joinBirth">
-        <span>생일 </span>
-        <el-date-picker
-          v-model="birth"
-          value-format="YYYY-MM-DD"
-          type="date"
-          placeholder="날짜를 고르세요"
-          :size="size"
-        />
-        
-      </label>
-      <hr>
-      <label for="joinProfile">
-        <span>프로필 설정</span>
-        <hr>
-        <!-- 이미지업로드는 되나 세로가 더 길면 사이드가 짤려 나감 -->
-        <el-avatar
-          :size = "300"
-          :src = "profile"     
-        />
-        <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
-        <img src="profile" alt="">
-        
-      </label>
-      <hr>
-      <button @click="submit()">가입하기</button>
-    <!-- </div> -->
-  </div>
-
-
   <!-- 여기부턴 아진 폼 -->
 
+  
+  
   <el-form
-    ref="ruleFormRef"
-    :model="ruleForm"
-    status-icon
-    :rules="rules"
-    label-width="120px"
-    class="demo-ruleForm"
+  ref="ruleFormRef"
+  :model="ruleForm"
+  status-icon
+  :rules="rules"
+  label-width="120px"
+  class="demo-ruleForm"
   >
-    <!-- 이름 -->
-    <el-form-item prop="name" label="이름">
-      <el-input v-model.trim="ruleForm.name" type="text" autocomplete="off" placeholder="이름을 입력해 주세요." maxlength="45"/>
-    </el-form-item>
+
+  <!-- 이메일 -->
+  <el-form-item prop="email" label="이메일" >
+    <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
+  </el-form-item>
+  <!-- 클래스 삼항? 으로 class readonly 넣기 -->
+  <button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</button>
+  <button @click.prevent="reCheck()" v-if = "isDupli">인증코드 재발급</button>
+  
+  <!-- 인증코드 -->
+  <el-form-item prop="authPin" label="인증코드">
+    <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
+    <button @click.prevent="authCheck()">인증하기</button>
+    <h5 v-if = "isCheck">확인완료</h5>
+  </el-form-item>
+
+  <!-- 이름 -->
+  <el-form-item prop="name" label="이름">
+    <el-input v-model.trim="ruleForm.name" type="text" autocomplete="off" placeholder="이름을 입력해 주세요." maxlength="45"/>
+  </el-form-item>
 
     <!-- 연락처 -->
     <el-form-item prop="phone" label="연락처">
@@ -139,22 +52,6 @@
       />
     </el-form-item>
 
-
-    <!-- 이메일 -->
-    <el-form-item prop="email" label="이메일" >
-      <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isCheck"/>
-      <!-- 클래스 삼항? 으로 class readonly 넣기 -->
-      <button @click="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</button>
-      <button @click="reCheck()" v-if = "isDupli">인증코드 재발급</button>
-    </el-form-item>
-    
-    <!-- 인증코드 -->
-    <el-form-item prop="authPin" label="인증코드">
-      <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
-      <button @click="authCheck()">인증하기</button>
-      <h5 v-if = "isCheck">확인완료</h5>
-    </el-form-item>
-
     <!-- 비밀번호 -->
     <el-form-item  prop="password" label="비밀번호">
       <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요"/>
@@ -165,13 +62,32 @@
       <el-input v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호를 다시 입력해주세요"/>
     </el-form-item>
 
+
+    <label for="joinProfile">
+        <span>프로필 설정</span>
+        <hr>
+        <!-- 이미지업로드는 되나 세로가 더 길면 사이드가 짤려 나감 -->
+        <el-avatar
+          :size = "300"
+          :src = "profile"     
+        />
+        <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
+        <img src="profile" alt="">
+        
+      </label>
+
+
+
+
+
+
     <!-- 회원가입 -->
     <el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
   </el-form>
   
 </template>
 
-<script>
+<!-- <script>
 import { ref } from "vue";
 import router from "../router/index";
 import axios from 'axios'
@@ -207,12 +123,12 @@ export default {
         "email": this.email,
       }
       console.log(this.email);
-      axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+      axios.post("http://172.30.1.26:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
         headers: { 'content-type': 'application/json' }})
       .then(res => {
         console.log(res);
         if (res.data === 1) {
-          axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
+          axios.put("http://172.30.1.26:8080/api/v1/user/email", this.email)
           alert("인증번호가 전송되었습니다.")
           this.isDupli = true
         } else {
@@ -221,7 +137,7 @@ export default {
       })
     },
     reCheck(){
-      axios.put("http://192.168.100.191:8080/api/v1/user/email", this.email)
+      axios.put("http://172.30.1.26:8080/api/v1/user/email", this.email)
       alert("인증번호가 전송되었습니다.")
     },
     authCheck(){
@@ -229,7 +145,7 @@ export default {
       //   "authPin": this.authPin
       // }
       console.log(this.authPin);
-      axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", this.authPin)
+      axios.post("http://172.30.1.26:8080/api/v1/user/emailCheck", this.authPin)
       .then(res => {
         if (res.status === 200) {
           alert("인증이 성공적으로 완료되었습니다.");
@@ -265,10 +181,8 @@ export default {
       );
       for(let value of frm.values())
         console.log(value)
-      for(let value of frm.values())
-        console.log(value)
       if (this.isCheck === true && this.password === this.passwordCheck) {
-        axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
+        axios.post("http://172.30.1.26:8080/api/v1/user", frm, config)
       
         .then(res => {
           if (res.status === 200) {
@@ -288,15 +202,16 @@ export default {
     }
   },
 } 
-</script>
+</script> -->
 
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { inject } from "vue";
+// import { inject } from "vue";
+import axios from "axios"
+// const axios = inject('axios');
 
-const axios = inject('axios');
 const store = useStore()
 const ruleFormRef = ref()
 const router = useRouter()
@@ -307,9 +222,11 @@ const image = ref()
 // 이미지 업로드
 function uploadImg (){
   let profile = image.value.files[0];
+  console.log(profile)
   const url = URL.createObjectURL(profile);
   profile.value = url;
   console.log(image.value.files[0])
+  console.log(profile.value)
 }
 
 const ruleForm = reactive({
@@ -376,7 +293,7 @@ const validateEmail = (rule, value, callback) => {
 // 인증코드 확인
 const authCheck = () => {
   console.log(ruleForm.authPin);
-  axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("http://172.30.1.26:8080/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
       alert("인증이 성공적으로 완료되었습니다.");
@@ -392,22 +309,22 @@ const authCheck = () => {
 // 인증코드 재발급
 const reCheck = () => {
   console.log('ruleForm.email',ruleForm.email)
-  axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
+  axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
   alert("인증번호가 전송되었습니다.")
   }
 
 // 인증코드 발급
 const dupliCheck= () => {
+  console.log('ruleForm.email',ruleForm.email)
   const param = {
     "email": ruleForm.email,
   }
-  console.log(ruleForm.email);
-  axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+  axios.post("http://172.30.1.26:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
     headers: { 'content-type': 'application/json' }})
   .then(res => {
     console.log(res);
     if (res.data === 1) {
-      axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
+      axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
       alert("인증번호가 전송되었습니다.")
       isDupli.value = true
     } else {
@@ -493,7 +410,7 @@ const submitForm = (formEl) => {
       );
       for(let value of frm.values())
         console.log(value)
-      axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
+      axios.post("http://172.30.1.26:8080/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");

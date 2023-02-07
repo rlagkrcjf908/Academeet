@@ -43,19 +43,24 @@
 <script>
 import { requestAttdList } from "@/common/api/groupAPI";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   name: "attdList",
   setup() {
     const router = useRouter();
+    const route = useRoute();
+
     const groupId = ref();
     const attdUserList = ref([]);
+
+    groupId.value = route.params.groupId;
 
     const routeToUser = (item) => {
       console.log("item.userId: ", item.userId);
       router.push({
         name: "attdUser",
+        //params: { userId: item.userId, groupId: item.groupId },
         params: { userId: item.userId },
       });
     };
@@ -68,8 +73,8 @@ export default {
       routeToUser,
     };
   },
+
   async mounted() {
-    this.groupId = 2;
     console.log("groupId==", this.groupId);
     const res = await requestAttdList(this.groupId);
     console.log("전체 출석 res", res);
@@ -157,9 +162,9 @@ section {
 }
 
 .attd-fail {
-  color: red;
+  color: #f89898;
 }
 .attd-success {
-  color: green;
+  color: #95d475;
 }
 </style>

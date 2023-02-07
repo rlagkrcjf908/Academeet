@@ -21,7 +21,6 @@ const props = defineProps({
 
 const getGroupInfo = async (groupId) => {
   await store.dispatch("groupStore/requestUserListAction", groupId);
-  await store.dispatch("groupStore/requestGroupAction", groupId);
   router.push({ name: "groupUser", params: { groupId } });
 }
 

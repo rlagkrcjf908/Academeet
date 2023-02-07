@@ -54,12 +54,6 @@ const mutations = {
   },
 
   //출석관련
-  SET_ATTD_LIST: (state, payload) => {
-    state.attdList = payload; //그룹 전체 리스트
-  },
-  SET_ATTD_USER: (state, payload) => {
-    state.attdUser = payload; //유저 한명의 출석 리스트
-  },
   _ATTD_USER: (state, payload) => {
     state.attdUser = payload; //유저 한명 수정
   },
@@ -73,7 +67,7 @@ const mutations = {
     console.log("attdList",state.attdList);
   },
   SET_ATTD_USER: (state, payload) => {
-    state.attdUser = ayload; //유저 한명의 출석 리스트
+    state.attdUser = payload; //유저 한명의 출석 리스트
   },
   UPDATE_ATTD_USER: (state, payload) => {
     state.attdUser = payload; //유저 한명 수정
@@ -132,9 +126,8 @@ const actions = {
     // commit("SET_ATTD_LIST", response.data.groupData);
     commit("SET_ATTD_LIST", response.data);
   },
-  //유저만 부르게 어떻게 하지..?
-  requestAttdUser: async ({ commit }, groupId) => {
-    const response = await requestAttdUser(groupId);
+  requestAttdUser: async ({ commit }, data) => {
+    const response = await requestAttdUser(data.groupId, data.userId);
     commit("SET_ATTD_USER", response.data.groupData);
   },
   attdUserUpdate: async ({ commit }, groupId) => {

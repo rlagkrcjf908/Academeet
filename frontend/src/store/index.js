@@ -8,7 +8,7 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
   plugins: [
     createPersistedState({
-      paths: ['accountStore'],
+      paths: ['accountStore', 'groupStore'],
     })
   ],
   modules: {

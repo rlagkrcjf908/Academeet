@@ -23,105 +23,58 @@
             <td>{{ index + 1 }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.date }}</td>
-            <td>{{ item.attendance }}</td>
+            <td class="attd-success" v-if="item.attendance >= 80">
+              {{ item.attendance }}
+            </td>
+            <td class="attd-fail" v-else>{{ item.attendance }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <el-button @click="remoteMethod"
-      >UserID: {{ $route.params.userId }}</el-button
-    >
   </section>
 </template>
   
-  <script>
+<script>
 import { requestAttdUser } from "@/common/api/groupAPI";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 export default {
-  name: "attdList",
-  components: {},
-  data() {
-    return {
-      name: "",
-      // userId: "",
-      allAtt: "",
-      result: "",
-      groupId: 2,
-      userId: "",
-      // userId: this.$route.params.name,
+  name: "attdUser",
 
-      attdUserList: [],
+  setup() {
+    const route = useRoute();
+    const groupId = ref();
+    const userId = ref();
+    const attdUserList = ref([]);
+
+    groupId.value = route.params.groupId;
+    userId.value = route.params.userId;
+
+    console.log("route.params:", route.params);
+
+    return {
+      groupId,
+      userId,
+      attdUserList,
     };
   },
-  // computed:{
-  //   attdCheck(){
-  //     if(this.allAtt >= 80){
-  //       return '출석 완료!';
-  //     }else{
-  //       return '미출석';
-  //     }
-
-  //   }
-  // },
-  setup() {
-    // const attdUserList = ref([])
-  },
-  created() {
-    this.userId = this.$route.params.userId;
-    console.log("created", this.userId);
-    console.log("this.$route.params:", this.$route.params);
-  },
-  mounted() {},
-  unmounted() {},
-  methods: {
-    // changeColor() {
-    //   if (this.AttdList.allAtt >= 80) {
-    //     this.AttdList.result = "출석!";
-    //   } else {
-    //     this.AttdList.result = "미출석!";
-    //   }
-    // },
-    // tableRowClassName(attendance) {
-    //   if (attendance < 80) {
-    //     return "warning-row";
-    //   } else if (attendance >= 80) {
-    //     return "success-row";
-    //   }
-    //   return "";
-    // },
-
-    attdColor({ row }) {
-      if (row.attendance >= 80) {
-        return "success-row";
-      } else if (row.attendance < 80) {
-        return "warning-row";
-      }
-      return "";
-    },
-
-    remoteMethod() {
-      setTimeout(async () => {
-        const groupId = Number(this.groupId);
-        const userId = Number(this.userId);
-        const res = await requestAttdUser(groupId, userId);
-        console.log("개인 출석 res", res);
-        const datas = res.data;
-        console.log("개인 출석 datas", datas);
-        let list = datas.map((item) => {
-          return {
-            title: item.title,
-            date: item.date.substr(0, 10),
-            attendance: item.attendance,
-          };
-        });
-        console.log("개인 출석list==", list);
-
-        this.attdUserList = list;
-
-        // 요청결과 리스트
-      }, 200);
-    },
+  async mounted() {
+    console.log("userId==", this.userId);
+    console.log("groupId==", this.groupId);
+    const res = await requestAttdUser(this.groupId, this.userId);
+    console.log("개인 출석 res", res);
+    const datas = res.data;
+    const list = datas.map((item) => {
+      console.log("attdUserList attendance", item.attendance);
+      return {
+        title: item.title,
+        date: item.date.substr(0, 10),
+        attendance: item.attendance,
+      };
+    });
+    this.attdUserList = list;
+    console.log("개인 attdUserList", this.attdUserList);
   },
 };
 </script>
@@ -190,10 +143,10 @@ section {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-.el-table .warning-row {
+.attd-fail {
   color: #f89898;
 }
-.el-table .success-row {
+.attd-success {
   color: #95d475;
 }
 </style>
