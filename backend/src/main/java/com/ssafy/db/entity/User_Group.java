@@ -18,7 +18,7 @@ public class User_Group {
     @JoinColumn(name = "user_id")
     private User userid;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "group_id")
     private Group groupid;
 }

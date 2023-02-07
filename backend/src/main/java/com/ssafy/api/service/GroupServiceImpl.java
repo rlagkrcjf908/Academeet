@@ -2,9 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.GroupCreatePostReq;
 import com.ssafy.api.request.GroupUpdatePostReq;
-import com.ssafy.db.entity.Group;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.User_Group;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +31,13 @@ public class GroupServiceImpl implements GroupService {
     private User_GroupRepositorySupport userGroupRepositorySupport;
 
     private EntityManager em;
+    @Autowired
+    private Group_MeetRepository group_MeetRepository;
+    @Autowired
+    private MeetRepository meetRepository;
+    @Autowired
+    private User_MeetRepository user_MeetRepository;
+
     @Override
     public Group createGroup(int id, GroupCreatePostReq groupCreatePostReq) {
         Group group = new Group();
@@ -79,10 +84,19 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public int deleteGroup(int groupId) {
-        Optional<Group> ogroup = groupRepositorySupport.findGroupById(groupId);
-        if (ogroup == null) {
+        Group group = groupRepository.findGroupById(groupId);
+        if (group == null) {
             return 0;
         }
+        List<Meet> meet = meetRepository.findMeetsByGroupid(group);
+        for(int i = 0; i<meet.size() ; i++){
+            group_MeetRepository.deleteGroup_MeetsByMeetid(meet.get(i));
+            user_MeetRepository.deleteByMeetid(meet.get(i));
+
+        }
+        meetRepository.deleteByGroupid(group);
+        group_MeetRepository.deleteGroup_MeetsByGroupid(group);
+        user_groupRepository.deleteUser_GroupsByGroupid(group);
         groupRepository.deleteById(groupId);
         return 1;
     }

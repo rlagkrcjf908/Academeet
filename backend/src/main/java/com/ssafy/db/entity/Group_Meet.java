@@ -15,10 +15,10 @@ public class Group_Meet {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "GROUP_ID")
+    @JoinColumn(name = "group_id")
     private Group groupid;
 
     @ManyToOne
-    @JoinColumn(name = "MEET_ID")
+    @JoinColumn(name = "meet_id")
     private Meet meetid;
 }

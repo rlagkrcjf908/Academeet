@@ -138,7 +138,7 @@ public class GroupController {
     public Map<String, Object> deleteGroup(@PathVariable("group_id") int group_id) {
         Map<String, Object> response = new HashMap<>();
         int res = groupService.deleteGroup(group_id);
-        if (res > 1) {
+        if (res > 0) {
             response.put("result", "SUCCESS");
             //성공되었다는 값
         } else {

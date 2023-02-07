@@ -15,6 +15,6 @@ public class AttendGroupRes {
     String name;
     @ApiModelProperty(name="allAtt")
     double allAtt;
-
-
+    @ApiModelProperty(name="profile")
+    String profile;
 }

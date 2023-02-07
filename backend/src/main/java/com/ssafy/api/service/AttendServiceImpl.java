@@ -48,10 +48,10 @@ public class AttendServiceImpl implements AttendService{
                 sumatt += attendance.get(j).getAttendance();
             }
             allatt = sumatt/attendance.size();
-
             agr.setUserId(id);
             agr.setName(user.getName());
             agr.setAllAtt(allatt);
+            agr.setProfile(user.getProfile());
             attendGroupRes.add(agr);
         }
         return attendGroupRes;

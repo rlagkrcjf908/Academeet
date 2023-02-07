@@ -22,6 +22,10 @@ public class Group{
     @Column(length = 45, nullable = false)
     String name;
 
-
+//    @OneToMany(mappedBy = "groupid",cascade = CascadeType.REMOVE )
+//    private List<User_Group> user_group = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "groupid",cascade = CascadeType.REMOVE )
+//    private List<Group_Meet> group_meet = new ArrayList<>();
 
 }

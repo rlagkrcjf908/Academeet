@@ -36,6 +36,11 @@ public class User{
     @Column(length = 225, nullable = false)
     String password;
 
+//    @OneToMany(mappedBy = "userid",cascade = CascadeType.REMOVE )
+//    private List<User_Group> user_group = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "userid",cascade = CascadeType.REMOVE )
+//    private List<User_Meet> user_meet = new ArrayList<>();
 //    @ManyToMany
 //    @JoinTable(name = "User_Group",
 //                joinColumns = @JoinColumn(name = "USER_ID"),
