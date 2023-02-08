@@ -1,9 +1,5 @@
 <template>
   <section>
-    <h2 style="color: rgba(97, 178, 153, 1)">
-      구미1반 ({{ attdUserList.length }})
-    </h2>
-
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
@@ -51,17 +47,23 @@ export default {
     const router = useRouter();
     const route = useRoute();
 
-    const groupId = ref();
+    const groupId = ref(route.params.groupId);
+    const hostId = ref(route.params.hostId);
+    const userId = ref(route.params.userId);
     const attdUserList = ref([]);
 
     groupId.value = route.params.groupId;
 
     const routeToUser = (item) => {
       console.log("item.userId: ", item.userId);
+      userId.value = item.userId;
       router.push({
         name: "attdUser",
-        //params: { userId: item.userId, groupId: item.groupId },
-        params: { userId: item.userId },
+        params: {
+          userId: userId.value,
+          groupId: groupId.value,
+          hostId: hostId.value,
+        },
       });
     };
 
@@ -69,13 +71,14 @@ export default {
 
     return {
       groupId,
+      hostId,
+      userId,
       attdUserList,
       routeToUser,
     };
   },
 
   async mounted() {
-    console.log("groupId==", this.groupId);
     const res = await requestAttdList(this.groupId);
     console.log("전체 출석 res", res);
     const datas = res.data;
@@ -87,7 +90,7 @@ export default {
       };
     });
     this.attdUserList = list;
-    console.log("attdUserList value XX", this.attdUserList);
+    console.log("attdUserList ", this.attdUserList);
   },
 };
 </script>

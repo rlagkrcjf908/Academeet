@@ -1,135 +1,154 @@
 <template>
-  <p>attdUser 공간</p>
-  <div>
-    <!-- 그룹의 호스트아이디와 현재 유저가 같으면 수정버튼 보이게하기 -->
-    <el-main>
-      <div v-if="그룹호스트아이디 == 현재유저아이디">
-        <!-- ===으로 고쳐야한다 -->
-        <!-- <GroupList v-for="group in groups" :key="group" :group="group"/> -->
-        <el-button
-          type="success"
-          @click="$router.push(`/group/attdModify/:{userId}`)"
-          >수정하기</el-button
-        >
-      </div>
-      <div v-else>
-        <!-- 호스트아이디와 현재유저가 같지않으면 유저가 참여한 회의 목록만 불러오기 -->
-
-        <!-- <el-table
-          :data="attdInfos"
-          style="width: 100%"
-          :row-class-name="attdColor"
-        >
-          <el-table-column prop="number" label="No." width="60" />
-          <el-table-column prop="title" label="제목" width="200" />
-          <el-table-column prop="date" label="날짜" width="150" />
-          <el-table-column prop="attd" label="출석율" width="100" />
-        </el-table> -->
-
-        <div>
-          <p style="color: rgba(97, 178, 153, 1)">
-            출 석 ({{ attdUsers.length }})
-          </p>
-          <div style="border: 1px solid black; padding: 40px">
-            <AttdUserItem
-              v-for="(attdUser, i) in attdUsers"
-              :key="i + 1"
-              :attdUser="attdUser"
-            ></AttdUserItem>
-          </div>
-        </div>
-      </div>
-    </el-main>
-  </div>
+  <section>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>제목</th>
+            <th>날짜</th>
+            <th>출석률</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          <tr v-for="(item, index) in attdUserList" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.date }}</td>
+            <td class="attd-success" v-if="item.attendance >= 80">
+              {{ item.attendance }}
+            </td>
+            <td class="attd-fail" v-else>{{ item.attendance }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </template>
-
-<script setup>
+  
+<script>
+import { requestAttdUser } from "@/common/api/groupAPI";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
-// import { onMounted } from "vue";
-import AttdUserItem from "@/components/group/attendance/AttdUserItem.vue";
 
-//스토어부분 주석처리하기
-import { groupStore } from "vuex";
-const store = groupStore();
+export default {
+  name: "attdUser",
 
-onMounted(() => {
-  store.dispatch("groupStore/requestAttdUser", store.state.groupStore.attdUser);
-});
+  setup() {
+    const route = useRoute();
+    const groupId = ref(route.params.groupId);
+    const userId = ref(route.params.userId);
+    const hostId = ref(route.params.hostId);
+    const attdUserList = ref([]);
 
-const { ...attdUser } = store.state.groupStore.attdUser;
-// const props = defineProps({
-//   title: String,
-//   label: String,
-//   attd: Number,
-// });
+    // groupId.value = route.params.groupId;
+    // userId.value = route.params.userId;
+    // hostId.value = route.params.hostId;
 
-// export default {{
-//   data(){
-//     return{
-//       attdUsers
-//     };
-//   },
-//   methods: {}
-//   ,
-// }
-// }
+    console.log("==========================");
+    console.log("route.params:", route.params);
+    console.log("hostId:", hostId.value);
 
-const attdColor = ({ row }) => {
-  if (row.attd >= 80) {
-    return "success-row";
-  } else if (row.attd < 80) {
-    return "warning-row";
-  }
-  return "";
+    return {
+      groupId,
+      userId,
+      hostId,
+      attdUserList,
+    };
+  },
+  async mounted() {
+    console.log("groupId==", this.groupId, "/ userId==", this.userId),
+      "/hostId==",
+      this.hostId;
+    const res = await requestAttdUser(this.groupId, this.userId);
+    console.log("개인 출석 res", res);
+    const datas = res.data;
+    const list = datas.map((item) => {
+      console.log("attdUserList attendance", item.attendance);
+      return {
+        title: item.title,
+        date: item.date.substr(0, 10),
+        attendance: item.attendance,
+      };
+    });
+    this.attdUserList = list;
+    console.log("개인 attdUserList", this.attdUserList);
+  },
 };
-
-const attdUsers = ref([
-  {
-    // number: 1,
-    title: "title",
-    date: "2016-05-03",
-    attd: 78,
-  },
-  {
-    // number: 2,
-    title: "title",
-    date: "2016-05-02",
-    attd: 88,
-  },
-  {
-    // number: 3,
-    title: "title",
-    date: "2016-05-04",
-    attd: 100,
-  },
-  {
-    // number: 4,
-    title: "title",
-    date: "2016-05-01",
-    attd: 55,
-  },
-  {
-    // number: 5,
-    title: "title",
-    date: "2016-05-01",
-    attd: 88,
-  },
-]);
 </script>
-
+  
 <style>
-.el-table .warning-row {
+tr:hover {
+  background-color: rgba(97, 178, 153, 0.2);
+  font-weight: bolder;
+  /* color: #fdce7e; */
+  color: rgba(97, 178, 153, 1);
+}
+h1 {
+  font-size: 30px;
+  /* color: #fff; */
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+.tbl-header {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.tbl-content {
+  height: 400px;
+  overflow-x: auto;
+  margin-top: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+th {
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  font-weight: bolder;
+  text-transform: uppercase;
+  /* background-color: #94d82d; */
+  background-color: rgba(97, 178, 153, 1);
+}
+td {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 400;
+  font-size: 15px;
+  /* color: #fff; */
+  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+}
+
+section {
+  margin: 50px;
+}
+
+/* for custom scrollbar for webkit browser  */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.attd-fail {
   color: #f89898;
 }
-.el-table .success-row {
+.attd-success {
   color: #95d475;
 }
-.el-main {
-  width: 70vw;
-  height: 90vh;
-  overflow: hidden;
-}
-/* .el-main:hover {
-  overflow-y: scroll;
-} */
 </style>

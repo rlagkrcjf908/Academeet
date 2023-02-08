@@ -48,7 +48,7 @@ const actions = {
         "email": loginData.email,
         "password": loginData.password
     }
-    axios.post("http://172.30.1.26:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post("http://localhost:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       alert("정보가 확인되었습니다.\n환영합니다!")
@@ -61,14 +61,15 @@ const actions = {
       setAuthHeader(res.data.accessToken)
       router.push("/")
     }).catch(e => {
-      console.log(e)
+      console.log('e: ', e)
+      console.log('error.response: ', e.response)
       alert("로그인 요청에 문제가 발생했습니다.")
       router.push("/login")
     })
   },
   
   logout({commit}){
-    axios.get("http://172.30.1.26:8080/api/v1/auth/logout/")
+    axios.get("http://localhost:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -79,7 +80,7 @@ const actions = {
   
   // 토큰 가져오기
   getToken(){
-    axios.get("http://172.30.1.26:8080/api/v1/")
+    axios.get("http://localhost:8080/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정

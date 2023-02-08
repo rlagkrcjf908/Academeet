@@ -1,9 +1,5 @@
 <template>
   <section>
-    <h2 style="color: rgba(97, 178, 153, 1)">
-      참여 회의 ({{ attdUserList.length }})
-    </h2>
-
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
@@ -18,7 +14,22 @@
     </div>
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
-        <tbody>
+        <!-- 호스트 유저 (수정가능하게 하기) -->
+        <tbody v-if="hostId === loginUserId">
+          <tr v-for="(item, index) in attdUserList" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.date }}</td>
+            <td class="attd-success" v-if="item.attendance >= 80">
+              {{ item.attendance }}
+            </td>
+            <td class="attd-fail" v-else>
+              <el-input v-model="item.attendance"></el-input>
+            </td>
+          </tr>
+        </tbody>
+        <!-- 일반 유저 -->
+        <tbody v-else>
           <tr v-for="(item, index) in attdUserList" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.title }}</td>
@@ -31,6 +42,13 @@
         </tbody>
       </table>
     </div>
+    <el-button
+      type="success"
+      @click="saveAttdList"
+      size="small"
+      v-if="hostId === loginUserId"
+      >저장하기</el-button
+    >
   </section>
 </template>
   
@@ -44,24 +62,56 @@ export default {
 
   setup() {
     const route = useRoute();
-    const groupId = ref();
-    const userId = ref();
+    console.log("attdUserList route.params :", route.params);
+    const groupId = ref(route.params.groupId);
+    const userId = ref(route.params.userId); //상세보기 선택된 유저
+    const hostId = ref(route.params.hostId);
     const attdUserList = ref([]);
 
-    groupId.value = route.params.groupId;
-    userId.value = route.params.userId;
+    const userInfo = ref([]); //localstorage에 저장된 로그인된 userId 저장할 공간
+    const loginUserId = ref();
+    //login된 유저ID 저장
+    userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
+    console.log("userInfo.value: ", userInfo.value);
+    loginUserId.value = userInfo.value.id;
 
-    console.log("route.params:", route.params);
+    console.log("attdUserList hostId :", hostId.value);
+    console.log("attdUserList loginUserId :", loginUserId.value);
+
+    //함수수정하기
+    function saveAttdList() {
+      const config = {
+        headers: {
+          "content-type": "application/json;charset=UTF-8",
+          // "Content-Type": "multipart/form-data"
+        },
+      };
+
+      const updateAttdList = {
+        title: item.title,
+        date: item.date.substr(0, 10),
+        attendance: item.attendance,
+      };
+    }
 
     return {
       groupId,
       userId,
+      hostId,
+      loginUserId,
       attdUserList,
+      saveAttdList,
     };
   },
   async mounted() {
-    console.log("userId==", this.userId);
-    console.log("groupId==", this.groupId);
+    console.log(
+      "groupId==",
+      this.groupId,
+      "/ userId==",
+      this.userId,
+      "/hostId==",
+      this.hostId
+    );
     const res = await requestAttdUser(this.groupId, this.userId);
     console.log("개인 출석 res", res);
     const datas = res.data;

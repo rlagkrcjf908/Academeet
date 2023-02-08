@@ -101,24 +101,23 @@ const routes = [
                 component: () => import(/* webpackChunkName: "GroupUser" */ '@/components/group/GroupUser.vue'),
               },
               // 출석 관련 routes
-              // {
-              //   //개인출석
-              //   path: `attdUser`,
-              //   // path: `attdUser/:{groupId}/:{userId}`,
-              //   name: "attdUser",
-              //   component: () => import(/* webpackChunkName: "attdUser" */"@/components/group/attendance/AttdUser.vue"),
-              // },
+              {
+                //attdView
+                path: `attdView`,
+                name: "attdView2",
+                component: () => import(/* webpackChunkName: "attdUser" */"@/views/AttdView2.vue"),
+              },
               {
                 //개인출석테스트 중
                 // path: `attdUser`,
-                path: `attdUser/:userId`,
+                path: `attdUser/:userId/:hostId`,
                 name: "attdUser",
                 component: () => import(/* webpackChunkName: "attdUser" */"@/components/group/attendance/AttdListUser.vue"),
               },
               {
                 //전체 출석보기
                 // path: `attdList`,
-                path: `attdList`,
+                path: `attdList/:hostId`,
                 name: "attdList",
                 component: () => import(/* webpackChunkName: "attdList" */"@/components/group/attendance/AttdList.vue"),
               },

@@ -4,7 +4,9 @@ const groupCreate = (user_id,payload) => $axios.post(`/group/${user_id}`, payloa
 
 const requestGroupList = (user_id) => $axios.get(`/group/${user_id}/list`);
 
-const requestGroup = (group_id) => $axios.get(`/group/${group_id}`);
+const requestGroup = (group_id) => $axios.get(`/group/${group_id}`);//그룹호스트id 부르는 API
+
+// const requestGroupHost = (group_id) => $axios.get(`/group/${group_id}`);
 
 const requestUserList = (group_id) => $axios.get(`/group/${group_id}/userList`);
 

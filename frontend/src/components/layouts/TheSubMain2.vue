@@ -6,7 +6,7 @@
       <el-button type="success" @click="routeToSubMain" link small>
         {{ groupName }}
       </el-button>
-      <el-button @click="routeToAttdItem" type="success" link small>
+      <el-button @click="routeToAttdView" type="success" link small>
         출석부
       </el-button>
       <el-button type="success" link small>공지사항</el-button>
@@ -17,73 +17,29 @@
 </template>
 
 <script setup>
-//출석부를 위해서 로컬 스토리지 유저와 그룹 호스트 비교, route.push() 기능 정리
-import { useRouter, useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
-import { requestDeleteGroup, requestGroup } from "@/common/api/groupAPI";
-import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
+import { requestDeleteGroup, requestGroup } from "@/common/api/groupAPI";
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { ref, onMounted } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
 const groupId = ref(route.params.groupId);
 const groupName = ref();
-const hostId = ref(); //requestGroup해서 받은 hostId 저장할 공간
-const userInfo = ref([]); //localstorage에 저장된 userId 저장할 공간
-const userId = ref();
 
-//login된 유저ID 저장
-userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
-console.log("userInfo.value: ", userInfo.value);
-userId.value = userInfo.value.id;
-//그룹 이름, 호스트 유저 저장
-const getGroup = async () => {
-  const res = await requestGroup(groupId.value);
-  console.log("requestGroup 결과:", res);
-  groupName.value = res.data.name;
-  hostId.value = res.data.ownerid;
-  console.log(
-    "hostId.value:",
-    hostId.value,
-    "/ groupName.value: ",
-    groupName.value
-  );
-};
-
-getGroup();
+console.log("groupId", groupId.value);
 
 //출석부 이동
-function routeToAttdItem() {
+const routeToAttdView = () => {
   console.log("routeToAttdView 이동합니다");
-  if (hostId.value === userId.value) {
-    router.push({
-      name: "attdList",
-      params: {
-        hostId: hostId.value,
-        userId: userId.value,
-        groupId: groupId.value,
-      },
-    });
-  } else {
-    router.push({
-      name: "attdUser",
-      params: {
-        hostId: hostId.value,
-        userId: userId.value,
-        groupId: groupId.value,
-      },
-    });
-  }
-  console.log(
-    "hostId:",
-    hostId.value,
-    "/ userId:",
-    userId.value,
-    "/ groupId:",
-    groupId.value
-  );
-  console.log("++++++++++++++++++++++++++++++++++=");
-}
+  router.push({
+    name: "attdView2",
+    params: { groupId: groupId.value },
+  });
+};
 
 //서브메인 이동
 const routeToSubMain = () => {
@@ -93,6 +49,13 @@ const routeToSubMain = () => {
     params: { groupId: groupId.value },
   });
 };
+
+//그룹이름 조회
+onMounted(async () => {
+  const res = await requestGroup(groupId.value);
+  console.log("groupName:", res.data.name);
+  groupName.value = res.data.name;
+});
 
 // 확인 메시지 창
 const open = () => {
