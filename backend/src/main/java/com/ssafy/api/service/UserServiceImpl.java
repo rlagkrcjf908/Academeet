@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(user);
         } else {
             String imageFileName = profile.getOriginalFilename();
-            String path = "C:/Users/SSAFY/Pictures/img";
+            String path = "C:/Users/SSAFY/Pictures/img/";
             Path imagePath = Paths.get(path + imageFileName);
             try {
                 Files.write(imagePath, profile.getBytes());
