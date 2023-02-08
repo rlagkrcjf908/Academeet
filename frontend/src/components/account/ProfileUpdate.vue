@@ -1,17 +1,16 @@
 <template>
-  <!-- 폼 시작 -->
-  
-  <el-col :span="4">
-    <label for="joinProfile">
-      <el-avatar :size = "300" :src="profileImg" />
-      <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
-    </label>
-    <!-- 유저이름 -->
-    <p>{{profile.name}}</p>
-  </el-col>
+  <div class="profile-container">
+      <!-- 폼 시작 -->
+      <div class='profile-img-form'>
+        <label for="joinProfile">
+          <el-avatar class='profile-img' :src="profileImg" />
+          <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
+        </label>
+        <!-- 유저이름 -->
+        <p>{{profile.name}}</p>
+      </div>
 
-  <el-row :span="24" justify="center">
-    <el-col>
+      <div class="profileInfo-box">
         <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -19,54 +18,42 @@
         :rules="rules"
         label-width=auto
         class="demo-ruleForm">
+
+          <!-- 이메일 -->
+          <div class="profileInfo">
+            <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+            <span>{{profile.email}}</span>
+          </div>
           
-          <el-row :span="24" justify="center">
-
-            <el-col :span="8">
-              <div class="profileInfo-box">
-  
-                <!-- 이메일 -->
-                <div class="profileInfo">
-                  <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
-                  <span>{{profile.email}}</span>
-                </div>
-                
-                <!-- 닉네임 -->
-                <div class="profileInfo">
-                  <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <el-form-item prop="nickname">
-                    <el-input v-model.trim="ruleForm.nick" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
-                  </el-form-item>
-                </div>
-                
-
-                <!-- 연락처  -->                
-                <div class="profileInfo" >
-                  <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <el-form-item prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
-                  </el-form-item>
-                </div>
-                
-                <!-- 생일 -->
-                <div class="profileInfo">
-                  <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.birth}}</span>
-                </div>
-              </div>
-
-            </el-col>
-            
-          </el-row>
-
+          <!-- 닉네임 -->
+          <div class="profileInfo">
+            <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
+            <el-form-item prop="nickname">
+              <el-input v-model.trim="ruleForm.nick" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
+            </el-form-item>
+          </div>
+          
+          <!-- 연락처  -->                
+          <div class="profileInfo" >
+            <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
+            <el-form-item prop="phone">
+              <el-input v-model="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
+            </el-form-item>
+          </div>
+          
+          <!-- 생일 -->
+          <div class="profileInfo">
+            <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
+            <span>{{profile.birth}}</span>
+          </div>
         </el-form>
-      </el-col>
-      <!-- 수정버튼 -->
-  
-      <el-form-item>
-        <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
-      </el-form-item>
-    </el-row>
+      </div>
+    </div>
+
+  <!-- 수정버튼 -->
+  <el-form-item>
+    <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
+  </el-form-item>
 </template>
 
 <script setup>
@@ -173,5 +160,10 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-
+.profile-img-form{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+}
 </style>

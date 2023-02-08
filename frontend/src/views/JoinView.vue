@@ -1,82 +1,94 @@
 <template>
-  <el-form
-  ref="ruleFormRef"
-  :model="ruleForm"
-  status-icon
-  :rules="rules"
-  label-width="120px"
-  class="demo-ruleForm"
-  >
+  <div>
+    <h1>
+      <span style="color: #94d82d">A</span>cade<span style="color: #94d82d">M</span>eet
+    </h1>
 
-  <!-- 이메일 -->
-  <el-form-item prop="email" label="이메일" >
-    <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
-  </el-form-item>
-
-  <button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</button>
-  <button @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</button>
-  
-  <!-- 인증코드 -->
-  <el-form-item prop="authPin" label="인증코드">
-    <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
-  </el-form-item>
-  <button @click.prevent="authCheck()">인증하기</button>
-  <h5 v-if = "isCheck">확인완료</h5>
-
-  <!-- 이름 -->
-  <el-form-item prop="name" label="이름">
-    <el-input v-model.trim="ruleForm.name" type="text" autocomplete="off" placeholder="이름을 입력해 주세요." maxlength="45"/>
-  </el-form-item>
-
-    <!-- 연락처 -->
-    <el-form-item prop="phone" label="연락처">
-      <el-input v-model.number="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
-    </el-form-item>
-
-    <!-- 닉네임 -->
-    <el-form-item prop="nick" label="닉네임">
-      <el-input v-model.trim="ruleForm.nick" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
-    </el-form-item>
-
-    <!-- 생일 -->
-    <el-form-item prop="birth" label="생일">
-      <el-date-picker
-        v-model="ruleForm.birth"
-        type="date"
-        placeholder="날짜를 고르세요."
-        style="width: 100%"
-      />
-    </el-form-item>
-
-    <!-- 비밀번호 -->
-    <el-form-item  prop="password" label="비밀번호">
-      <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요"/>
-    </el-form-item>
-
-    <!-- 비밀번호 확인 -->
-    <el-form-item  prop="checkPass" label="비밀번호 확인">
-      <el-input v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호를 다시 입력해주세요"/>
-    </el-form-item>
-
-
-    <label for="joinProfile">
-        <span>프로필 설정</span>
-        <hr>
+    <el-form
+      label-position="top"
+      ref="ruleFormRef"
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      label-width="120px"
+      class="demo-ruleForm join-container"
+      >
+    <div class="join-item">
+      <!-- 프로필사진 -->
+      <label for="joinProfile">
         <!-- 이미지업로드는 되나 세로가 더 길면 사이드가 짤려 나감 -->
         <el-avatar
           :size = "300"
           :src = "profile"     
         />
-        <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
+        <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*" hidden/>
         <img src="profile" alt="">
-        
       </label>
 
-    <!-- 회원가입 -->
-    <el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
-  </el-form>
-  <el-button type="success" round @click="$router.push('/')">로그인</el-button>
+      <!-- 이름 -->
+      <el-form-item prop="name" label="이름">
+        <el-input v-model.trim="ruleForm.name" type="text" autocomplete="off" placeholder="이름을 입력해 주세요." maxlength="45"/>
+      </el-form-item>
+
+      <!-- 연락처 -->
+      <el-form-item prop="phone" label="연락처">
+        <el-input v-model.number="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
+      </el-form-item>
+
+    </div>
+
+    <div class="join-item">
+
+      <div class="auth-item">
+        <!-- 이메일 -->
+        <el-form-item prop="email" label="이메일" >
+          <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
+        </el-form-item>
+        <el-button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</el-button>
+        <el-button @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</el-button>
+      </div>
+
+      <div class="auth-item">
+        <!-- 인증코드 -->
+        <el-form-item prop="authPin" label="인증코드">
+          <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
+        </el-form-item>
+        <el-button @click.prevent="authCheck()">인증하기</el-button>
+        <h5 v-if = "isCheck">확인완료</h5>
+      </div>
+
+      <!-- 닉네임 -->
+      <el-form-item prop="nick" label="닉네임">
+        <el-input v-model.trim="ruleForm.nick" type="text" autocomplete="off" placeholder="닉네임을 입력해 주세요." maxlength="45"/>
+      </el-form-item>
+
+      <!-- 생일 -->
+      <el-form-item prop="birth" label="생일">
+        <el-date-picker
+          v-model="ruleForm.birth"
+          type="date"
+          placeholder="날짜를 고르세요."
+          style="width: 100%"
+        />
+      </el-form-item>
+
+      <!-- 비밀번호 -->
+      <el-form-item  prop="password" label="비밀번호">
+        <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요"/>
+      </el-form-item>
+
+      <!-- 비밀번호 확인 -->
+      <el-form-item  prop="checkPass" label="비밀번호 확인">
+        <el-input v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호를 다시 입력해주세요"/>
+      </el-form-item>
+    </div>
+    </el-form>
+  </div>
   
+<!-- 회원가입 -->
+<el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
+<el-button type="success" round @click="$router.push('/')">로그인</el-button>
+
 </template>
 
 <script setup>
@@ -102,16 +114,6 @@ function uploadImg (){
   console.log(image.value.files[0])
   console.log(profile.value)
 }
-
-// 정윤
-// 이미지 업로드
-// function uploadImg (){
-//   let profile = image.value.files[0];
-//   const url = URL.createObjectURL(profile);
-//   profile.value = url;
-//   console.log(image.value.files[0])
-// }
-
 
 const ruleForm = reactive({
   name : '',
@@ -353,6 +355,36 @@ const submitForm = (formEl) => {
 }
 </script>
 
-<style>
+<style scoped>
+.join-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
 
+  /* height: 100vh; */
+}
+
+.join-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30vw;
+  margin: 8px auto;
+}
+
+.auth-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.auth-item>.el-button {
+  padding: 0;
+  margin: 0;
+  height: 32px;
+}
 </style>

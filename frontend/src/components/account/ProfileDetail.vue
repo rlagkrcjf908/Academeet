@@ -1,54 +1,48 @@
 <template>
-  <el-row :span="24" justify="center">
-    <el-col>
-          <el-row :span="24" justify="center">
-
-            <el-col :span="4">
-              <!-- 프로필사진 -->
-              <img :src = "'http://192.168.219.112:8080/image/'+profile.profile.filename"  style="height:5em;">
-              
-              <!-- 유저이름 -->
-              <p>{{profile.name}}</p>
-
-            </el-col>
-            
-            <el-col :span="8">
-              <div class="profileInfo-box">
+  <div class="profile-container">
+    <div>
+      <!-- 프로필사진 -->
+      <div class='profile-img'>
+        <img :src = "'http://192.168.219.112:8080/image/'+profile.profile.filename"  style="height:100%;">
+      </div>
+      
+      <!-- 유저이름 -->
+      <p>{{profile.name}}</p>
+    </div>
   
-                <!-- 이메일 -->
-                <div class="profileInfo">
-                  <img :src="profile" alt="" style="height:1em; padding-right: 1em;">
-                  <span>{{profile.email}}</span>
-                </div>
-                
-                <!-- 닉네임 -->
-                <div class="profileInfo">
-                  <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.nick}}</span>
-                </div>
-                
+    <div class="profileInfo-box">
+    
+      <!-- 이메일 -->
+      <div class="profileInfo">
+        <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+        <span>{{profile.email}}</span>
+      </div>
+      
+      <!-- 닉네임 -->
+      <div class="profileInfo">
+        <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <span>{{profile.nick}}</span>
+      </div>
+      
+    
+      <!-- 연락처  -->                
+      <div class="profileInfo" >
+        <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <span>{{profile.phone}}</span>
+      </div>
+      
+      <!-- 생일 -->
+      <div class="profileInfo">
+        <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <span>{{profile.birth}}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 수정버튼 -->
+  <el-button type="success" round @click="$router.push('/profile/update')" class="profile-btn">수정하기</el-button>
 
-                <!-- 연락처  -->                
-                <div class="profileInfo" >
-                  <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.phone}}</span>
-                </div>
-                
-                <!-- 생일 -->
-                <div class="profileInfo">
-                  <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
-                  <span>{{profile.birth}}</span>
-                </div>
-              </div>
 
-            </el-col>
-            
-          </el-row>
-
-        </el-col>
-      </el-row>
-      <!-- 수정버튼 -->
-      <el-button type="success" round @click="$router.push('/profile/update')" class="profile-btn">수정하기</el-button>
 </template>
 
 <script setup>
@@ -60,8 +54,27 @@ console.log('받앗다',profile)
 </script>
 
 <style>
+
+.profile-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4em;
+
+  /* max-width: 960px; */
+}
+
+.profile-img{
+  background-color: rgba(205, 229, 155, 1);
+  width: 24vh;
+  height: 24vh;
+  border-radius: 100%;
+  margin: 0 8em;
+}
+
 .profileInfo-box {
-    border: 4px solid rgba(148, 216, 45, 1);
+    border: 1.5px solid rgba(148, 216, 45, 1);
     border-radius: 40px;
     box-shadow: 8px 8px 8px 2px rgba(205, 229, 155, 0.5);
     padding: 1em;

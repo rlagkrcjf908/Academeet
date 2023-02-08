@@ -1,32 +1,36 @@
-  <template>
-  <el-row justify="center" class="profile-container">
-    <el-col :span="10">
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <!-- 현재 비밀번호 -->
-        <el-form-item label="현재 비밀번호" prop="currentpass">
-          <el-input v-model.trim="ruleForm.currentpass" type="password" autocomplete="off" placeholder="현재 비밀번호를 입력해주세요"/>
-        </el-form-item>
-        <!-- 새 비밀번호 -->
-        <el-form-item label="새 비밀번호" prop="pass">
-          <el-input v-model.trim="ruleForm.pass" type="password" autocomplete="off" placeholder="새로운 비밀번호를 입력해주세요"/>
-        </el-form-item>
-        <!-- 새 비밀번호 확인 -->
-        <el-form-item label="새 비밀번호 확인" prop="checkPass">
-          <el-input
-            v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호 확인을 위해 한번 더 입력해주세요"/>
-        </el-form-item>
-        <!-- 변경 -->
-        <el-button type="success" round @click="submitForm(ruleFormRef)">변경완료</el-button>
-      </el-form>
-    </el-col>
-  </el-row>
+<template>
+
+<div class="password">
+  <el-form
+    label-position="top"
+    ref="ruleFormRef"
+    :model="ruleForm"
+    status-icon
+    :rules="rules"
+    label-width="120px"
+    class="demo-ruleForm"
+    style="width: 480px"
+  >
+    <!-- 현재 비밀번호 -->
+    <el-form-item label="현재 비밀번호" prop="currentpass">
+      <el-input v-model.trim="ruleForm.currentpass" type="password" autocomplete="off" placeholder="현재 비밀번호를 입력해주세요"/>
+    </el-form-item>
+    <!-- 새 비밀번호 -->
+    <el-form-item label="새 비밀번호" prop="pass">
+      <el-input v-model.trim="ruleForm.pass" type="password" autocomplete="off" placeholder="새로운 비밀번호를 입력해주세요"/>
+    </el-form-item>
+    <!-- 새 비밀번호 확인 -->
+    <el-form-item label="새 비밀번호 확인" prop="checkPass">
+      <el-input
+        v-model.trim="ruleForm.checkPass" type="password" autocomplete="off" placeholder="비밀번호 확인을 위해 한번 더 입력해주세요"/>
+    </el-form-item>
+    <!-- 변경 -->
+    <el-button type="success" round @click="submitForm(ruleFormRef)">변경완료</el-button>
+  </el-form>
+
+</div>
+
+
 </template>
 
 <script setup>
@@ -144,8 +148,12 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-.profile-container{
+.password{
+  /* height: 40vh; */
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4em;
 }
 </style>

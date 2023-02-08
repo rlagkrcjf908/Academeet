@@ -1,13 +1,16 @@
 <template>
-  <div>
-    <div class="loginBox">
+  <div class="login">
+    <h1>
+      <span style="color: #94d82d">A</span>cade<span style="color: #94d82d">M</span>eet
+    </h1>
       <el-form
+        label-position="top"
         ref="ruleFormRef"
         :model="ruleForm"
         status-icon
         :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
+        size="large"
+        class="demo-ruleForm login-box"
       >
         <!-- 이메일 -->
         <el-form-item prop="email" label="EMAIL">
@@ -16,7 +19,7 @@
             type="email"
             autocomplete="off"
             placeholder="이메일을 입력해 주세요."
-            maxlength="100"
+            minlength="100"
           />
         </el-form-item>
         <!-- 비밀번호 -->
@@ -28,21 +31,16 @@
             placeholder="비밀번호를 입력해주세요"
           />
         </el-form-item>
+        
+        <!-- 로그인 버튼 -->
+        <el-button type="success" @click="submitForm(ruleFormRef)" style="margin:0; width:100%; color: ;">LOGIN</el-button>
+        <!-- </div> -->
       </el-form>
-  
-      <!-- 로그인 버튼 -->
-      <el-button type="success" round @click="submitForm(ruleFormRef)"
-        >LOGIN</el-button
-      >
       <!-- 회원가입 -->
-      <router-link to="/join">회원가입</router-link>
-      <!-- </div> -->
-
-
-
-
+      <router-link to="/join" style="margin-top:16vh; text-decoration: none; color: gray;">회원가입</router-link>
   </div>
-  </div>
+
+
 </template>
 
 <script setup>
@@ -112,10 +110,17 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-.loginBox {
+.login{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
+
+.login-box{
+  min-width: 240px;
+  max-width: 400px;
+}
+
 </style>
