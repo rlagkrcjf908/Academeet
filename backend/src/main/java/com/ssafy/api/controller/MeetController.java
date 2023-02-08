@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public class MeetController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> endMeet(@PathVariable("meet_id") int meetId,
-                                                              @RequestBody @ApiParam(value = "회원가입 정보", required = true) MeetEndReq endReq) {
+                                                              @RequestBody @ApiParam(value = "회원가입 정보", required = true) MeetEndReq endReq) throws IOException {
         if (meetService.endMeet(meetId, endReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }

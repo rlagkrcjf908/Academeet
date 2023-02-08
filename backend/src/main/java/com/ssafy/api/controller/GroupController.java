@@ -121,14 +121,14 @@ public class GroupController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<GroupRes> getUserInfo(@PathVariable("group_id") int group_id) {
+    public ResponseEntity<GroupUserRes> getUserInfo(@PathVariable("group_id") int group_id) {
         /**
          * 요청 헤더 액세스 토큰이 포함된 경우G에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
          */
         Group group = groupService.getGroupByGroupId(group_id);
 
-        return ResponseEntity.status(200).body(GroupRes.of(group));
+        return ResponseEntity.status(200).body(GroupUserRes.of(group));
     }
 
     // 그룹 삭제
@@ -242,13 +242,13 @@ public class GroupController {
         return ResponseEntity.status(200).body(ArticleParamRes.of(articleService.listArticle(groupId,userId)));
     }
 
-    @GetMapping("/{articleno}")
+    @GetMapping("/{articleno}/article")
     @ApiOperation(value = "게시판 글보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.")
     public ResponseEntity<ArticleRes> getArticle(@PathVariable("articleno") @ApiParam(value = "얻어올 글의 글번호.", required = true) int articleno){
         return ResponseEntity.status(200).body(ArticleRes.of(articleService.getArticle(articleno)));
     }
 
-    @PutMapping("/{articleno}/update")
+    @PutMapping("/{articleno}/articleupdate")
     @ApiOperation(value = "게시판 글수정", notes = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<? extends BaseResponseBody> updateArticle(@PathVariable("articleno")int articleno,@RequestBody @ApiParam(value = "수정할 글정보.", required = true) ArticlePostReq articlePostReq){
         if (articleService.updateArticle(articleno,articlePostReq)) {
@@ -257,7 +257,7 @@ public class GroupController {
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
 
-    @DeleteMapping("/{articleno}")
+    @DeleteMapping("/{articleno}/Delarticle")
     @ApiOperation(value = "게시판 글삭제", notes = "글번호에 해당하는 게시글의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<? extends BaseResponseBody> deleteArticle(@PathVariable("articleno") @ApiParam(value = "살제할 글의 글번호.", required = true) int articleno){
         if (articleService.deleteArticle(articleno)) {

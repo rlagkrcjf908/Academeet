@@ -7,8 +7,11 @@ import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service("meetService")
 public class MeetServiceImpl implements MeetService {
@@ -104,17 +107,40 @@ public class MeetServiceImpl implements MeetService {
     }
 
     @Override
-    public boolean endMeet(int meetId, MeetEndReq endReq) {
+    public boolean endMeet(int meetId, MeetEndReq endReq)  {
         Meet meet = meetRepository.findMeetById(meetId);
-        List<User_Meet> um = user_MeetRepository.findByMeetid(meet);
+        if (meet == null) return false;
+        if(endReq.getStt() !=null) {
+            String[] note = endReq.getStt();
+//           String[] note = {"김학철입니다.","반갑습니다."};
+            String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+            String fileName = meet.getTitle() + UUID.randomUUID()+".txt";
+            try {
+                FileWriter fileWriter = new FileWriter(filePath + fileName);
+                for (int i = 0; i < note.length; i++) {
+                    System.out.println(note[i]);
+                    fileWriter.write(note[i] + "\n");
+                }
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<User_Meet> um = user_MeetRepository.findByMeetid(meet);
+            meet.setEndtime(endReq.getEndtime());
+            meet.setChat(endReq.getChat());
+            meet.setStt(fileName);
+            meet.setVideo(endReq.getVideo());
+            meetRepository.save(meet);
+            return true;
 
-        if(meet == null) return false;
+        }
+        List<User_Meet> um = user_MeetRepository.findByMeetid(meet);
         meet.setEndtime(endReq.getEndtime());
         meet.setChat(endReq.getChat());
-        meet.setStt(endReq.getStt());
         meet.setVideo(endReq.getVideo());
+
         meetRepository.save(meet);
-        // 출석율 저장 개인의 출석율을 저장하는 것
+//         출석율 저장 개인의 출석율을 저장하는 것
 //        for (int i = 0; i<um.size();i++){
 //
 //        }

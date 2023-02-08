@@ -109,13 +109,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserById(id);
         if(user==null)return 0;
         user.setEmail(registerInfo.getEmail());
-        // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         user.setName(registerInfo.getName());
         user.setBirth(registerInfo.getBirth());
         user.setNick(registerInfo.getNick());
         user.setPhone(registerInfo.getPhone());
         String path = "C:/Users/SSAFY/Pictures/img";
-        if (user.getProfile() == path + profile.getOriginalFilename()) {
+        if (user.getProfile() == profile.getOriginalFilename()) {
             userRepository.save(user);
             return 1;
         } else {

@@ -114,19 +114,26 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> updateUserInfo(@PathVariable("id") int id, @RequestPart
-    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo,@RequestPart MultipartFile profile) {
+    public ResponseEntity<UserRes> updateUserInfo(@PathVariable("id") int id, @RequestPart
+    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo,@RequestPart MultipartFile profile) throws MalformedURLException {
         /**
          * 요청받은 해당 유저의 고유아이디에 변경되어진 정보를 받으면 수정
          * 받은정보가 하나라도 비었을시 오류 발생
          */
 
+
         int res = userService.updateUser(id, updateInfo,profile);
-        System.out.println(updateInfo.getEmail());
         if (res > 0) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+            User user = userRepository.findUserById(id);
+            System.out.println(user.getEmail());
+            System.out.println(user.getName());
+            System.out.println(user.getNick());
+            System.out.println(user.getPhone());
+            System.out.println(user.getBirth());
+            System.out.println(user.getProfile());
+            return ResponseEntity.status(200).body(UserRes.of(user));
         }
-        return ResponseEntity.status(403).body(BaseResponseBody.of(403,"Fail"));
+        return ResponseEntity.status(403).body(null);
     }
 
     // 입력한 비밀번호 확인
