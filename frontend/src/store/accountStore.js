@@ -48,7 +48,7 @@ const actions = {
         "email": loginData.email,
         "password": loginData.password
     }
-    axios.post("http://172.30.1.26:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post("http://192.168.100.189:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       alert("정보가 확인되었습니다.\n환영합니다!")
@@ -56,6 +56,7 @@ const actions = {
       commit('SET_TOKEN', res)
       commit('SET_USERID', res.data.userRes.id)
       commit('SET_AUTHENTICATED')
+      console.log(res)
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
@@ -68,7 +69,7 @@ const actions = {
   },
   
   logout({commit}){
-    axios.get("http://172.30.1.26:8080/api/v1/auth/logout/")
+    axios.get("http://192.168.100.189:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -79,7 +80,7 @@ const actions = {
   
   // 토큰 가져오기
   getToken(){
-    axios.get("http://172.30.1.26:8080/api/v1/")
+    axios.get("http://192.168.100.189:8080/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정

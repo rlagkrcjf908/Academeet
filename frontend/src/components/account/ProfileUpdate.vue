@@ -88,7 +88,8 @@ const store = useStore()
 const ruleFormRef = ref()
 const router = useRouter()
 
-const { ...profile } = toRefs(store.state.accountStore.profile)
+const profile = JSON.parse(localStorage.getItem('userInfo'))
+console.log(profile)
 
 const ruleForm = reactive({
   nick: profile.nick,
@@ -135,12 +136,12 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
       const profileData = {
-        "img": profile.img.value,
-        "name": profile.name.value,
-        "email": profile.email.value,
+        "img": profile.img,
+        "name": profile.name,
+        "email": profile.email,
         "nick": ruleForm.nick,
         "phone": ruleForm.phone,
-        "birth": profile.birth.value
+        "birth": profile.birth
       }
       await store.dispatch('accountStore/profileUpdateAction', profileData)
       router.push({ name: 'profile' })
@@ -166,10 +167,7 @@ const handleAvatarSuccess = (
 }
 
 const beforeAvatarUpload = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
+  if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error('Avatar picture size can not exceed 2MB!')
     return false
   }
