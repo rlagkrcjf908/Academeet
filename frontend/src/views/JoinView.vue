@@ -1,8 +1,4 @@
 <template>
-  <!-- 여기부턴 아진 폼 -->
-
-  
-  
   <el-form
   ref="ruleFormRef"
   :model="ruleForm"
@@ -16,16 +12,17 @@
   <el-form-item prop="email" label="이메일" >
     <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
   </el-form-item>
+
   <!-- 클래스 삼항? 으로 class readonly 넣기 -->
   <button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</button>
-  <button @click.prevent="reCheck()" v-if = "isDupli">인증코드 재발급</button>
+  <button @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</button>
   
   <!-- 인증코드 -->
   <el-form-item prop="authPin" label="인증코드">
     <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
-    <button @click.prevent="authCheck()">인증하기</button>
-    <h5 v-if = "isCheck">확인완료</h5>
   </el-form-item>
+  <button @click.prevent="authCheck()">인증하기</button>
+  <h5 v-if = "isCheck">확인완료</h5>
 
   <!-- 이름 -->
   <el-form-item prop="name" label="이름">
@@ -76,141 +73,19 @@
         
       </label>
 
-
-
-
-
-
     <!-- 회원가입 -->
     <el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
   </el-form>
+  <el-button type="success" round @click="$router.push('/')">로그인</el-button>
   
 </template>
-
-<!-- <script>
-import { ref } from "vue";
-import router from "../router/index";
-import axios from 'axios'
-
-export default {
-  name: "JoinView",
-  data () {
-    return{
-      isDupli : false,
-      isCheck : false,
-      email: "",
-      password: "",
-      passwordCheck: "",
-      name: "",
-      phone: "",
-      nick: "",
-      birth: "",
-      profile: "",
-      authPin: "",
-    }
-  },
-
-  methods: {
-    uploadImg(){
-      var profile = this.$refs["image"].files[0];
-      const url = URL.createObjectURL(profile);
-      this.profile = url;
-      console.log(this.$refs["image"].files[0])
-    },
-
-    dupliCheck(){
-      const param = {
-        "email": this.email,
-      }
-      console.log(this.email);
-      axios.post("http://172.30.1.26:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
-        headers: { 'content-type': 'application/json' }})
-      .then(res => {
-        console.log(res);
-        if (res.data === 1) {
-          axios.put("http://172.30.1.26:8080/api/v1/user/email", this.email)
-          alert("인증번호가 전송되었습니다.")
-          this.isDupli = true
-        } else {
-          alert("이미 가입되거나 유효하지 않은 이메일입니다.")
-        }
-      })
-    },
-    reCheck(){
-      axios.put("http://172.30.1.26:8080/api/v1/user/email", this.email)
-      alert("인증번호가 전송되었습니다.")
-    },
-    authCheck(){
-      // const parauth = {
-      //   "authPin": this.authPin
-      // }
-      console.log(this.authPin);
-      axios.post("http://172.30.1.26:8080/api/v1/user/emailCheck", this.authPin)
-      .then(res => {
-        if (res.status === 200) {
-          alert("인증이 성공적으로 완료되었습니다.");
-          this.isCheck = true
-        } else {
-          alert(res.status)
-        }
-      }).catch(err => {
-        console.log(err);
-      })
-    },
-    submit() {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      };
-
-      const registerInfo = {
-        email: this.email,
-        password: this.password,
-        name: this.name,
-        phone: this.phone,
-        nick: this.nick,
-        birth: this.birth,
-      };
-
-      const frm = new FormData();
-      frm.append("profile", this.$refs["image"].files[0]);
-      frm.append(
-        "registerInfo", 
-        new Blob([JSON.stringify(registerInfo)], {type: 'application/json'})
-      );
-      for(let value of frm.values())
-        console.log(value)
-      if (this.isCheck === true && this.password === this.passwordCheck) {
-        axios.post("http://172.30.1.26:8080/api/v1/user", frm, config)
-      
-        .then(res => {
-          if (res.status === 200) {
-            alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");
-            router.push("/login");
-          } else {
-            alert(res.status)   
-          }
-        }).catch(err => {
-          console.log(err);
-        })
-      } else if (this.isCheck === true && this.password!== this.passwordCheck) {
-        alert("비밀번호가 일치하지 않습니다.");
-      } else {
-        alert("인증이 필요합니다.");
-      }
-    }
-  },
-} 
-</script> -->
 
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-// import { inject } from "vue";
 import axios from "axios"
-// const axios = inject('axios');
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
 const ruleFormRef = ref()
@@ -275,14 +150,10 @@ const isCheck = ref(false)
 
 // 이메일 유효성 검사
 const validateEmail = (rule, value, callback) => {
-  // const reg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/
   const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
   if (value === '') {
     callback(new Error('이메일을 입력해주세요'))
   } else {
-    if (value.replace(' ','') !== value){
-      callback(new Error('공백은 입력할 수 없습니다.'))
-    }
     if (regExp.test(value) === false) {
       callback(new Error('올바른 이메일을 입력해주세요'))
     }
@@ -290,47 +161,90 @@ const validateEmail = (rule, value, callback) => {
   }
 }
 
+// 인증코드입력 유효성 검사
+const validateAuthPin = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('인증코드를 입력해주세요'))
+  } else {
+    if (value.replace(' ','') !== value){
+      callback(new Error('공백은 입력할 수 없습니다.'))
+    }else{
+    callback()
+    }
+  }
+}
+
 // 인증코드 확인
 const authCheck = () => {
-  console.log(ruleForm.authPin);
-  axios.post("http://172.30.1.26:8080/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
-      alert("인증이 성공적으로 완료되었습니다.");
+      ElMessage({
+        showClose: true,
+        message:'인증 되었습니다.',
+        type: 'success',
+      })
       isCheck.value = true
     } else {
-      alert(res.status)
+      ElMessage({
+        showClose: true,
+        message:'일치하지 않는 코드입니다.',
+        type: 'error',
+      })
     }
   }).catch(err => {
+    ElMessage({
+        showClose: true,
+        message:'인증 실패했습니다.',
+        type: 'error',
+      })
     console.log(err);
   })
 }
 
-// 인증코드 재발급
-const reCheck = () => {
-  console.log('ruleForm.email',ruleForm.email)
-  axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
-  alert("인증번호가 전송되었습니다.")
-  }
-
 // 인증코드 발급
 const dupliCheck= () => {
-  console.log('ruleForm.email',ruleForm.email)
-  const param = {
-    "email": ruleForm.email,
-  }
-  axios.post("http://172.30.1.26:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
-    headers: { 'content-type': 'application/json' }})
-  .then(res => {
-    console.log(res);
-    if (res.data === 1) {
-      axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
-      alert("인증번호가 전송되었습니다.")
-      isDupli.value = true
-    } else {
-      alert("이미 가입되거나 유효하지 않은 이메일입니다.")
+  if (ruleForm.email){
+    const param = {
+      "email": ruleForm.email,
     }
-  })
+    axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+      headers: { 'content-type': 'application/json' }})
+    .then(res => {
+      console.log(res);
+      if (res.data === 1) {
+        axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
+        .then(res => {
+          ElMessage({
+            showClose: true,
+            message:'인증번호가 전송되었습니다.',
+            type: 'success',
+          })
+          isDupli.value = true
+        })
+        .catch(err => {
+          console.log(err);
+          ElMessage({
+            showClose: true,
+            message:'올바른 이메일을 입력해주세요',
+            type: 'error',
+          })
+        })
+      } else {
+        ElMessage({
+          showClose: true,
+          message:'가입되었거나 유효하지 않은 이메일입니다.',
+          type: 'error',
+        })
+      }
+    })
+  }else{
+    ElMessage({
+          showClose: true,
+          message:'이메일을 입력해주세요.',
+          type: 'warning',
+        })
+  }
 }
 
 // 비밀번호 유효성 검사
@@ -377,7 +291,7 @@ const rules = reactive({
   nick : [{ validator : validateName, trigger : 'blur' }],
   birth : [{ required : true, message : '날짜를 입력해 주세요.', trigger : 'change',  }],
   email : [{ validator : validateEmail, trigger : 'blur' }],
-  authPin : [{ required : true, message : '인증번호를 입력해 주세요.', trigger : 'blur' }],
+  authPin : [{ validator : validateAuthPin, trigger : 'blur' }],
   password: [{ validator: validatePass, trigger: 'blur' }],
   checkPass: [{ validator: validatePass2, trigger: 'blur' }]
 })
@@ -410,7 +324,7 @@ const submitForm = (formEl) => {
       );
       for(let value of frm.values())
         console.log(value)
-      axios.post("http://172.30.1.26:8080/api/v1/user", frm, config)
+      axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");

@@ -43,7 +43,7 @@
 import { reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-
+import { ElMessage } from 'element-plus'
 const store = useStore();
 const ruleFormRef = ref();
 const router = useRouter();
@@ -95,7 +95,7 @@ const submitForm = (formEl) => {
         await store.dispatch("accountStore/login", loginData);
         console.log("submit!");
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     } else {
       console.log("error submit!");
