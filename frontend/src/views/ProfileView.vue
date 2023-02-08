@@ -1,28 +1,31 @@
 <template>
-  <!-- <nav>
-  </nav> -->
-  <div class="common-layout">
+  <div>
+    <nav>
+      <el-button type="success" link @click="$router.push('/profile')">기본정보</el-button>
+      <el-button type="success" link @click="$router.push('/profile/changepassword')">비밀번호변경</el-button>
+    </nav>
+    <router-view></router-view>
+  </div>
+  <!-- <div class="common-layout">
     <el-container>
       <el-header class="header-item">
         <nav>
-          <router-link to="/profile">기본정보</router-link>
-          <router-link to="/profile/changepassword">비밀번호변경</router-link>
+          <el-button type="success" link >기본정보</el-button>
+          <el-button type="success" link >비밀번호변경</el-button>
         </nav>
       </el-header>
       <el-main>
         <router-view></router-view>
       </el-main>
     </el-container>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
 
 </script>
 <style scoped>
-.header-item{
-  border-bottom: 1px solid rgba(134, 134, 134, 1);
-  margin-bottom: 4em;
-}
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
+
 </style>
 

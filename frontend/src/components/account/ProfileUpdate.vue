@@ -3,11 +3,8 @@
   
   <el-col :span="4">
     <label for="joinProfile">
-      <!-- <el-avatar :size = "300" :src="'http://192.168.129.112:8080/image/'+profile.profile.filename" /> -->
-      <!-- <el-avatar :size = "300" :src="'http://192.168.129.112:8080/image/'+profileImg.filename" /> -->
       <el-avatar :size = "300" :src="profileImg" />
       <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
-      <!-- <img :src="'http://192.168.129.112:8080/image/'+profile.profile.filename" alt=""> -->
     </label>
     <!-- 유저이름 -->
     <p>{{profile.name}}</p>
@@ -47,7 +44,7 @@
                 <div class="profileInfo" >
                   <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
                   <el-form-item prop="phone">
-                    <el-input v-model.number="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
+                    <el-input v-model="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
                   </el-form-item>
                 </div>
                 
@@ -96,18 +93,9 @@ const ruleForm = reactive({
 const checkPhone = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('연락처를 입력해주세요.'))
-  }
-  setTimeout(() => {
-    if (!Number.isInteger(Number(value))) {
-      callback(new Error('숫자만 입력해주세요.'))
-    } else {
-      if (String(value).length < 7) {
-        callback(new Error('번호를 확인해주세요.'))
-      } else {
-        callback()
-      }
-    }
-  }, 1000)
+  }else{
+    ruleForm.phone = value.replace(/[^0-9]/g, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+  }callback()
 }
 
 // 닉네임 유효성 검사
@@ -123,22 +111,21 @@ const validateNickname = (rule, value, callback) => {
 }
 
 // 프로필사진 업로드
-const profileImg = ref('http://192.168.129.112:8080/image/'+profile.profile.filename)
+const profileImg = ref('http://192.168.219.112:8080/image/'+profile.profile.filename)
 const image = ref()
-const img = ref()
+
 function uploadImg (){
   let profile = image.value.files[0];
-  console.log(profile)
   const url = URL.createObjectURL(profile);
   profileImg.value = url;
-  console.log(image.value.files[0])
-  console.log(profileImg.value)
+  // console.log(image.value.files[0])
 }
 
 const rules = reactive({
   nick: [{ validator: validateNickname, trigger: 'blur' }],
   phone: [{ validator: checkPhone, trigger: 'blur' }]
 })
+
 // 회원정보수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
@@ -165,10 +152,10 @@ const submitForm = (formEl) => {
         new Blob([JSON.stringify(updateInfo)], {type: 'application/json'})
       );
       console.log('보내는 폼',frm);
-      axios.put(`http://192.168.129.112:8080/api/v1/user/${id}/update`, frm, config)
+      axios.put(`http://192.168.219.112:8080/api/v1/user/${id}/update`, frm, config)
       .then(res => {
         console.log('답',res.data)
-      localStorage.setItem('userInfo', JSON.stringify(res.data));
+        localStorage.setItem('userInfo', JSON.stringify(res.data));
         
         router.push("/");
         }).catch(err => {
