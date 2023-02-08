@@ -13,7 +13,6 @@
     <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
   </el-form-item>
 
-  <!-- 클래스 삼항? 으로 class readonly 넣기 -->
   <button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</button>
   <button @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</button>
   
@@ -96,13 +95,23 @@ const image = ref()
 
 // 이미지 업로드
 function uploadImg (){
-  let profile = image.value.files[0];
-  console.log(profile)
-  const url = URL.createObjectURL(profile);
+  let profileImg = image.value.files[0];
+  console.log(profileImg)
+  const url = URL.createObjectURL(profileImg);
   profile.value = url;
   console.log(image.value.files[0])
   console.log(profile.value)
 }
+
+// 정윤
+// 이미지 업로드
+// function uploadImg (){
+//   let profile = image.value.files[0];
+//   const url = URL.createObjectURL(profile);
+//   profile.value = url;
+//   console.log(image.value.files[0])
+// }
+
 
 const ruleForm = reactive({
   name : '',

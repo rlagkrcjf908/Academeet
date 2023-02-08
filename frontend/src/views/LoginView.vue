@@ -1,41 +1,47 @@
 <template>
-  <div class="loginBox">
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      status-icon
-      :rules="rules"
-      label-width="120px"
-      class="demo-ruleForm"
-    >
-      <!-- 이메일 -->
-      <el-form-item prop="email" label="EMAIL">
-        <el-input
-          v-model.trim="ruleForm.email"
-          type="email"
-          autocomplete="off"
-          placeholder="이메일을 입력해 주세요."
-          maxlength="100"
-        />
-      </el-form-item>
-      <!-- 비밀번호 -->
-      <el-form-item prop="password" label="PASSWORD">
-        <el-input
-          v-model.trim="ruleForm.password"
-          type="password"
-          autocomplete="off"
-          placeholder="비밀번호를 입력해주세요"
-        />
-      </el-form-item>
-    </el-form>
+  <div>
+    <div class="loginBox">
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <!-- 이메일 -->
+        <el-form-item prop="email" label="EMAIL">
+          <el-input
+            v-model.trim="ruleForm.email"
+            type="email"
+            autocomplete="off"
+            placeholder="이메일을 입력해 주세요."
+            maxlength="100"
+          />
+        </el-form-item>
+        <!-- 비밀번호 -->
+        <el-form-item prop="password" label="PASSWORD">
+          <el-input
+            v-model.trim="ruleForm.password"
+            type="password"
+            autocomplete="off"
+            placeholder="비밀번호를 입력해주세요"
+          />
+        </el-form-item>
+      </el-form>
+  
+      <!-- 로그인 버튼 -->
+      <el-button type="success" round @click="submitForm(ruleFormRef)"
+        >LOGIN</el-button
+      >
+      <!-- 회원가입 -->
+      <router-link to="/join">회원가입</router-link>
+      <!-- </div> -->
 
-    <!-- 로그인 버튼 -->
-    <el-button type="success" round @click="submitForm(ruleFormRef)"
-      >LOGIN</el-button
-    >
-    <!-- 회원가입 -->
-    <router-link to="/join">회원가입</router-link>
-    <!-- </div> -->
+
+
+
+  </div>
   </div>
 </template>
 
@@ -43,7 +49,7 @@
 import { reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { ElMessage } from 'element-plus'
+
 const store = useStore();
 const ruleFormRef = ref();
 const router = useRouter();
@@ -95,7 +101,7 @@ const submitForm = (formEl) => {
         await store.dispatch("accountStore/login", loginData);
         console.log("submit!");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     } else {
       console.log("error submit!");

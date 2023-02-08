@@ -8,10 +8,10 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
           <tr>
-            <th>시작시간</th>
+            <th>No.</th>
             <th>회의제목</th>
             <th>그룹이름</th>
-            <th>회의호스트</th>
+            <th>회의시간</th>
           </tr>
         </thead>
       </table>
@@ -21,17 +21,17 @@
         <tbody>
           <tr v-for="(item, index) in meetingUserList" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
-            <td class="meeting-success" v-if="item.allAtt >= 80">
-              {{ item.allAtt }}
+            <td >{{ item.meetTitle }}</td>
+            <td>{{ item.groupTitle }}</td>
+            <td>
+              {{ item.startTime }} ~ {{ item.endTime }}
             </td>
-            <td class="meeting-fail" v-else>{{ item.allAtt }}</td>
             <el-button
               class="detail-btn"
-              @click="routeToUser(item)"
+              @click="meetJoin(item)"
               type="success"
               plain
-              >{{ item.name }}:{{ item.userId }}</el-button
+              >미팅 참여</el-button
             >
           </tr>
         </tbody>
@@ -51,17 +51,21 @@ export default {
   name: "meetingList",
   setup() {
     const router = useRouter();
-    const groupId = ref();
     const meetingUserList = ref([]);
     const user = JSON.parse(localStorage.getItem("userInfo"));
     console.log(user.id);
-    ime.userId = user.id;
+    const userId = user.id;
     
-    const routeToUser = (item) => {
-      console.log("item.userId: ", item.userId);
+    const meetJoin = () => {
+      console.log("item.userId: ", userId);
+      const payload = {
+        userName: user.Name,
+        // meetTitle: item.meetTitle
+      }
+      this.listStore.commit('SET_MEET_INFO', payload)
       router.push({
         name: "meeting",
-        params: { userId: item.userId },
+        params: { userId: userId },
       });
     };
 
@@ -69,26 +73,26 @@ export default {
 
     return {
       user,
-      groupId,
+      userId,
       meetingUserList,
-      routeToUser,
+      meetJoin
     };
   },
   async mounted() {
-    this.groupId = 2;
     console.log("userId==", this.userId);
     const res = await requestMeetingList(this.userId);
     console.log("전체 출석 res", res);
     const datas = res.data;
     const list = datas.map((item) => {
       return {
-        userId: item.userId,
-        name: item.name,
-        allAtt: item.allAtt,
+        meetTitle: item.meetTitle,
+        groupTitle: item.groupTitle,
+        startTime: item.startTime,
+        endTime: item.endTime,
       };
     });
     this.meetingUserList = list;
-    console.log("meetingUserList value XX", this.meetingUserList);
+    // console.log("meetingUserList value XX", this.meetingUserList);
   },
 };
 </script>

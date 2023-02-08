@@ -1,4 +1,4 @@
-<template>
+  <template>
   <el-row justify="center" class="profile-container">
     <el-col :span="10">
       <el-form

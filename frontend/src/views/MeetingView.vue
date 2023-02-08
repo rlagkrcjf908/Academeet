@@ -5,6 +5,10 @@
         <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
     </div> -->
     <div id="join-dialog" class="jumbotron vertical-center">
+        {{ $store.state.userName }}
+        {{ $store.state.meetTitle }}
+        {{ userName }}
+        {{ meetTitle }}
         <h1>Join a video session</h1>
         <div class="form-group">
         <p>
@@ -159,6 +163,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../components/meeting/UserVideo";
@@ -236,6 +241,15 @@ data() {
 mounted: function() {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.speechRecognition = new SpeechRecognition();
+},
+
+computed:{
+    ...mapState(['userName', 'meetTitle'])
+},
+
+created(){
+    console.log(this.userName)
+    console.log(this.meetTitle)
 },
 
 methods: {

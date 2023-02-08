@@ -1,5 +1,18 @@
 <template>
   <!-- 폼 시작 -->
+  
+  <el-col :span="4">
+    <label for="joinProfile">
+      <!-- <el-avatar :size = "300" :src="'http://192.168.129.112:8080/image/'+profile.profile.filename" /> -->
+      <!-- <el-avatar :size = "300" :src="'http://192.168.129.112:8080/image/'+profileImg.filename" /> -->
+      <el-avatar :size = "300" :src="profileImg" />
+      <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
+      <!-- <img :src="'http://192.168.129.112:8080/image/'+profile.profile.filename" alt=""> -->
+    </label>
+    <!-- 유저이름 -->
+    <p>{{profile.name}}</p>
+  </el-col>
+
   <el-row :span="24" justify="center">
     <el-col>
         <el-form
@@ -12,23 +25,6 @@
           
           <el-row :span="24" justify="center">
 
-            <el-col :span="4">
-              <!-- 프로필사진 -->
-              <el-upload
-              class="avatar-uploader"
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-                >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <p v-else class="avatar-uploader-icon">+</p>
-              </el-upload>
-              <!-- 유저이름 -->
-              <p>{{profile.name}}</p>
-
-            </el-col>
-            
             <el-col :span="8">
               <div class="profileInfo-box">
   
@@ -80,15 +76,16 @@
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-// import { profileUpdate } from '@/common/api/accountAPI.js'
-// import { onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { profileUpdate } from '@/common/api/accountAPI.js'
+import axios from "axios"
 
 const store = useStore()
 const ruleFormRef = ref()
 const router = useRouter()
 
-const { ...profile } = toRefs(store.state.accountStore.profile)
+const profile = JSON.parse(localStorage.getItem('userInfo'))
+console.log('받음',profile)
 
 const ruleForm = reactive({
   nick: profile.nick,
@@ -101,7 +98,7 @@ const checkPhone = (rule, value, callback) => {
     return callback(new Error('연락처를 입력해주세요.'))
   }
   setTimeout(() => {
-    if (!Number.isInteger(value)) {
+    if (!Number.isInteger(Number(value))) {
       callback(new Error('숫자만 입력해주세요.'))
     } else {
       if (String(value).length < 7) {
@@ -125,6 +122,19 @@ const validateNickname = (rule, value, callback) => {
   }
 }
 
+// 프로필사진 업로드
+const profileImg = ref('http://192.168.129.112:8080/image/'+profile.profile.filename)
+const image = ref()
+const img = ref()
+function uploadImg (){
+  let profile = image.value.files[0];
+  console.log(profile)
+  const url = URL.createObjectURL(profile);
+  profileImg.value = url;
+  console.log(image.value.files[0])
+  console.log(profileImg.value)
+}
+
 const rules = reactive({
   nick: [{ validator: validateNickname, trigger: 'blur' }],
   phone: [{ validator: checkPhone, trigger: 'blur' }]
@@ -132,19 +142,40 @@ const rules = reactive({
 // 회원정보수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return
-  formEl.validate(async (valid) => {
+  formEl.validate( (valid) => {
     if (valid) {
-      const profileData = {
-        "img": profile.img.value,
-        "name": profile.name.value,
-        "email": profile.email.value,
-        "nick": ruleForm.nick,
-        "phone": ruleForm.phone,
-        "birth": profile.birth.value
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+
+      const updateInfo = {
+        name: profile.name,
+        email: profile.email,
+        nick: ruleForm.nick,
+        phone: ruleForm.phone,
+        birth: profile.birth
       }
-      await store.dispatch('accountStore/profileUpdateAction', profileData)
-      router.push({ name: 'profile' })
-      console.log('submit!')
+      const id = profile.id
+      const frm = new FormData();
+      frm.append("profile", image.value.files[0]);
+      frm.append(
+        "updateInfo", 
+        new Blob([JSON.stringify(updateInfo)], {type: 'application/json'})
+      );
+      console.log('보내는 폼',frm);
+      axios.put(`http://192.168.129.112:8080/api/v1/user/${id}/update`, frm, config)
+      .then(res => {
+        console.log('답',res.data)
+      localStorage.setItem('userInfo', JSON.stringify(res.data));
+        
+        router.push("/");
+        }).catch(err => {
+          alert("실패");
+          console.log(err);
+        })
+
     } else {
       console.log('error submit!')
       return false
@@ -152,60 +183,8 @@ const submitForm = (formEl) => {
   })
 }
 
-// 프로필사진 업로드
-const imageUrl = ref('profile.value.img')
-const handleAvatarSuccess = (
-  response,
-  uploadFile
-) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw)
-  console.log('uploadFile:',uploadFile)
-  console.log('업로드된이미지url1번:',imageUrl.value)
-
-  console.log('imageUrl1번:',imageUrl)
-}
-
-const beforeAvatarUpload = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
-  }
-  console.log('업로드된이미지url:',imageUrl.value)
-  console.log('imageUrl:',imageUrl)
-  console.log('rawFile:',rawFile)
-
-  return true
-}
 </script>
 
+<style>
 
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
 </style>
