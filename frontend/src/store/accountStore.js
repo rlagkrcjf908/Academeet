@@ -2,6 +2,7 @@ import { profileUpdate } from "../common/api/accountAPI";
 import axios from 'axios'
 import router from '../router/index'
 import setAuthHeader from 'axios'
+import { ElMessage } from 'element-plus'
 
 const state = {
   token : null,
@@ -48,10 +49,9 @@ const actions = {
         "email": loginData.email,
         "password": loginData.password
     }
-    axios.post("http://localhost:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post("http://192.168.100.191:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
-      alert("정보가 확인되었습니다.\n환영합니다!")
       commit('SET_USERINFO', res.data)
       commit('SET_TOKEN', res)
       commit('SET_USERID', res.data.userRes.id)
@@ -60,35 +60,47 @@ const actions = {
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
+      ElMessage({
+        showClose: true,
+        message:'로그인 성공! 환영합니다.',
+        type: 'success',
+      })
       router.push("/")
     }).catch(e => {
-      console.log('e: ', e)
-      console.log('error.response: ', e.response)
-      alert("로그인 요청에 문제가 발생했습니다.")
-      router.push("/login")
+      console.log(e)
+      ElMessage({
+        showClose: true,
+        message:'존재하지 않는 회원 정보 입니다',
+        type: 'error',
+      })
     })
   },
   
   logout({commit}){
-    axios.get("http://localhost:8080/api/v1/auth/logout/")
+    axios.get("http://192.168.100.191:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
     commit('LOGOUT')
-    alert("로그아웃이 성공적으로 이루어졌습니다.")
+    ElMessage({
+      showClose: true,
+      message:'로그아웃 되었습니다.',
+      type: 'success',
+    })
     router.push("/login")
   },
   
   // 토큰 가져오기
   getToken(){
-    axios.get("http://localhost:8080/api/v1/")
+    axios.get("http://192.168.100.191:8080/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정
-  // 프로필 수정
-  profileUpdateAction: async ({ commit }, profileData) => {
-    const response = await profileUpdate(state.id, JSON.stringify(profileData));
-    commit("SET_USER_PROFILE", profileData);
+  profileUpdateAction: async ({ commit }, payload) => {
+    console.log(state.userId)
+    const response = await profileUpdate(payload.id, payload.frm, payload.config);
+    const profileData = response.data
+    console.log(profileData)
     commit("SET_USER_PROFILE", profileData);
   },
 };
