@@ -12,7 +12,7 @@ import java.util.Date;
 @ApiModel("AttendanceResponse")
 public class AttendRes {
     @ApiModelProperty(name="meetid")
-    String meetId;
+    int meetId;
     @ApiModelProperty(name="title")
     String title;
     @ApiModelProperty(name="MeetDate")

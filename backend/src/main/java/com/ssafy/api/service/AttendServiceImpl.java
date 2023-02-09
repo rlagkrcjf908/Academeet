@@ -67,11 +67,13 @@ public class AttendServiceImpl implements AttendService{
 
         //해당유저가 진행한 모든 미팅룸 번호
         List<Attendance> att = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
+        System.out.println(att.get(0).getMeetid());
         //미팅룸 번호로 타이틀과 날짜과 미팅 그룹 사용자의 출석률
         List<AttendRes> resList = new ArrayList<>();
         for (int i = 0; i<att.size();i++){
             Meet meet = att.get(i).getMeetid();
             AttendRes res = new AttendRes();
+            res.setMeetId(meet.getId());
             res.setTitle(meet.getTitle());
             res.setDate(meet.getDate());
             res.setAttendance(att.get(i).getAttendance());
