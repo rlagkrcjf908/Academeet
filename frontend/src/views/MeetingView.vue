@@ -1,29 +1,26 @@
 <template>
 <div id="main-container" class="container">
     <div id="join" v-if="!sessionCamera">
+        {{$store.state.userName}}
     <!-- <div id="img-div">
         <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
     </div> -->
     <div id="join-dialog" class="jumbotron vertical-center">
-        {{ $store.state.userName }}
-        {{ $store.state.meetTitle }}
-        {{ userName }}
-        {{ meetTitle }}
         <h1>Join a video session</h1>
         <div class="form-group">
         <p>
-            <label>Participant</label>
+            <label>회의제목</label>
             <input
-            v-model="myUserName"
+            v-model="mySessionId"
             class="form-control"
             type="text"
             required
             />
         </p>
         <p>
-            <label>Session</label>
+            <label>참가자</label>
             <input
-            v-model="mySessionId"
+            v-model="myUserName"
             class="form-control"
             type="text"
             required
@@ -163,10 +160,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../components/meeting/UserVideo";
+import { meetingCreate } from "@/common/api/meetingAPI";
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -185,7 +182,12 @@ components: {
     // SpeechRecognition,
 },
 
+
+
+
 data() {
+    const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
+    console.log(meetInfo);
     return {
     publisher : "publisher",
     subscriber : "subscriber",
@@ -215,8 +217,8 @@ data() {
     screensharing: false,
 
     // Join form
-    mySessionId: "SessionA",
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
+    mySessionId: meetInfo.meetTitle,
+    myUserName: meetInfo.userName,
 
     // recording
     hasAudio : true,
@@ -241,15 +243,6 @@ data() {
 mounted: function() {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.speechRecognition = new SpeechRecognition();
-},
-
-computed:{
-    ...mapState(['userName', 'meetTitle'])
-},
-
-created(){
-    console.log(this.userName)
-    console.log(this.meetTitle)
 },
 
 methods: {

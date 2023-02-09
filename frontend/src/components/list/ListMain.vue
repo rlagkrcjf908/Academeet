@@ -41,9 +41,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { requestMeetingList } from "@/common/api/meetingAPI";
 import { ref } from "vue";
+import { listStore } from "../../store/index";
 import { useRouter } from "vue-router";
+import router from '@/router';
 
 
 
@@ -55,18 +58,18 @@ export default {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     console.log(user.id);
     const userId = user.id;
+    const userName = user.name;
     
-    const meetJoin = () => {
-      console.log("item.userId: ", userId);
-      const payload = {
-        userName: user.Name,
-        // meetTitle: item.meetTitle
+    const meetJoin = (item) => {
+      const meetInfo = {
+        userName: userName,
+        meetTitle: item.meetTitle,
       }
-      this.listStore.commit('SET_MEET_INFO', payload)
-      router.push({
-        name: "meeting",
-        params: { userId: userId },
-      });
+      console.log(meetInfo);
+      // this.$store.commit('SET_MEET_INFO', meetInfo);
+      // sessionStorage.removeItem("meetInfo", JSON.stringify(meetInfo));
+      sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
+      router.push({ name: "meeting" })
     };
 
     // 요청결과 리스트
@@ -75,9 +78,22 @@ export default {
       user,
       userId,
       meetingUserList,
-      meetJoin
+      meetJoin,
     };
   },
+  // methods: {
+  //   ...mapMutations(["SET_MEET_INFO"]),
+  //   meetJoin: (item) => {
+  //     const user = JSON.parse(localStorage.getItem("userInfo"));
+  //     const userId = user.id
+  //     const meetInfo = {
+  //       userId: userId,
+  //       meetTitle: item.meetTitle,
+  //     }
+  //     this.listStore.commit('SET_MEET_INFO', meetInfo);
+  //     router.push({ name: "meeting" })
+  //   }
+  // },
   async mounted() {
     console.log("userId==", this.userId);
     const res = await requestMeetingList(this.userId);

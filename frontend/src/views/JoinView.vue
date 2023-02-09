@@ -226,7 +226,7 @@ function uploadImg (){
   const url = URL.createObjectURL(profile);
   profile.value = url;
   console.log(image.value.files[0])
-  console.log(profile.value)
+  console.log("이미지",profile.value)
 }
 
 const ruleForm = reactive({
