@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="join">
     <h1>
       <span style="color: #94d82d">A</span>cade<span style="color: #94d82d">M</span>eet
     </h1>
@@ -32,7 +32,7 @@
 
       <!-- 연락처 -->
       <el-form-item prop="phone" label="연락처">
-        <el-input v-model.number="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
+        <el-input v-model="ruleForm.phone" placeholder="예) 01012345678" maxlength="12"/>
       </el-form-item>
 
     </div>
@@ -44,8 +44,8 @@
         <el-form-item prop="email" label="이메일" >
           <el-input v-model.trim="ruleForm.email" type="email" autocomplete="off" placeholder="이메일을 입력해 주세요." maxlength="100" :readonly="isDupli"/>
         </el-form-item>
-        <el-button @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</el-button>
-        <el-button @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</el-button>
+        <el-button type="info" plain size="small" @click.prevent="dupliCheck()" v-if="!isCheck && !isDupli">인증코드 발급</el-button>
+        <el-button type="info" plain @click.prevent="dupliCheck()" v-if = "isDupli">인증코드 재발급</el-button>
       </div>
 
       <div class="auth-item">
@@ -53,7 +53,7 @@
         <el-form-item prop="authPin" label="인증코드">
           <el-input v-model.trim="ruleForm.authPin" type="text" autocomplete="off" placeholder="인증코드를 입력해 주세요." maxlength="100" :readonly="isCheck"/>
         </el-form-item>
-        <el-button @click.prevent="authCheck()">인증하기</el-button>
+        <el-button type="info" plain size="small" @click.prevent="authCheck()">인증하기</el-button>
         <h5 v-if = "isCheck">확인완료</h5>
       </div>
 
@@ -86,8 +86,10 @@
   </div>
   
 <!-- 회원가입 -->
-<el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
-<el-button type="success" round @click="$router.push('/')">로그인</el-button>
+<div>
+  <el-button type="success"  @click="submitForm(ruleFormRef)">회원가입</el-button>
+  <el-button type="success"  @click="$router.push('/')">로그인</el-button>
+</div>
 
 </template>
 
@@ -142,18 +144,9 @@ const validateName = (rule, value, callback) => {
 const checkPhone = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('연락처를 입력해주세요.'))
-  }
-  setTimeout(() => {
-    if (!Number.isInteger(value)) {
-      callback(new Error('숫자만 입력해주세요.'))
-    } else {
-      if (String(value).length < 7) {
-        callback(new Error('번호를 확인해주세요.'))
-      } else {
-        callback()
-      }
-    }
-  }, 1000)
+  }else{
+    ruleForm.phone = value.replace(/[^0-9]/g, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+  }callback()
 }
 
 const isDupli = ref(false)
@@ -179,6 +172,9 @@ const validateAuthPin = (rule, value, callback) => {
   } else {
     if (value.replace(' ','') !== value){
       callback(new Error('공백은 입력할 수 없습니다.'))
+    if (!isCheck){
+      callback(new Error('인증코드를 확인 해주세요'))
+    }
     }else{
     callback()
     }
@@ -333,8 +329,7 @@ const submitForm = (formEl) => {
         "registerInfo", 
         new Blob([JSON.stringify(registerInfo)], {type: 'application/json'})
       );
-      for(let value of frm.values())
-        console.log(value)
+
       axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
@@ -356,12 +351,22 @@ const submitForm = (formEl) => {
 </script>
 
 <style scoped>
+
+.join{
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
 .join-container{
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 80vw;
+  margin: auto;
 
   /* height: 100vh; */
 }
@@ -385,6 +390,5 @@ const submitForm = (formEl) => {
 .auth-item>.el-button {
   padding: 0;
   margin: 0;
-  height: 32px;
 }
 </style>

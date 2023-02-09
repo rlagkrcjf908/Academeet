@@ -4,7 +4,7 @@
       <div class='profile-img-form'>
         <label for="joinProfile">
           <el-avatar class='profile-img' :src="profileImg" />
-          <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*"/>
+          <input ref="image" @change="uploadImg()" type="file" id="joinProfile" accept="image/*" hidden/>
         </label>
         <!-- 유저이름 -->
         <p>{{profile.name}}</p>
@@ -51,17 +51,14 @@
     </div>
 
   <!-- 수정버튼 -->
-  <el-form-item>
     <el-button type="success" round @click="submitForm(ruleFormRef)">저장하기</el-button>
-  </el-form-item>
 </template>
 
 <script setup>
-import { reactive, ref, toRefs } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
-import { profileUpdate } from '@/common/api/accountAPI.js'
 import axios from "axios"
 
 const store = useStore()
@@ -69,7 +66,6 @@ const ruleFormRef = ref()
 const router = useRouter()
 
 const profile = JSON.parse(localStorage.getItem('userInfo'))
-console.log('받음',profile)
 
 const ruleForm = reactive({
   nick: profile.nick,
@@ -98,14 +94,13 @@ const validateNickname = (rule, value, callback) => {
 }
 
 // 프로필사진 업로드
-const profileImg = ref('http://192.168.219.112:8080/image/'+profile.profile.filename)
+const profileImg = ref('http://192.168.100.191:8080/image/'+profile.profile.filename)
 const image = ref()
 
 function uploadImg (){
   let profile = image.value.files[0];
   const url = URL.createObjectURL(profile);
   profileImg.value = url;
-  // console.log(image.value.files[0])
 }
 
 const rules = reactive({
@@ -133,24 +128,35 @@ const submitForm = (formEl) => {
       }
       const id = profile.id
       const frm = new FormData();
-      frm.append("profile", image.value.files[0]);
+
+      if (image.value.files[0] !== undefined){
+        frm.append("profile", image.value.files[0]);
+      }
+   
       frm.append(
         "updateInfo", 
         new Blob([JSON.stringify(updateInfo)], {type: 'application/json'})
       );
-      console.log('보내는 폼',frm);
-      axios.put(`http://192.168.219.112:8080/api/v1/user/${id}/update`, frm, config)
+
+      axios.put(`http://192.168.100.191:8080/api/v1/user/${id}/update`, frm, config)
       .then(res => {
-        console.log('답',res.data)
         localStorage.setItem('userInfo', JSON.stringify(res.data));
-        
-        router.push("/");
+        router.push("/profile");
         }).catch(err => {
-          alert("실패");
+          ElMessage({
+            showClose: true,
+            message:'수정 실패했습니다.',
+            type: 'error',
+          })
           console.log(err);
         })
 
     } else {
+      ElMessage({
+            showClose: true,
+            message:'수정 실패했습니다.',
+            type: 'error',
+          })
       console.log('error submit!')
       return false
     }

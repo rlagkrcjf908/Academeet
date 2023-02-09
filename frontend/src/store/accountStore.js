@@ -49,7 +49,7 @@ const actions = {
         "email": loginData.email,
         "password": loginData.password
     }
-    axios.post("http://192.168.219.112:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post("http://192.168.100.191:8080/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       commit('SET_USERINFO', res.data)
@@ -76,7 +76,7 @@ const actions = {
   },
   
   logout({commit}){
-    axios.get("http://192.168.219.112:8080/api/v1/auth/logout/")
+    axios.get("http://192.168.100.191:8080/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -91,7 +91,7 @@ const actions = {
   
   // 토큰 가져오기
   getToken(){
-    axios.get("http://192.168.219.112:8080/api/v1/")
+    axios.get("http://192.168.100.191:8080/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정

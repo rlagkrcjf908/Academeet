@@ -2,9 +2,7 @@
   <div class="profile-container">
     <div>
       <!-- 프로필사진 -->
-      <div class='profile-img'>
-        <img :src = "'http://192.168.219.112:8080/image/'+profile.profile.filename"  style="height:100%;">
-      </div>
+        <img :src = "'http://192.168.100.191:8080/image/'+profile.profile.filename"  style="height:100%; " class='profile-img'>
       
       <!-- 유저이름 -->
       <p>{{profile.name}}</p>
@@ -41,7 +39,6 @@
   
   <!-- 수정버튼 -->
   <el-button type="success" round @click="$router.push('/profile/update')" class="profile-btn">수정하기</el-button>
-
 
 </template>
 

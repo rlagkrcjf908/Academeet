@@ -136,7 +136,7 @@ const actions = {
   },
 
   // getAttdUser: async ({ commit }) => {
-  //   axios.get(`http://192.168.219.112:8080/.json`).then((response)=>{
+  //   axios.get(`http://192.168.100.191:8080/.json`).then((response)=>{
   //     console.log(response.data);//ajax로 받아온 데이터
   //     groupUserList = response.data.SET_ATTD_USER             
   //   }).then(groupUserList => {})
