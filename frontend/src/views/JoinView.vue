@@ -183,7 +183,7 @@ const validateAuthPin = (rule, value, callback) => {
 
 // 인증코드 확인
 const authCheck = () => {
-  axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("https://academeet.shop/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
       ElMessage({
@@ -215,12 +215,12 @@ const dupliCheck= () => {
     const param = {
       "email": ruleForm.email,
     }
-    axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+    axios.post("https://academeet.shop/api/v1/user/login/idCheck", JSON.stringify(param), {
       headers: { 'content-type': 'application/json' }})
     .then(res => {
       console.log(res);
       if (res.data === 1) {
-        axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
+        axios.put("https://academeet.shop/api/v1/user/email", ruleForm.email)
         .then(res => {
           ElMessage({
             showClose: true,
@@ -330,7 +330,7 @@ const submitForm = (formEl) => {
         new Blob([JSON.stringify(registerInfo)], {type: 'application/json'})
       );
 
-      axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
+      axios.post("https://academeet.shop/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");

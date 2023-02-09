@@ -193,7 +193,7 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
+const APPLICATION_SERVER_URL = "https://academeet.shop/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
 // const OPENVIDU_SERVER_URL = "https://localhost:4443";
@@ -652,7 +652,7 @@ methods: {
         headers: { "Content-Type": "application/json" },
         }
     );
-    
+    // 나중에 오세요(주소)
     this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
     document.getElementById('buttonStartRecording').style.visibility = "visible";
     document.getElementById('buttonStopRecording').style.visibility = "hidden";      

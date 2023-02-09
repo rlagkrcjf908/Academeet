@@ -2,7 +2,7 @@ import { meetingCreate } from "../common/api/meetingAPI";
 import router from '../router/index'
 
 const state = {
-  id:4,
+  id:null,
   meetingInfo:null,
 };
 

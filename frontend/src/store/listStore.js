@@ -1,6 +1,4 @@
 import { requestMeetingList } from "@/common/api/meetingAPI";
-import { requestMeetingList } from "@/common/api/meetingAPI";
-
 //변수들의 집합
 const state = {
   meetList: [],
@@ -15,8 +13,6 @@ const getters = {
 
 //변수를 조작하는 함수들을 선언
 const mutations = {
-  SET_MEET_LIST: (state, payload) => {
-    state.meetList = payload;
   SET_MEET_LIST: (state, payload) => {
     state.meetList = payload;
   },

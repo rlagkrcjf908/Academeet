@@ -9,10 +9,8 @@
         <thead>
           <tr>
             <th>No.</th>
-            <th>No.</th>
             <th>회의제목</th>
             <th>그룹이름</th>
-            <th>회의시간</th>
             <th>회의시간</th>
           </tr>
         </thead>
@@ -27,18 +25,12 @@
             <td>{{ item.groupTitle }}</td>
             <td>
               {{ item.startTime }} ~ {{ item.endTime }}
-            <td >{{ item.meetTitle }}</td>
-            <td>{{ item.groupTitle }}</td>
-            <td>
-              {{ item.startTime }} ~ {{ item.endTime }}
             </td>
             <el-button
               class="detail-btn"
               @click="meetJoin(item)"
-              @click="meetJoin(item)"
               type="success"
               plain
-              >미팅 참여</el-button
               >미팅 참여</el-button
             >
           </tr>
@@ -85,24 +77,11 @@ export default {
     return {
       user,
       userId,
-      userId,
       meetingUserList,
       meetJoin,
     };
   },
-  // methods: {
-  //   ...mapMutations(["SET_MEET_INFO"]),
-  //   meetJoin: (item) => {
-  //     const user = JSON.parse(localStorage.getItem("userInfo"));
-  //     const userId = user.id
-  //     const meetInfo = {
-  //       userId: userId,
-  //       meetTitle: item.meetTitle,
-  //     }
-  //     this.listStore.commit('SET_MEET_INFO', meetInfo);
-  //     router.push({ name: "meeting" })
-  //   }
-  // },
+
   async mounted() {
     console.log("userId==", this.userId);
     const res = await requestMeetingList(this.userId);
@@ -114,15 +93,9 @@ export default {
         groupTitle: item.groupTitle,
         startTime: item.startTime,
         endTime: item.endTime,
-        meetTitle: item.meetTitle,
-        groupTitle: item.groupTitle,
-        startTime: item.startTime,
-        endTime: item.endTime,
       };
     });
     this.meetingUserList = list;
-    // console.log("meetingUserList value XX", this.meetingUserList);
-    // console.log("meetingUserList value XX", this.meetingUserList);
   },
 };
 </script>

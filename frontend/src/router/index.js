@@ -141,13 +141,6 @@ const routes = [
             name: 'listMain',
             component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
           },
-          // {
-          //   //전체 출석보기
-          //   // path: `meetingList`,
-          //   path: `meetingList`,
-          //   name: "meetingList",
-          //   component: () => import(/* webpackChunkName: "meetingList" */"@/components/list/MeetingList.vue"),
-          // },
         ]
       },
     ]
