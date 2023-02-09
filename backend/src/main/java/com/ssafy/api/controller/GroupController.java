@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.ArticlePostReq;
+import com.ssafy.api.request.AttendUpdateReq;
 import com.ssafy.api.request.GroupCreatePostReq;
 import com.ssafy.api.request.GroupUpdatePostReq;
 import com.ssafy.api.response.*;
@@ -213,10 +214,14 @@ public class GroupController {
     }
     //그룹 내 회원 출석 상세정보 수정
     @PutMapping("/{group_id}/{user_id}/update")
-    public ResponseEntity<List<AttendGroupRes>> updateAttendance(@PathVariable("user_id")int userId, @PathVariable("group_id")int groupId,
-    @RequestBody double att){
-        List<AttendGroupRes> agr = attendService.getGroupAttendInfo(groupId);
-        return ResponseEntity.status(200).body(agr);
+    public ResponseEntity<? extends BaseResponseBody> updateAttendance(@PathVariable("user_id")int userId, @PathVariable("group_id")int groupId,
+                                                      @RequestBody AttendUpdateReq attendUpdateReq){
+        boolean agr = attendService.updateAttendance(userId,groupId,attendUpdateReq);
+        if(agr) {
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }else{
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403,"Fail"));
+        }
     }
     //그룹 게시판 API------------------------------------------------------------------------
 

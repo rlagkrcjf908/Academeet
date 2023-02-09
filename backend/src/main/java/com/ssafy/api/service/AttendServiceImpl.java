@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.AttendUpdateReq;
 import com.ssafy.api.response.AttendGroupRes;
 import com.ssafy.api.response.AttendRes;
 import com.ssafy.db.entity.*;
@@ -27,6 +28,8 @@ public class AttendServiceImpl implements AttendService{
     private User_GroupRepository user_GroupRepository;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private MeetRepository meetRepository;
 
     @Override
     public List<AttendGroupRes> getGroupAttendInfo(int groupId) {
@@ -76,5 +79,20 @@ public class AttendServiceImpl implements AttendService{
         }
 
         return resList;
+    }
+
+    @Override
+    public boolean updateAttendance(int userId, int groupId, AttendUpdateReq attendUpdateReq) {
+        User user = userRepositorySupport.findUserById(userId).get();
+        Group group =  groupRepositorySupport.findGroupById(groupId).get();
+        Meet meet = meetRepository.findMeetById(attendUpdateReq.getMeetId());
+
+        Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user,meet);
+        if(attendance == null) return false;
+        System.out.println(attendance.getAttendance());
+        attendance.setAttendance(attendUpdateReq.getAttendance());
+        attendanceRepository.save(attendance);
+        System.out.println(attendance.getAttendance());
+        return true;
     }
 }
