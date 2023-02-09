@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
+import com.ssafy.api.request.test;
 import com.ssafy.api.service.GroupService;
 import com.ssafy.api.service.MeetService;
 import com.ssafy.api.service.UserService;
@@ -85,6 +86,18 @@ public class MeetController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+    }
+
+
+    @PostMapping("/recognize")
+    public ResponseEntity<? extends BaseResponseBody> recogtest(@RequestBody test test){
+        for (int i = 0; i<test.getStt().length;i++){
+            System.out.println(test.getStt()[i]);
+        }
+        if(meetService.recogtest(test.getStt())){
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
+        }
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
     }
 
 }

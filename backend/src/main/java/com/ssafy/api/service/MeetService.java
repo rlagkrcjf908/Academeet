@@ -11,4 +11,6 @@ public interface MeetService {
     void insertMeetMember(int userId, MeetCreateReq createReq);
 
     boolean endMeet(int meetId, MeetEndReq endReq) throws IOException;
+
+    boolean recogtest(String[] stt);
 }

@@ -115,7 +115,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<UserRes> updateUserInfo(@PathVariable("id") int id, @RequestPart
-    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo,@RequestPart MultipartFile profile) throws MalformedURLException {
+    @ApiParam(value = "회원가입 정보", required = true) UserUpdatePostReq updateInfo,@RequestPart(required = false) MultipartFile profile) throws MalformedURLException {
         /**
          * 요청받은 해당 유저의 고유아이디에 변경되어진 정보를 받으면 수정
          * 받은정보가 하나라도 비었을시 오류 발생

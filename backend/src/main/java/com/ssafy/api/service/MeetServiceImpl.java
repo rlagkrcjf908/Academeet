@@ -146,4 +146,24 @@ public class MeetServiceImpl implements MeetService {
 //        }
         return true;
     }
+
+    @Override
+    public boolean recogtest(String[] stt) {
+        if(stt == null)return false;
+        String[] note = stt;
+//           String[] note = {"김학철입니다.","반갑습니다."};
+        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+        String fileName = "test" + UUID.randomUUID()+".txt";
+        try {
+            FileWriter fileWriter = new FileWriter(filePath + fileName);
+            for (int i = 0; i < note.length; i++) {
+                System.out.println(note[i]);
+                fileWriter.write(note[i] + "\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

@@ -108,6 +108,15 @@ public class UserServiceImpl implements UserService {
     public int updateUser(int id, UserUpdatePostReq registerInfo,MultipartFile profile) {
         User user = userRepository.findUserById(id);
         if(user==null)return 0;
+        if(profile == null){
+            user.setEmail(registerInfo.getEmail());
+            user.setName(registerInfo.getName());
+            user.setBirth(registerInfo.getBirth());
+            user.setNick(registerInfo.getNick());
+            user.setPhone(registerInfo.getPhone());
+            userRepository.save(user);
+            return 1;
+        }
         user.setEmail(registerInfo.getEmail());
         user.setName(registerInfo.getName());
         user.setBirth(registerInfo.getBirth());
