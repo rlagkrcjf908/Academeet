@@ -1,6 +1,8 @@
 <template>
 <div id="main-container" class="container">
+    <!-- 회의 입장 전 화면 -->
     <div id="join" v-if="!sessionCamera">
+        {{$store.state.userName}}
     <!-- <div id="img-div">
         <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
     </div> -->
@@ -8,18 +10,18 @@
         <h1>Join a video session</h1>
         <div class="form-group">
         <p>
-            <label>Participant</label>
+            <label>회의제목</label>
             <input
-            v-model="myUserName"
+            v-model="mySessionId"
             class="form-control"
             type="text"
             required
             />
         </p>
         <p>
-            <label>Session</label>
+            <label>참가자</label>
             <input
-            v-model="mySessionId"
+            v-model="myUserName"
             class="form-control"
             type="text"
             required
@@ -34,9 +36,11 @@
     </div>
     </div>
 
+    <!-- 회의 입장 후 화면 -->
     <div id="session" v-if="sessionCamera">
     <div id="session-header">
         <h1 id="session-title">{{ mySessionId }}</h1>
+        <!-- 화면공유 -->
         <input
         class="btn btn-large"
         type="button"
@@ -45,6 +49,7 @@
         value="Screen share"
         style="visibility: hidden"
         />
+        <!-- 세션 떠나기 -->
         <input
         class="btn btn-large btn-danger"
         type="button"
@@ -52,13 +57,13 @@
         @click="leaveSession"
         value="Leave session"
         />
+        <!-- 회의녹화 -->
         <input 
         class="btn btn-md" 
         type="button" 
         id="buttonStartRecording" 
         @click="startRecording" 
         value="Start recording"
-
         />
         <input 
         class="btn btn-md" 
@@ -68,7 +73,7 @@
         value="Stop recording"
         style="visibility: hidden"
         />
-
+        <!-- 출석 체크 -->
         <input 
         class="btn btn-md" 
         type="button" 
@@ -85,7 +90,7 @@
         value="Stop Checking"
         style="visibility: hidden"
         />
-
+        <!-- 음성기록 -->
         <input 
         class="btn btn-md" 
         type="button" 
@@ -93,7 +98,6 @@
         @click="startSpeeching" 
         value="Start Speeching"
         />
-        
         <input 
         class="btn btn-md" 
         type="button" 
@@ -106,16 +110,21 @@
         <a id="playVideo" :href=this.videoURL>Video</a>
 
     </div>
+    <!-- 내 화면 -->
     <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager" />
     </div>
+
+    <!-- 비디오 화면 -->
     <div id="video-container" class="col-md-6">
+        <!-- 호스트 -->
         <user-video
         :stream-manager="PublisherCamera" 
         :role="publisher"
         :faceDetection="onFaceDetection"
         @click="updateMainVideoStreamManager(PublisherCamera)"
         />
+        <!-- 게스트 -->
         <user-video
         v-for="sub in SubscribersCamera"
         :key="sub.stream.connection.connectionId"
@@ -124,12 +133,16 @@
         @click="updateMainVideoStreamManager(sub)"
         />
     </div>
+
+    <!-- 스크린 공유 화면 -->
     <div id="screen-container" class="col-md-6">
         <h2>Screen Share</h2>
+        <!-- 호스트 -->
         <user-video
         :stream-manager="PublisherScreen"
         @click="updateMainVideoStreamManager(PublisherScreen)"
         />
+        <!-- 게스트 -->
         <user-video
         v-for="sub in SubscribersScreen"
         :key="sub.stream.connection.connectionId"
@@ -139,16 +152,24 @@
     </div>
     <!-- <input clss="btn" type="button" @click="videoTrigger" value="Video" /> -->
     <!-- <input clss="btn" type="button" @click="audioTrigger" value="Audio" /> -->
+    
+    <!-- 비디오 버튼 -->
     <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
     <button v-else type="button" @click="videoTrigger()">video off</button>
+    
+    <!-- 음성 버튼 -->
     <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
     <button v-else type="button" @click="audioTrigger()">audio off</button>
     <!-- <button type="button" @click="speechTrigger()">speech</button> -->
-
+    
+    <!-- 채팅 보내기 -->
     <input type="text" v-model="message" @keydown.enter="sendChat()" />
     <button type="button" @click="sendChat()">입력</button>
-
+    
+    <!-- 채팅 창 -->
     <div id="chatting-content" style="width: 30%; display: inline-block">Chatting</div>
+    
+    <!-- 회의기록 창 -->
     <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
     <!-- <SpeechRecognition/> -->
     <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
@@ -162,6 +183,7 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../components/meeting/UserVideo";
+import { meetingCreate } from "@/common/api/meetingAPI";
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -180,7 +202,12 @@ components: {
     // SpeechRecognition,
 },
 
+
+
+
 data() {
+    const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
+    console.log(meetInfo);
     return {
     publisher : "publisher",
     subscriber : "subscriber",
@@ -210,8 +237,8 @@ data() {
     screensharing: false,
 
     // Join form
-    mySessionId: "SessionA",
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
+    mySessionId: meetInfo.meetTitle,
+    myUserName: meetInfo.userName,
 
     // recording
     hasAudio : true,

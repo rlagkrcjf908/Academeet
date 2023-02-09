@@ -84,7 +84,7 @@
     <!-- 회원가입 -->
     <el-button type="success" round @click="submitForm(ruleFormRef)">회원가입</el-button>
   </el-form>
-  
+  <el-button type="success" round @click="$router.push('/login')">로그인화면</el-button>
 </template>
 
 <!-- <script>
@@ -226,7 +226,7 @@ function uploadImg (){
   const url = URL.createObjectURL(profile);
   profile.value = url;
   console.log(image.value.files[0])
-  console.log(profile.value)
+  console.log("이미지",profile.value)
 }
 
 const ruleForm = reactive({
@@ -293,7 +293,7 @@ const validateEmail = (rule, value, callback) => {
 // 인증코드 확인
 const authCheck = () => {
   console.log(ruleForm.authPin);
-  axios.post("http://172.30.1.26:8080/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("http://192.168.100.191:8080/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
       alert("인증이 성공적으로 완료되었습니다.");
@@ -309,7 +309,7 @@ const authCheck = () => {
 // 인증코드 재발급
 const reCheck = () => {
   console.log('ruleForm.email',ruleForm.email)
-  axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
+  axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
   alert("인증번호가 전송되었습니다.")
   }
 
@@ -319,12 +319,12 @@ const dupliCheck= () => {
   const param = {
     "email": ruleForm.email,
   }
-  axios.post("http://172.30.1.26:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
+  axios.post("http://192.168.100.191:8080/api/v1/user/login/idCheck", JSON.stringify(param), {
     headers: { 'content-type': 'application/json' }})
   .then(res => {
     console.log(res);
     if (res.data === 1) {
-      axios.put("http://172.30.1.26:8080/api/v1/user/email", ruleForm.email)
+      axios.put("http://192.168.100.191:8080/api/v1/user/email", ruleForm.email)
       alert("인증번호가 전송되었습니다.")
       isDupli.value = true
     } else {
@@ -410,7 +410,7 @@ const submitForm = (formEl) => {
       );
       for(let value of frm.values())
         console.log(value)
-      axios.post("http://172.30.1.26:8080/api/v1/user", frm, config)
+      axios.post("http://192.168.100.191:8080/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");

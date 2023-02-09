@@ -56,6 +56,7 @@ const actions = {
       commit('SET_TOKEN', res)
       commit('SET_USERID', res.data.userRes.id)
       commit('SET_AUTHENTICATED')
+      console.log(res)
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
