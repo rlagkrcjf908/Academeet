@@ -14,7 +14,7 @@ import {
 
 //변수들의 집합
 const state = {
-  groupInfo: null,
+  groupInfo: [], //그룹이름, 그룹호스트저장
   groupList:[],
   groupUserList:[],
   attdList: [], //그룹의 전체 출석
@@ -22,6 +22,10 @@ const state = {
 };
 
 const getters = {
+  getGroupInfo: state => {
+    return state.groupInfo;
+  },
+  
   getGroupList: state => {
     return state.groupList;
   },
@@ -83,7 +87,6 @@ const actions = {
       "users": groupData.users,
     } 
     const response = await groupCreate(groupData.userid, JSON.stringify(payload));
-    commit("SET_GROUP_INFO", response.data);
   },
   // 그룹 리스트 요청
   requestGroupListAction: async ({ commit }, id) => {
@@ -123,7 +126,6 @@ const actions = {
     console.log(response.status);
     console.log("받은 데이터, response.data");
     console.log(response.data);
-    // commit("SET_ATTD_LIST", response.data.groupData);
     commit("SET_ATTD_LIST", response.data);
   },
   requestAttdUser: async ({ commit }, data) => {
@@ -134,14 +136,6 @@ const actions = {
     const response = await attdUserUpdate(groupId);
     commit("UPDATE_ATTD_USER", response.data.groupData);
   },
-
-  // getAttdUser: async ({ commit }) => {
-  //   axios.get(`http://192.168.100.191:8080/.json`).then((response)=>{
-  //     console.log(response.data);//ajax로 받아온 데이터
-  //     groupUserList = response.data.SET_ATTD_USER             
-  //   }).then(groupUserList => {})
-  // }
-    
 
 };
 

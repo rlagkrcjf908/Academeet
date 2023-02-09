@@ -2,7 +2,7 @@
   <div class="profile-container">
     <div>
       <!-- 프로필사진 -->
-        <img :src = "'http://192.168.100.191:8080/image/'+profile.profile.filename"  style="height:100%; " class='profile-img'>
+        <img :src = "'http://i8d108.p.ssafy.io/img/'+profile.profile.filename"  style="height:100%; " class='profile-img'>
       
       <!-- 유저이름 -->
       <p>{{profile.name}}</p>

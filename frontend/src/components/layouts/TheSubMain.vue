@@ -4,7 +4,7 @@
     <!-- 링크버튼 -->
     <div class="sub-main the-sub-main-header">
       <el-button type="success" @click="routeToSubMain" link small>
-        {{ groupName }}
+        {{ groupInfo.name }}
       </el-button>
       <el-button @click="routeToAttdItem" type="success" link small>
         출석부
@@ -20,65 +20,61 @@
 //출석부를 위해서 로컬 스토리지 유저와 그룹 호스트 비교, route.push() 기능 정리
 import { useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 import { requestDeleteGroup, requestGroup } from "@/common/api/groupAPI";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
 
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
+const groupInfo = ref([]);
 const groupId = ref(route.params.groupId);
-const groupName = ref();
-const hostId = ref(); //requestGroup해서 받은 hostId 저장할 공간
-const userInfo = ref([]); //localstorage에 저장된 userId 저장할 공간
-const userId = ref();
 
-//login된 유저ID 저장
-userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
-console.log("userInfo.value: ", userInfo.value);
-userId.value = userInfo.value.id;
 //그룹 이름, 호스트 유저 저장
 const getGroup = async () => {
-  const res = await requestGroup(groupId.value);
-  console.log("requestGroup 결과:", res);
-  groupName.value = res.data.name;
-  hostId.value = res.data.ownerid;
+  await store.dispatch("groupStore/requestGroupAction", groupId.value);
+  groupInfo.value = store.state.groupStore.groupInfo;
   console.log(
-    "hostId.value:",
-    hostId.value,
-    "/ groupName.value: ",
-    groupName.value
+    "groupInfo.value:",
+    groupInfo.value,
+    "/ groupInfo.ownerId: ",
+    groupInfo.value.ownerid
   );
 };
 
 getGroup();
 
+const userId = store.state.accountStore.userId; //로그인된 유저
+console.log("로그인 된 userId: ", userId);
+
 //출석부 이동
 function routeToAttdItem() {
   console.log("routeToAttdView 이동합니다");
-  if (hostId.value === userId.value) {
+  console.log("hostId(groupInfo.value.ownerid): ", groupInfo.value.ownerid);
+  console.log("userId: ", userId);
+
+  if (groupInfo.value.ownerid === userId) {
     router.push({
       name: "attdList",
       params: {
-        hostId: hostId.value,
-        userId: userId.value,
-        groupId: groupId.value,
+        hostId: groupInfo.value.ownerid,
       },
     });
   } else {
     router.push({
       name: "attdUser",
       params: {
-        hostId: hostId.value,
-        userId: userId.value,
-        groupId: groupId.value,
+        hostId: groupInfo.value.ownerid,
+        selectUserId: userId,
       },
     });
   }
   console.log(
-    "hostId:",
-    hostId.value,
+    "groupInfo.value.ownerid:",
+    groupInfo.value.ownerid.value,
     "/ userId:",
-    userId.value,
+    userId,
     "/ groupId:",
     groupId.value
   );

@@ -36,63 +36,46 @@
   </section>
 </template>
 
-<script>
+<script setup>
 import { requestAttdList } from "@/common/api/groupAPI";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-export default {
-  name: "attdList",
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
+const router = useRouter();
+const route = useRoute();
 
-    const groupId = ref(route.params.groupId);
-    const hostId = ref(route.params.hostId);
-    const userId = ref(route.params.userId);
-    const attdUserList = ref([]);
+const groupId = ref(route.params.groupId);
+const hostId = ref(route.params.hostId);
+const selectUserId = ref(); //상세 출석 볼 유저
+const attdUserList = ref([]);
 
-    groupId.value = route.params.groupId;
-
-    const routeToUser = (item) => {
-      console.log("item.userId: ", item.userId);
-      userId.value = item.userId;
-      router.push({
-        name: "attdUser",
-        params: {
-          userId: userId.value,
-          groupId: groupId.value,
-          hostId: hostId.value,
-        },
-      });
-    };
-
-    // 요청결과 리스트
-
-    return {
-      groupId,
-      hostId,
-      userId,
-      attdUserList,
-      routeToUser,
-    };
-  },
-
-  async mounted() {
-    const res = await requestAttdList(this.groupId);
-    console.log("전체 출석 res", res);
-    const datas = res.data;
-    const list = datas.map((item) => {
-      return {
-        userId: item.userId,
-        name: item.name,
-        allAtt: item.allAtt,
-      };
-    });
-    this.attdUserList = list;
-    console.log("attdUserList ", this.attdUserList);
-  },
+const routeToUser = (item) => {
+  console.log("item.userId: ", item.userId);
+  selectUserId.value = item.userId;
+  router.push({
+    name: "attdUser",
+    params: {
+      selectUserId: selectUserId.value,
+      groupId: groupId.value,
+      hostId: hostId.value,
+    },
+  });
 };
+
+onMounted(async () => {
+  const res = await requestAttdList(groupId.value);
+  console.log("전체 출석 res", res);
+  const datas = res.data;
+  const list = datas.map((item) => {
+    return {
+      userId: item.userId,
+      name: item.name,
+      allAtt: item.allAtt,
+    };
+  });
+  attdUserList.value = list;
+  console.log("attdList의 전체 유저 출석: ", attdUserList.value);
+});
 </script>
 
 <style>

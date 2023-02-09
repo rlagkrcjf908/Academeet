@@ -133,7 +133,7 @@ const validateNickname = (rule, value, callback) => {
 
 // 프로필사진 업로드
 const profileImg = ref(
-  "http://192.168.100.191:8080/image/" + profile.profile.filename
+  "http://i8d108.p.ssafy.io/img/" + profile.profile.filename
 );
 const image = ref();
 
@@ -180,7 +180,7 @@ const submitForm = (formEl) => {
 
       axios
         .put(
-          `http://192.168.100.191:8080/api/v1/user/${id}/update`,
+          `https://i8d108.p.ssafy.io/api/v1/user/${id}/update`,
           frm,
           config
         )

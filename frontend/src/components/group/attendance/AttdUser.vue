@@ -8,13 +8,38 @@
             <th>제목</th>
             <th>날짜</th>
             <th>출석률</th>
+            <th>수정</th>
           </tr>
         </thead>
       </table>
     </div>
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
-        <tbody>
+        <!-- 호스트 유저 (수정가능하게 하기) -->
+        <tbody v-if="hostId == userId">
+          <tr v-for="(item, index) in attdUserList" :key="index">
+            <td>{{ item.meetId }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.date }}</td>
+            <td class="attd-success" v-if="item.attendance >= 80">
+              <el-input v-model="item.attendance"></el-input>
+            </td>
+            <td class="attd-fail" v-else>
+              <el-input v-model="item.attendance"></el-input>
+            </td>
+            <td>
+              <el-button
+                type="success"
+                @click="saveAttdList(item)"
+                size="small"
+                v-if="hostId == userId"
+                >저장하기</el-button
+              >
+            </td>
+          </tr>
+        </tbody>
+        <!-- 일반 유저 -->
+        <tbody v-else>
           <tr v-for="(item, index) in attdUserList" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.title }}</td>
@@ -30,54 +55,92 @@
   </section>
 </template>
   
-<script>
-import { requestAttdUser } from "@/common/api/groupAPI";
+<script setup>
+import { requestAttdUser, attdUserUpdate } from "@/common/api/groupAPI";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 
-export default {
-  name: "attdUser",
+const route = useRoute();
+const store = useStore();
 
-  setup() {
-    const route = useRoute();
-    const groupId = ref(route.params.groupId);
-    const userId = ref(route.params.userId);
-    const hostId = ref(route.params.hostId);
-    const attdUserList = ref([]);
+console.log("attdUserList route.params :", route.params);
+const groupId = ref(route.params.groupId);
+const selectUserId = ref(route.params.selectUserId); //상세보기 선택된 유저
+const userId = store.state.accountStore.userId;
+const hostId = ref(route.params.hostId);
+const attdUserList = ref([]);
+const meetId = ref(); //meetid로 받음
+const attendance = ref(); //변하는 출석률 값
 
-    // groupId.value = route.params.groupId;
-    // userId.value = route.params.userId;
-    // hostId.value = route.params.hostId;
+console.log("attdUserList hostId :", hostId.value);
+console.log("attdUserList userId :", userId);
+console.log("hostId.value ==  userId.value :", hostId.value == userId);
 
-    console.log("==========================");
-    console.log("route.params:", route.params);
-    console.log("hostId:", hostId.value);
+onMounted(async () => {
+  console.log(
+    "groupId==",
+    groupId.value,
+    "/ userId==",
+    userId,
+    "/hostId==",
+    hostId.value,
+    "/selectUserId==",
+    selectUserId.value
+  );
 
+  const res = await requestAttdUser(groupId.value, selectUserId.value);
+  console.log("개인 출석 res", res);
+  console.log("개인 출석 datas", res.data);
+  const datas = res.data;
+  // meetId.value = datas.meetId;
+  // console.log("meetId.value", meetId.value);
+
+  const list = datas.map((item) => {
+    console.log("attdUserList attendance", item.attendance);
     return {
-      groupId,
-      userId,
-      hostId,
-      attdUserList,
+      title: item.title,
+      date: item.date.substr(0, 10),
+      attendance: item.attendance,
+      meetId: item.meetId,
     };
-  },
-  async mounted() {
-    console.log("groupId==", this.groupId, "/ userId==", this.userId),
-      "/hostId==",
-      this.hostId;
-    const res = await requestAttdUser(this.groupId, this.userId);
-    console.log("개인 출석 res", res);
-    const datas = res.data;
-    const list = datas.map((item) => {
-      console.log("attdUserList attendance", item.attendance);
-      return {
-        title: item.title,
-        date: item.date.substr(0, 10),
-        attendance: item.attendance,
-      };
-    });
-    this.attdUserList = list;
-    console.log("개인 attdUserList", this.attdUserList);
-  },
+  });
+  // console.log("meetId.value +++++++", meetId.value);
+
+  attdUserList.value = list;
+  // console.log("개인 attdUserList", this.attdUserList);
+});
+
+// 수정요청함수
+async function modifyAttdList(payload) {
+  try {
+    await attdUserUpdate(
+      groupId.value,
+      selectUserId.value,
+      JSON.stringify(payload),
+      console.log("modifyAttdList 성공")
+    );
+  } catch (error) {
+    console.log("modifyAttdList Error", error);
+    console.log("modifyAttdList 실패");
+  }
+}
+
+//저장하기 버튼을 눌렀을 때 실행
+const saveAttdList = (item) => {
+  console.log("item.attendance: ", item.attendance);
+  if (0 <= item.attendance && item.attendance <= 100) {
+    console.log("item........: ", item);
+    const payload = {
+      //미팅 PK를 받고
+      meetId: item.meetId,
+      attendance: item.attendance,
+    };
+    console.log("payload", payload);
+    modifyAttdList(payload);
+  } else {
+    alert("0~100까지만 입력이 가능합니다./n 다시 입력해주세요.");
+  }
 };
 </script>
   

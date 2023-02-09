@@ -153,14 +153,14 @@ const remoteMethod = (query) => {
     loading.value = true;
     setTimeout(async () => {
       // 검색요청
-      const username = { name: query };
+      const username = { "name" : query };
       const res = await userSearch(JSON.stringify(username));
 
       const searchUserList = res.data;
-      console.log("저장해서 불러온 검색결과", searchUserList);
-      let list = searchUserList.map((item) => {
-        return { value: item.id, label: `${item.name}:${item.email}` };
-      });
+
+      let list = searchUserList.filter(item =>item.id !== userid).map((item) => {
+        return { value: item.id, label: `${item.name}:${item.email}` }
+      })
 
       loading.value = false;
       options.value = list;
@@ -170,7 +170,6 @@ const remoteMethod = (query) => {
   } else {
     options.value = [];
   }
-  callback();
 };
 
 // 유효성 검사 규칙

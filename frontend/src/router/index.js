@@ -102,30 +102,16 @@ const routes = [
               },
               // 출석 관련 routes
               {
-                //attdView
-                path: `attdView`,
-                name: "attdView2",
-                component: () => import(/* webpackChunkName: "attdUser" */"@/views/AttdView2.vue"),
-              },
-              {
                 //개인출석테스트 중
-                // path: `attdUser`,
-                path: `attdUser/:userId/:hostId`,
+                path: `attdUser/:selectUserId/:hostId`,
                 name: "attdUser",
-                component: () => import(/* webpackChunkName: "attdUser" */"@/components/group/attendance/AttdListUser.vue"),
+                component: () => import(/* webpackChunkName: "attdUser" */"@/components/group/attendance/AttdUser.vue"),
               },
               {
                 //전체 출석보기
-                // path: `attdList`,
                 path: `attdList/:hostId`,
                 name: "attdList",
                 component: () => import(/* webpackChunkName: "attdList" */"@/components/group/attendance/AttdList.vue"),
-              },
-                //상세출석 - 호스트
-              { path: `attModify`,
-                // path: `attModify/:{groupId}/:{userId}`,
-                name: "attModify",
-                component: () => import(/* webpackChunkName: "attModify" */"@/components/group/attendance/AttModify.vue")
               },
             ]
           },
@@ -133,15 +119,8 @@ const routes = [
       },
       {
         path: 'list',
-        name: 'list',
-        component: ListView,
-        children: [
-          {
-            path: '',
-            name: 'listMain',
-            component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
-          },
-        ]
+        name: 'listMain',
+        component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
       },
     ]
   },

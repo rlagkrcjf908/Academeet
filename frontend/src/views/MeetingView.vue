@@ -44,139 +44,146 @@
     <div id="session" v-if="sessionCamera">
     <div id="session-header">
         <h1 id="session-title">{{ mySessionId }}</h1>
-        <!-- 화면공유 -->
-        <input
-        class="btn btn-large"
-        type="button"
-        id="buttonScreenShare"
-        @click="publishScreenShare"
-        value="Screen share"
-        style="visibility: hidden"
-        />
-        <!-- 세션 떠나기 -->
-        <input
-        class="btn btn-large btn-danger"
-        type="button"
-        id="buttonLeaveSession"
-        @click="leaveSession"
-        value="Leave session"
-        />
-        <!-- 회의녹화 -->
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStartRecording" 
-        @click="startRecording" 
-        value="Start recording"
-        />
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStopRecording" 
-        @click="stopRecording" 
-        value="Stop recording"
-        style="visibility: hidden"
-        />
-        <!-- 출석 체크 -->
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStartPresent" 
-        @click="startChecking" 
-        value="Start Checking"
-        />
-        
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStopPresent" 
-        @click="stopChecking" 
-        value="Stop Checking"
-        style="visibility: hidden"
-        />
-        <!-- 음성기록 -->
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStartSpeech" 
-        @click="startSpeeching" 
-        value="Start Speeching"
-        />
-        <input 
-        class="btn btn-md" 
-        type="button" 
-        id="buttonStopSpeech" 
-        @click="stopSpeeching" 
-        value="Stop Speeching"
-        style="visibility: hidden"
-        />
 
         <a id="playVideo" :href=this.videoURL>Video</a>
 
     </div>
-    <!-- 내 화면 -->
-    <div id="main-video" class="col-md-6">
-        <user-video :stream-manager="mainStreamManager" />
-    </div>
+        <div id = screens>
+            <!-- 내 화면 -->
+            <div id="main-video" class="col-md-6">
+                <user-video :stream-manager="mainStreamManager" />
+            </div>
+        
+            <!-- 비디오 화면 -->
+            <div id="video-container" class="col-md-6">
+                <!-- 호스트 -->
+                <user-video
+                :stream-manager="PublisherCamera" 
+                :role="publisher"
+                :faceDetection="onFaceDetection"
+                @click="updateMainVideoStreamManager(PublisherCamera)"
+                />
+                <!-- 게스트 -->
+                <user-video
+                v-for="sub in SubscribersCamera"
+                :key="sub.stream.connection.connectionId"
+                :stream-manager="sub"
+                :role="subscriber"
+                @click="updateMainVideoStreamManager(sub)"
+                />
+            </div>
+        
+            <!-- 스크린 공유 화면 -->
+            
+            <div id="screen-container" class="col-md-6">
+                <h2>Screen Share</h2>
+                <!-- 호스트 -->
+                <user-video
+                :stream-manager="PublisherScreen"
+                @click="updateMainVideoStreamManager(PublisherScreen)"
+                />
+                <!-- 게스트 -->
+                <user-video
+                v-for="sub in SubscribersScreen"
+                :key="sub.stream.connection.connectionId"
+                :stream-manager="sub"
+                @click="updateMainVideoStreamManager(sub)"
+                />
+            </div>
+        </div>
+        <hr>
+        <div id = "consoleBar">
+            <!-- 음성 버튼 -->
+            <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
+            <button v-else type="button" @click="audioTrigger()">audio off</button>
+            
+            <!-- 비디오 버튼 -->
+            <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
+            <button v-else type="button" @click="videoTrigger()">video off</button>
+            
+            <!-- 회의녹화 -->
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStartRecording" 
+            @click="startRecording" 
+            value="Start recording"
+            />
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStopRecording" 
+            @click="stopRecording" 
+            value="Stop recording"
+            style="visibility: hidden"
+            />
+            <!-- 화면공유 -->
+            <input
+            class="btn btn-large"
+            type="button"
+            id="buttonScreenShare"
+            @click="publishScreenShare"
+            value="Screen share"
+            style="visibility: hidden"
+            />
+            <!-- 세션 떠나기 -->
+            <input
+            class="btn btn-large btn-danger"
+            type="button"
+            id="buttonLeaveSession"
+            @click="leaveSession"
+            value="Leave session"
+            />
+            <!-- 출석 자동 체크 -->
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStartPresent" 
+            @click="startChecking" 
+            value="Start Checking"
+            />
+            
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStopPresent" 
+            @click="stopChecking" 
+            value="Stop Checking"
+            style="visibility: hidden"
+            />
+            <!-- 음성기록 -->
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStartSpeech" 
+            @click="startSpeeching" 
+            value="Start Speeching"
+            />
+            <input 
+            class="btn btn-md" 
+            type="button" 
+            id="buttonStopSpeech" 
+            @click="stopSpeeching" 
+            value="Stop Speeching"
+            style="visibility: hidden"
+            />
 
-    <!-- 비디오 화면 -->
-    <div id="video-container" class="col-md-6">
-        <!-- 호스트 -->
-        <user-video
-        :stream-manager="PublisherCamera" 
-        :role="publisher"
-        :faceDetection="onFaceDetection"
-        @click="updateMainVideoStreamManager(PublisherCamera)"
-        />
-        <!-- 게스트 -->
-        <user-video
-        v-for="sub in SubscribersCamera"
-        :key="sub.stream.connection.connectionId"
-        :stream-manager="sub"
-        :role="subscriber"
-        @click="updateMainVideoStreamManager(sub)"
-        />
-    </div>
-
-    <!-- 스크린 공유 화면 -->
-    <div id="screen-container" class="col-md-6">
-        <h2>Screen Share</h2>
-        <!-- 호스트 -->
-        <user-video
-        :stream-manager="PublisherScreen"
-        @click="updateMainVideoStreamManager(PublisherScreen)"
-        />
-        <!-- 게스트 -->
-        <user-video
-        v-for="sub in SubscribersScreen"
-        :key="sub.stream.connection.connectionId"
-        :stream-manager="sub"
-        @click="updateMainVideoStreamManager(sub)"
-        />
-    </div>
-    <!-- <input clss="btn" type="button" @click="videoTrigger" value="Video" /> -->
-    <!-- <input clss="btn" type="button" @click="audioTrigger" value="Audio" /> -->
-    
-    <!-- 비디오 버튼 -->
-    <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
-    <button v-else type="button" @click="videoTrigger()">video off</button>
-    
-    <!-- 음성 버튼 -->
-    <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-    <button v-else type="button" @click="audioTrigger()">audio off</button>
-    <!-- <button type="button" @click="speechTrigger()">speech</button> -->
-    
-    <!-- 채팅 보내기 -->
-    <input type="text" v-model="message" @keydown.enter="sendChat()" />
-    <button type="button" @click="sendChat()">입력</button>
-    
-    <!-- 채팅 창 -->
-    <div id="chatting-content" style="width: 30%; display: inline-block">Chatting</div>
-    
-    <!-- 회의기록 창 -->
-    <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
-    <!-- <SpeechRecognition/> -->
-    <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
+        </div>
+        <hr>
+        
+        <div id = "chat&STT">
+            <!-- 채팅 보내기 -->
+            <input type="text" v-model="message" @keydown.enter="sendChat()" />
+            <button type="button" @click="sendChat()">입력</button>
+            
+            <!-- 채팅 창 -->
+            <div id="chatting-content" style="width: 30%; display: inline-block">Chatting</div>
+            
+            <!-- 회의기록보기 창 -->
+            <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
+            <!-- <SpeechRecognition/> -->
+            <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
+        </div>
     </div>
 
     
@@ -193,7 +200,7 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "https://academeet.shop/";
+const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
 // const APPLICATION_SERVER_URL = "https://192.168.100.88/";
 // const OPENVIDU_SERVER_URL = "https://localhost:4443";

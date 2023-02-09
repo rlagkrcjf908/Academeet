@@ -1,17 +1,13 @@
 <template>
   <section>
-    <h2 style="color: rgba(97, 178, 153, 1)">
-      {{ user.name }}님의 회의리스트 ({{ meetingUserList.length }})
-    </h2>
-
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
           <tr>
             <th>No.</th>
-            <th>회의제목</th>
-            <th>그룹이름</th>
-            <th>회의시간</th>
+            <th>이름</th>
+            <th>전체 출석률</th>
+            <th>상세 보기</th>
           </tr>
         </thead>
       </table>
@@ -19,19 +15,19 @@
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
-          <tr v-for="(item, index) in meetingUserList" :key="index">
+          <tr v-for="(item, index) in meetList" :key="index">
             <td>{{ index + 1 }}</td>
-            <td >{{ item.meetTitle }}</td>
-            <td>{{ item.groupTitle }}</td>
-            <td>
-              {{ item.startTime }} ~ {{ item.endTime }}
+            <td>{{ item.meetTitle }}</td>
+            <td class="attd-success" v-if="item.allAtt >= 80">
+              {{ item.allAtt }}
             </td>
+            <td class="attd-fail" v-else>{{ item.allAtt }}</td>
             <el-button
               class="detail-btn"
-              @click="meetJoin(item)"
+              @click="routeToUser(item)"
               type="success"
               plain
-              >미팅 참여</el-button
+              >{{ item.name }}:{{ item.userId }}</el-button
             >
           </tr>
         </tbody>
@@ -40,64 +36,46 @@
   </section>
 </template>
 
-<script>
-import { mapMutations } from 'vuex'
+<script setup>
 import { requestMeetingList } from "@/common/api/meetingAPI";
-import { ref } from "vue";
-import { listStore } from "../../store/index";
-import { useRouter } from "vue-router";
-import router from '@/router';
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
+const router = useRouter();
+const route = useRoute();
 
+// const groupId = ref(route.params.groupId);
+// const hostId = ref(route.params.hostId);
+// const selectUserId = ref(); //상세 출석 볼 유저
+const meetList = ref([]);
+const userId = JSON.parse(localStorage.getItem("userInfo")).id
+// const routeToUser = (item) => {
+//   console.log("item.userId: ", item.userId);
+//   selectUserId.value = item.userId;
+//   router.push({
+//     name: "attdUser",
+//     params: {
+//       selectUserId: selectUserId.value,
+//       groupId: groupId.value,
+//       hostId: hostId.value,
+//     },
+//   });
+// };
 
-export default {
-  name: "meetingList",
-  setup() {
-    const router = useRouter();
-    const meetingUserList = ref([]);
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(user.id);
-    const userId = user.id;
-    const userName = user.name;
-    
-    const meetJoin = (item) => {
-      const meetInfo = {
-        userName: userName,
-        meetTitle: item.meetTitle,
-      }
-      console.log(meetInfo);
-      // this.$store.commit('SET_MEET_INFO', meetInfo);
-      // sessionStorage.removeItem("meetInfo", JSON.stringify(meetInfo));
-      sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
-      router.push({ name: "meeting" })
-    };
-
-    // 요청결과 리스트
-
-    return {
-      user,
-      userId,
-      meetingUserList,
-      meetJoin,
-    };
-  },
-
-  async mounted() {
-    console.log("userId==", this.userId);
-    const res = await requestMeetingList(this.userId);
-    console.log("전체 출석 res", res);
-    const datas = res.data;
-    const list = datas.map((item) => {
-      return {
-        meetTitle: item.meetTitle,
-        groupTitle: item.groupTitle,
-        startTime: item.startTime,
-        endTime: item.endTime,
-      };
-    });
-    this.meetingUserList = list;
-  },
-};
+onMounted(async () => {
+  const res = await requestMeetingList(userId);
+  console.log("전체  meet", res);
+  const datas = res.data;
+  // const list = datas.map((item) => {
+  //   return {
+  //     userId: item.userId,
+  //     name: item.name,
+  //     allAtt: item.allAtt,
+  //   };
+  // });
+  meetList.value = list;
+  console.log("attdList의 전체 유저 출석: ", meetList.value);
+});
 </script>
 
 <style>
@@ -170,9 +148,9 @@ section {
 }
 
 .attd-fail {
-  color: red;
+  color: #f89898;
 }
 .attd-success {
-  color: green;
+  color: #95d475;
 }
 </style>

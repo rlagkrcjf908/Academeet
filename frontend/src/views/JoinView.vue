@@ -69,9 +69,12 @@
           type="date"
           placeholder="날짜를 고르세요."
           style="width: 100%"
+          format="YYYY/MM/DD"
+          value-format="YYYY-MM-DD"
+          min="2022-04-01" 
+          max="2023-02-09"
         />
       </el-form-item>
-
       <!-- 비밀번호 -->
       <el-form-item  prop="password" label="비밀번호">
         <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요"/>
@@ -106,7 +109,6 @@ const router = useRouter()
 
 const profile = ref()
 const image = ref()
-
 // 이미지 업로드
 function uploadImg (){
   let profileImg = image.value.files[0];
@@ -172,18 +174,14 @@ const validateAuthPin = (rule, value, callback) => {
   } else {
     if (value.replace(' ','') !== value){
       callback(new Error('공백은 입력할 수 없습니다.'))
-    if (!isCheck){
-      callback(new Error('인증코드를 확인 해주세요'))
     }
-    }else{
     callback()
-    }
   }
 }
 
 // 인증코드 확인
 const authCheck = () => {
-  axios.post("https://academeet.shop/api/v1/user/emailCheck", ruleForm.authPin)
+  axios.post("https://i8d108.p.ssafy.io/api/v1/user/emailCheck", ruleForm.authPin)
   .then(res => {
     if (res.status === 200) {
       ElMessage({
@@ -215,12 +213,12 @@ const dupliCheck= () => {
     const param = {
       "email": ruleForm.email,
     }
-    axios.post("https://academeet.shop/api/v1/user/login/idCheck", JSON.stringify(param), {
+    axios.post("https://i8d108.p.ssafy.io/api/v1/user/login/idCheck", JSON.stringify(param), {
       headers: { 'content-type': 'application/json' }})
     .then(res => {
       console.log(res);
       if (res.data === 1) {
-        axios.put("https://academeet.shop/api/v1/user/email", ruleForm.email)
+        axios.put("https://i8d108.p.ssafy.io/api/v1/user/email", ruleForm.email)
         .then(res => {
           ElMessage({
             showClose: true,
@@ -247,10 +245,10 @@ const dupliCheck= () => {
     })
   }else{
     ElMessage({
-          showClose: true,
-          message:'이메일을 입력해주세요.',
-          type: 'warning',
-        })
+      showClose: true,
+      message:'이메일을 입력해주세요.',
+      type: 'warning',
+    })
   }
 }
 
@@ -307,7 +305,7 @@ const rules = reactive({
 const submitForm = (formEl) => {
   if (!formEl) return
     formEl.validate( (valid) => {
-    if (valid) {
+    if (valid && isCheck.value) {
       const config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -330,7 +328,7 @@ const submitForm = (formEl) => {
         new Blob([JSON.stringify(registerInfo)], {type: 'application/json'})
       );
 
-      axios.post("https://academeet.shop/api/v1/user", frm, config)
+      axios.post("https://i8d108.p.ssafy.io/api/v1/user", frm, config)
       .then(res => {
           if (res.status === 200) {
             alert("가입이 완료되었습니다.\n로그인창으로이동합니다 ");
@@ -343,6 +341,11 @@ const submitForm = (formEl) => {
           console.log(err);
         })
     }else {
+      ElMessage({
+          showClose: true,
+          message:'회원가입에 실패했습니다!',
+          type: 'error',
+        })
       console.log('error submit!')
       return false
     }

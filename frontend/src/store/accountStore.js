@@ -49,7 +49,8 @@ const actions = {
         "email": loginData.email,
         "password": loginData.password
     }
-    axios.post("https://academeet.shop/api/v1/auth/login/", JSON.stringify(params), {
+    // i8d108.p.ssafy.io
+    axios.post("https://i8d108.p.ssafy.io/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       commit('SET_USERINFO', res.data)
@@ -57,7 +58,7 @@ const actions = {
       commit('SET_USERID', res.data.userRes.id)
       commit('SET_AUTHENTICATED')
       console.log(res)
-      localStorage.setItem('token', res.data.accessToken)
+      // localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
       ElMessage({
@@ -77,7 +78,7 @@ const actions = {
   },
   
   logout({commit}){
-    axios.get("https://academeet.shop/api/v1/auth/logout/")
+    axios.get("https://i8d108.p.ssafy.io/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -92,7 +93,7 @@ const actions = {
   
   // 토큰 가져오기
   getToken(){
-    axios.get("https://academeet.shop/api/v1/")
+    axios.get("https://i8d108.p.ssafy.io/api/v1/")
     .then((res)=>console.log(res.data))
   },
   // 프로필 수정

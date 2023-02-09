@@ -1,18 +1,18 @@
 import { requestMeetingList } from "@/common/api/meetingAPI";
+
 //변수들의 집합
 const state = {
   meetList: [],
-  meetInfo: null
+
 };
 
 const getters = {
-  getMeetInfo (state) {
-    return state.meetInfo
-  }
+  userId : state => state.userId,
 };
 
 //변수를 조작하는 함수들을 선언
 const mutations = {
+  // 회의 리스트
   SET_MEET_LIST: (state, payload) => {
     state.meetList = payload;
   },
@@ -26,12 +26,9 @@ const actions = {
   // 미팅 리스트 요청
   requestMeetingList : async ({ commit }, id) =>{
     const response = await requestMeetingList(id);
-    commit("SET_MEET_LIST", response.data)
+    console.log(response.data);
+    commit("SET_MEET_LIST", response.data);
   },
-  requestMeetInfo({ commit, dispatch }, meetInfo) {
-    commit("SET_MEET_INFO", meetInfo);
-    console.log(meetInfo)
-  }
 };
 
 export default {
