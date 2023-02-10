@@ -218,11 +218,11 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> emailConfirm(@RequestBody @ApiParam(value="email", required = true)  String email) throws Exception {
+    public ResponseEntity<? extends BaseResponseBody> emailConfirm(@RequestBody @ApiParam(value="email", required = true)  UserIdCheckReq userIdCheckReq) throws Exception {
 
-        System.out.println(email);
-        String confirm = userService.sendSimpleMessage(email);
-        System.out.println(confirm);
+        System.out.println("처음 들어왔습니다."+userIdCheckReq.getEmail());
+        String confirm = userService.sendSimpleMessage(userIdCheckReq.getEmail());
+        System.out.println("컨펌이에요"+confirm);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
     }
 
