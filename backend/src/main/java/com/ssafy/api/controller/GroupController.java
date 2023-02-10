@@ -27,7 +27,7 @@ import java.util.Map;
 @Api(value = "인증 API", tags = {"Group."})
 @RestController
 @RequestMapping("/api/v1/group")
-@CrossOrigin(origins="*")
+//@CrossOrigin(origins="*")
 public class GroupController {
 
     @Autowired
