@@ -252,7 +252,6 @@ public class UserServiceImpl implements UserService {
     public List<UserMeetRes> getUserMeetList(int userId) {
         User user = userRepository.findUserById(userId);
         List<User_Meet> um = userMeetRepository.findUser_MeetByUserid(user);
-        List<Meet> ownerum = meetRepository.findMeetsByUserid(user);
         List<UserMeetRes> umrs = new ArrayList<>();
         for (int i = 0; i< um.size();i++){
             Meet meet = meetRepository.findMeetById(um.get(i).getMeetid().getId());
@@ -269,10 +268,11 @@ public class UserServiceImpl implements UserService {
 
             umrs.add(umr);
         }
-
+        List<Meet> ownerum = meetRepository.findMeetsByUserid(user);
+        System.out.println(ownerum.size());
         for (int i = 0; i<ownerum.size() ;i++){
             Meet meet = ownerum.get(i);
-
+            System.out.println(meet.getTitle());
             if(meet.getGroupid()==null){
                 UserMeetRes umr = new UserMeetRes();
                 umr.setMeetId(meet.getId());
@@ -282,18 +282,18 @@ public class UserServiceImpl implements UserService {
                 umr.setEndTime(meet.getEndtime());
 
                 umrs.add(umr);
-                return umrs;
-            }
-            Group group = groupRepository.findGroupById(meet.getGroupid().getId());
-            UserMeetRes umr = new UserMeetRes();
-            umr.setMeetId(meet.getId());
-            umr.setGroupTitle(group.getName());
-            umr.setDate(meet.getDate());
-            umr.setMeetTitle(meet.getTitle());
-            umr.setStartTime(meet.getStarttime());
-            umr.setEndTime(meet.getEndtime());
+            }else {
+                Group group = groupRepository.findGroupById(meet.getGroupid().getId());
+                UserMeetRes umr = new UserMeetRes();
+                umr.setMeetId(meet.getId());
+                umr.setGroupTitle(group.getName());
+                umr.setDate(meet.getDate());
+                umr.setMeetTitle(meet.getTitle());
+                umr.setStartTime(meet.getStarttime());
+                umr.setEndTime(meet.getEndtime());
 
-            umrs.add(umr);
+                umrs.add(umr);
+            }
         }
         return umrs;
     }

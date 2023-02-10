@@ -37,6 +37,7 @@ import java.util.Map;
 @Api(value = "유저 API", tags = {"User"})
 @RestController
 @RequestMapping("/api/v1/user")
+@CrossOrigin(origins="*")
 public class UserController {
 
     @Autowired
@@ -264,6 +265,7 @@ public class UserController {
     public ResponseEntity<List<UserMeetRes>> getUserMeetList(@PathVariable("user_id")int userId){
 
         List<UserMeetRes> umr = userService.getUserMeetList(userId);
+
         return ResponseEntity.status(200).body(umr);
     }
 }

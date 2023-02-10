@@ -22,6 +22,7 @@ import java.util.Map;
 @Api(value = "유저 API", tags = {"Meet"})
 @RestController
 @RequestMapping("/api/v1/meet")
+@CrossOrigin(origins="*")
 public class MeetController {
     @Autowired
     MeetService meetService;
