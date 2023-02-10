@@ -1,5 +1,8 @@
 <template>
   <section>
+    <div>
+      <!-- <MeetSide/> -->
+    </div>
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
@@ -24,12 +27,12 @@
             <td>{{ item.meetTitle }}</td>
             <td>{{ item.groupTitle }}</td>
             <el-button
-              class="detail-btn"
-              @click="routeToUser(item)"
+              class="meetEnterBtn"
+              @click="joinMeet(item)"
               type="success"
               plain
-              >회의시작</el-button
-            >
+              >회의시작
+            </el-button>
           </tr>
         </tbody>
       </table>
@@ -41,6 +44,7 @@
 import { requestMeetingList } from "@/common/api/meetingAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import MeetSide from "@/components/layouts/MeetSide.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -49,6 +53,7 @@ const route = useRoute();
 // const hostId = ref(route.params.hostId);
 // const selectUserId = ref(); //상세 출석 볼 유저
 const meetList = ref([]);
+const meetTitle = ref();
 const userId = JSON.parse(localStorage.getItem("userInfo")).id
 // const routeToUser = (item) => {
 //   console.log("item.userId: ", item.userId);
@@ -77,9 +82,21 @@ onMounted(async () => {
     };
   });
   meetList.value = list;
-  console.log("attdList의 전체 유저 출석: ", meetList.value);
-
 });
+
+const joinMeet = (item) => {
+  const meetInfo = {
+    meetTitle: item.meetTitle,
+    userName: JSON.parse(localStorage.getItem("userInfo")).name,
+    userId: JSON.parse(localStorage.getItem("userInfo")).id,
+  }
+  console.log(meetInfo);
+  sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
+  router.push({ name: "meeting"})
+}
+
+
+
 </script>
 
 <style>
