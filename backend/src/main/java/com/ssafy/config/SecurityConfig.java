@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsUtils;
 
 /**
  * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
@@ -69,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //접근권한 설정
                 .antMatchers("/api/v1/user","/api/v1/auth/login").permitAll()//인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .anyRequest().permitAll()/*.authenticated()*/
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and().cors();
     }
 }
