@@ -4,10 +4,11 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>이름</th>
-            <th>전체 출석률</th>
-            <th>상세 보기</th>
+            <th>날짜</th>
+            <th>회의 시간</th>
+            <th>회의 이름</th>
+            <th>그룹 이름</th>
+            <th>회의 참여</th>
           </tr>
         </thead>
       </table>
@@ -16,18 +17,18 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
           <tr v-for="(item, index) in meetList" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.meetTitle }}</td>
-            <td class="attd-success" v-if="item.allAtt >= 80">
-              {{ item.allAtt }}
+            <td>{{ item.date }}</td>
+            <td>
+              {{ item.startTime }} ~ {{ item.endTime }}
             </td>
-            <td class="attd-fail" v-else>{{ item.allAtt }}</td>
+            <td>{{ item.meetTitle }}</td>
+            <td>{{ item.groupTitle }}</td>
             <el-button
               class="detail-btn"
               @click="routeToUser(item)"
               type="success"
               plain
-              >{{ item.name }}:{{ item.userId }}</el-button
+              >회의시작</el-button
             >
           </tr>
         </tbody>
@@ -66,15 +67,18 @@ onMounted(async () => {
   const res = await requestMeetingList(userId);
   console.log("전체  meet", res);
   const datas = res.data;
-  // const list = datas.map((item) => {
-  //   return {
-  //     userId: item.userId,
-  //     name: item.name,
-  //     allAtt: item.allAtt,
-  //   };
-  // });
+  const list = datas.map((item) => {
+    return {
+      groupTitle: item.groupTitle,
+      meetTitle: item.meetTitle,
+      date: item.date,
+      startTime: item.startTime,
+      endTime: item.endTime,
+    };
+  });
   meetList.value = list;
   console.log("attdList의 전체 유저 출석: ", meetList.value);
+
 });
 </script>
 
