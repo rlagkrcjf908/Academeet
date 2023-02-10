@@ -42,8 +42,8 @@ public class AttendServiceImpl implements AttendService{
             double allatt = 0;
             double sumatt = 0;
 
-            User user = userRepositorySupport.findUserById(id).get();
-            Group group = groupRepositorySupport.findGroupById(groupId).get();
+            User user = userRepository.findUserById(id);
+            Group group = groupRepository.findGroupById(groupId);
 
             List<Attendance> attendance = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
             for (int j = 0; j<attendance.size();j++){
@@ -62,12 +62,11 @@ public class AttendServiceImpl implements AttendService{
 
     @Override
     public List<AttendRes> getAttendance(int userId, int groupId) {
-        User user = userRepositorySupport.findUserById(userId).get();
-        Group group =  groupRepositorySupport.findGroupById(groupId).get();
+        User user = userRepository.findUserById(userId);
+        Group group =  groupRepository.findGroupById(groupId);
 
         //해당유저가 진행한 모든 미팅룸 번호
         List<Attendance> att = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
-        System.out.println(att.get(0).getMeetid());
         //미팅룸 번호로 타이틀과 날짜과 미팅 그룹 사용자의 출석률
         List<AttendRes> resList = new ArrayList<>();
         for (int i = 0; i<att.size();i++){
@@ -85,8 +84,8 @@ public class AttendServiceImpl implements AttendService{
 
     @Override
     public boolean updateAttendance(int userId, int groupId, AttendUpdateReq attendUpdateReq) {
-        User user = userRepositorySupport.findUserById(userId).get();
-        Group group =  groupRepositorySupport.findGroupById(groupId).get();
+        User user = userRepository.findUserById(userId);
+        Group group =  groupRepository.findGroupById(groupId);
         Meet meet = meetRepository.findMeetById(attendUpdateReq.getMeetId());
 
         Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user,meet);

@@ -114,7 +114,7 @@ public class GroupController {
     }
 
     // 선택한 그룹 정보 조회(ownerId일때)
-    @GetMapping("/{group_id}") //user 로 변경
+    @GetMapping("/{group_id}")
     @ApiOperation(value = "선택한 그룹 조회", notes = "선택한 그룹의 정보를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
