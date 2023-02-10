@@ -253,26 +253,41 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserById(userId);
         List<User_Meet> um = userMeetRepository.findUser_MeetByUserid(user);
         List<UserMeetRes> umrs = new ArrayList<>();
+        //내가 참여자일때
         for (int i = 0; i< um.size();i++){
             Meet meet = meetRepository.findMeetById(um.get(i).getMeetid().getId());
-            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
-            Group group = groupRepository.findGroupById(gm.getGroupid().getId());
-            UserMeetRes umr = new UserMeetRes();
+//            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
+            if(meet.getGroupid()==null){
+                UserMeetRes umr = new UserMeetRes();
 
-            umr.setMeetId(meet.getId());
-            umr.setGroupTitle(group.getName());
-            umr.setDate(meet.getDate());
-            umr.setMeetTitle(meet.getTitle());
-            umr.setStartTime(meet.getStarttime());
-            umr.setEndTime(meet.getEndtime());
+                umr.setMeetId(meet.getId());
+                umr.setDate(meet.getDate());
+                umr.setMeetTitle(meet.getTitle());
+                umr.setStartTime(meet.getStarttime());
+                umr.setEndTime(meet.getEndtime());
 
-            umrs.add(umr);
+                umrs.add(umr);
+            }else {
+                Group group = groupRepository.findGroupById(meet.getGroupid().getId());
+                UserMeetRes umr = new UserMeetRes();
+
+                umr.setMeetId(meet.getId());
+                umr.setGroupTitle(group.getName());
+                umr.setDate(meet.getDate());
+                umr.setMeetTitle(meet.getTitle());
+                umr.setStartTime(meet.getStarttime());
+                umr.setEndTime(meet.getEndtime());
+
+                umrs.add(umr);
+            }
         }
         List<Meet> ownerum = meetRepository.findMeetsByUserid(user);
+        // 내가 owner로서 참가할때
         System.out.println(ownerum.size());
         for (int i = 0; i<ownerum.size() ;i++){
             Meet meet = ownerum.get(i);
             System.out.println(meet.getTitle());
+            // 그룹이 있는 강의인지
             if(meet.getGroupid()==null){
                 UserMeetRes umr = new UserMeetRes();
                 umr.setMeetId(meet.getId());
@@ -283,6 +298,7 @@ public class UserServiceImpl implements UserService {
 
                 umrs.add(umr);
             }else {
+                //그룹이 아닌 회의인지
                 Group group = groupRepository.findGroupById(meet.getGroupid().getId());
                 UserMeetRes umr = new UserMeetRes();
                 umr.setMeetId(meet.getId());
