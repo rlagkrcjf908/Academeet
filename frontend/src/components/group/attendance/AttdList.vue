@@ -64,7 +64,7 @@ const routeToUser = (item) => {
 
 onMounted(async () => {
   const res = await requestAttdList(groupId.value);
-  console.log("전체 출석 res", res);
+  // console.log("전체 출석 res", res);
   const datas = res.data;
   const list = datas.map((item) => {
     return {
@@ -74,7 +74,7 @@ onMounted(async () => {
     };
   });
   attdUserList.value = list;
-  console.log("attdList의 전체 유저 출석: ", attdUserList.value);
+  // console.log("attdList의 전체 유저 출석: ", attdUserList.value);
 });
 </script>
 

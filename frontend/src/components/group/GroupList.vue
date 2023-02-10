@@ -6,7 +6,7 @@
 
 <script setup>
 import GroupListItem from '@/components/group/GroupListItem'
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -21,5 +21,5 @@ onMounted (async () => {
 </script>
 <style scoped>
 
-</style>
+</style>+
 

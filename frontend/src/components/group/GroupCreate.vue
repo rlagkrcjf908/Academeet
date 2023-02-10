@@ -129,7 +129,7 @@ const submitForm = (formEl) => {
         "users": guestList,
       }
       await store.dispatch('groupStore/groupCreateAction',groupData)
-      router.push('/')
+      router.push('/group')
       console.log('submit!')
     } else {
       console.log('error submit!')

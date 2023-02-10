@@ -1,6 +1,6 @@
 <template>
   <div class="join">
-    <h1>
+    <h1 @click="$router.push('/login')">
       <span style="color: #94d82d">A</span>cade<span style="color: #94d82d">M</span>eet
     </h1>
 
@@ -112,11 +112,9 @@ const image = ref()
 // 이미지 업로드
 function uploadImg (){
   let profileImg = image.value.files[0];
-  console.log(profileImg)
   const url = URL.createObjectURL(profileImg);
   profile.value = url;
-  console.log(image.value.files[0])
-  console.log("이미지",profile.value)
+
 }
 
 const ruleForm = reactive({
@@ -305,7 +303,8 @@ const rules = reactive({
 const submitForm = (formEl) => {
   if (!formEl) return
     formEl.validate( (valid) => {
-    if (valid && isCheck.value) {
+      console.log(isCheck.value)
+    if (valid && isCheck.value === true) {
       const config = {
         headers: {
           "Content-Type": "multipart/form-data"
