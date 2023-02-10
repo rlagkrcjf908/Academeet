@@ -1,4 +1,5 @@
 <template>
+    
         <span>{{ props.member.name }}</span> |
         <span>{{ props.member.email }}</span>
 </template>
