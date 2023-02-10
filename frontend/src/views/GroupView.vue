@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <TheSide />
+      <TheSide/>
       <el-container>
         <router-view></router-view>
       </el-container>
@@ -10,8 +10,16 @@
 </template>
 
 <script setup>
-// import TheHeader from '@/components/layouts/TheHeader.vue'
 import TheSide from "@/components/layouts/TheSide.vue";
+// import { onMounted, ref } from 'vue';
+// import { useStore } from 'vuex'
+
+// const store = useStore()
+// const userid = store.state.accountStore.userId
+
+// onMounted (async () => {
+//     await store.dispatch('groupStore/requestGroupListAction', userid)
+// })
 </script>
 
 <style>

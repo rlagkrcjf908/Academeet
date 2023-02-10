@@ -3,15 +3,17 @@
   <el-header>
     <!-- 링크버튼 -->
     <div class="sub-main the-sub-main-header">
-      <el-button type="success" @click="routeToSubMain" link small>
+      <el-button type="success" @click="routeToSubMain" link style="margin: 0; margin-bottom: 8px; ">
         {{ groupInfo.name }}
       </el-button>
-      <el-button @click="routeToAttdItem" type="success" link small>
+      <el-button @click="routeToAttdItem" type="success" link style="margin: 0; margin-bottom: 8px; ">
         출석부
       </el-button>
-      <el-button type="success" link small>공지사항</el-button>
+      <el-button type="success" link style="margin: 0; margin-bottom: 8px; ">
+        공지사항
+      </el-button>
       <!-- 삭제버튼 -->
-      <el-button type="success" :icon="Delete" small @click="open" />
+      <el-button type="success" :icon="Delete" small @click="open" style="margin-top: 8px; margin-bottom: 8px; width: 5px;"/>
     </div>
   </el-header>
 </template>
@@ -19,7 +21,7 @@
 <script setup>
 //출석부를 위해서 로컬 스토리지 유저와 그룹 호스트 비교, route.push() 기능 정리
 import { useRouter, useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { requestDeleteGroup, requestGroup } from "@/common/api/groupAPI";
 import { ElMessage, ElMessageBox } from "element-plus";

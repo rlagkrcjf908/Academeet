@@ -12,7 +12,7 @@
 
     <nav>
       <ul>
-        <li style="color: #94d82d">{{ userInfo.nick }} 님</li>
+        <li style="color: #94d82d">{{ userInfo.name }} 님</li>
         <small v-if="userInfo" class="text-muted">{{ userInfo.uid }} </small>
         <li><router-link to="/profile">My Page</router-link></li>
         <li><router-link to="/group">Group</router-link></li>
