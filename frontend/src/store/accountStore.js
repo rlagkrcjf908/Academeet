@@ -5,49 +5,49 @@ import setAuthHeader from 'axios'
 import { ElMessage } from 'element-plus'
 
 const state = {
-  token : null,
-  userInfo : null,
-  userId : null,
-  isAuthenticated : false,
+  token: null,
+  userInfo: null,
+  userId: null,
+  isAuthenticated: false,
 };
 
 const getters = {
   token: state => state.token,
   userInfo: state => state.userInfo,
-  userId : state => state.userId,
-  isAuthenticated : state => state.isAuthenticated
+  userId: state => state.userId,
+  isAuthenticated: state => state.isAuthenticated
 }
 
 const mutations = {
   SET_USERINFO: (state, item) => {
     state.userInfo = item
   },
-  SET_TOKEN : (state, item) => {
+  SET_TOKEN: (state, item) => {
     state.token = item.headers['accessToken']
   },
-  SET_USERID : (state, item) => {
+  SET_USERID: (state, item) => {
     state.userId = item
   },
-  SET_AUTHENTICATED : (state) => {
+  SET_AUTHENTICATED: (state) => {
     state.isAuthenticated = true
   },
-  LOGOUT : (state) => {
+  LOGOUT: (state) => {
     state.token = null
     state.userInfo = null
     state.userId = null
     state.isAuthenticated = false
   },
-  SET_USERID : (state, item) => {
+  SET_USERID: (state, item) => {
     state.userId = item
   }
 };
 
 const actions = {
   // 로그인
-  login ({commit}, loginData) {
+  login({ commit }, loginData) {
     const params = {
-        "email": loginData.email,
-        "password": loginData.password
+      "email": loginData.email,
+      "password": loginData.password
     }
     // i8d108.p.ssafy.io
     axios.post("https://i8d108.p.ssafy.io/api/v1/auth/login/", JSON.stringify(params), {
@@ -63,7 +63,7 @@ const actions = {
       setAuthHeader(res.data.accessToken)
       ElMessage({
         showClose: true,
-        message:'로그인 성공! 환영합니다.',
+        message: '로그인 성공! 환영합니다.',
         type: 'success',
       })
       router.push("/")
@@ -71,13 +71,13 @@ const actions = {
       console.log(e)
       ElMessage({
         showClose: true,
-        message:'존재하지 않는 회원 정보 입니다',
+        message: '존재하지 않는 회원 정보 입니다',
         type: 'error',
       })
     })
   },
-  
-  logout({commit}){
+
+  logout({ commit }) {
     axios.get("https://i8d108.p.ssafy.io/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
@@ -85,16 +85,16 @@ const actions = {
     commit('LOGOUT')
     ElMessage({
       showClose: true,
-      message:'로그아웃 되었습니다.',
+      message: '로그아웃 되었습니다.',
       type: 'success',
     })
     router.push("/login")
   },
-  
+
   // 토큰 가져오기
-  getToken(){
+  getToken() {
     axios.get("https://i8d108.p.ssafy.io/api/v1/")
-    .then((res)=>console.log(res.data))
+      .then((res) => console.log(res.data))
   },
   // 프로필 수정
   profileUpdateAction: async ({ commit }, payload) => {

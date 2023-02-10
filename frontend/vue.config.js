@@ -8,8 +8,9 @@ module.exports = defineConfig({
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'https://i8d108.p.ssafy.io/'
-        // target: 'http://localhost:8080'
+        // target: 'https://i8d108.p.ssafy.io/'
+        target: 'http://localhost:8080',
+        // changeOrigin: true,
       }
     },
     historyApiFallback: true,
@@ -20,5 +21,5 @@ module.exports = defineConfig({
   // },
   transpileDependencies: true,
   lintOnSave: false,
-  outputDir: '../backend/src/main/resources/dist'
+  //outputDir: '../backend/src/main/resources/dist'
 })

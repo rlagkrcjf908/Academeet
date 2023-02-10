@@ -9,8 +9,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.servlet.Filter;
 
@@ -19,7 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.addAllowedOrigin("*");
+//        configuration.addAllowedOrigin("*");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
@@ -33,19 +33,26 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        registry.addResourceHandler("/image/**")
+                .addResourceLocations("file:///app/build/img/")
+                .setCachePeriod(3600)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
+
     		registry.addResourceHandler("/resources/**")
     				.addResourceLocations("/WEB-INF/resources/");
-    		
+
     		registry.addResourceHandler("swagger-ui.html")
     				.addResourceLocations("classpath:/META-INF/resources/");
 
     		registry.addResourceHandler("/webjars/**")
     				.addResourceLocations("classpath:/META-INF/resources/webjars/");
-    		
+
     		/*
-    		 * 
+    		 *
     		 * Front-end에서 참조하는 URL을 /dist로 매핑
-    		 * 
+    		 *
     		 */
         registry.addResourceHandler("/css/**")
         			.addResourceLocations("classpath:/dist/css/");
@@ -57,6 +64,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.addResourceLocations("classpath:/dist/img/");
         registry.addResourceHandler("/js/**")
 				.addResourceLocations("classpath:/dist/js/");
+
     }
 
     public Filter requestLoggingFilter() {
@@ -75,4 +83,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.addUrlPatterns("/api/*");
         return registration;
     }
+
+
+
 }

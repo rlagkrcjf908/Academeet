@@ -200,11 +200,11 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io/";
+// const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io/";
 // const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
-// const APPLICATION_SERVER_URL = "https://192.168.100.88/";
-// const OPENVIDU_SERVER_URL = "https://localhost:4443";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const APPLICATION_SERVER_URL = "https://192.168.100.88/";
+const OPENVIDU_SERVER_URL = "https://localhost:4443";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
 name: "App",
@@ -599,32 +599,68 @@ methods: {
      * Visit https://docs.openvidu.io/en/stable/application-server to learn
      * more about the integration of OpenVidu in your application server.
      */
-    async getToken(mySessionId) {
-    const sessionId = await this.createSession(mySessionId);
-    return await this.createToken(sessionId);
+     getToken(mySessionId) {
+        return this.createSession(mySessionId).then((sessionId) => this.createToken(sessionId));
     },
 
-    async createSession(sessionId) {
-    const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions",
-        { customSessionId: sessionId },
-        {
-        headers: { "Content-Type": "application/json" },
-        }
-    );
-    return response.data; // The sessionId
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
+    createSession(sessionId) {
+        return new Promise((resolve, reject) => {
+            axios
+            .post(
+                `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+                JSON.stringify({
+                customSessionId: sessionId,
+                }),
+                {
+                auth: {
+                    username: "OPENVIDUAPP",
+                    password: OPENVIDU_SERVER_SECRET,
+                },
+                }
+            )
+            .then((response) => response.data)
+            .then((data) => resolve(data.id))
+            .catch((error) => {
+                if (error.response.status === 409) {
+                resolve(sessionId);
+                } else {
+                console.warn(
+                    `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
+                );
+                if (
+                    window.confirm(
+                    `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                    )
+                ) {
+                    location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+                }
+                reject(error.response);
+                }
+            });
+        });
     },
 
-    async createToken(sessionId) {
-    const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions/" + sessionId + "/connections",
-        {},
-        {
-        headers: { "Content-Type": "application/json" },
-        }
-    );
-    return response.data; // The token
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+    createToken(sessionId) {
+        return new Promise((resolve, reject) => {
+            axios
+            .post(
+                `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+                {},
+                {
+                auth: {
+                    username: "OPENVIDUAPP",
+                    password: OPENVIDU_SERVER_SECRET,
+                },
+                }
+            )
+            .then((response) => response.data)
+            .then((data) => resolve(data.token))
+            .catch((error) => reject(error.response));
+        });
     },
+
 
     async startRecording(){
     console.log("Starting recording");
