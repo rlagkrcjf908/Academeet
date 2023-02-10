@@ -20,9 +20,11 @@ const props = defineProps({
   group: Object
 })
 
-async function getUserList(groupId){
-  await store.dispatch("groupStore/requestUserListAction", groupId);
+function getUserList(groupId){
+  // alert('g');
+  // console.log(groupId)
   router.push({ name: "groupUser", params: { groupId } });
+  // window.location.reload(true);
 }
 
 </script>

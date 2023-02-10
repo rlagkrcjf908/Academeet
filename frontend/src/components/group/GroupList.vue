@@ -28,5 +28,5 @@ onMounted (() => {
 </script>
 <style scoped>
 
-</style>+
+</style>
 

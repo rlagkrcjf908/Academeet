@@ -216,7 +216,7 @@ const dupliCheck= () => {
     .then(res => {
       console.log(res);
       if (res.data === 1) {
-        axios.put("https://i8d108.p.ssafy.io/api/v1/user/email", ruleForm.email)
+        axios.put("https://i8d108.p.ssafy.io/api/v1/user/email", JSON.stringify(param))
         .then(res => {
           ElMessage({
             showClose: true,

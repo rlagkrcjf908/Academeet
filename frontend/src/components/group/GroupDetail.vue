@@ -1,7 +1,7 @@
 <template>
   <div>
-    <TheSubMain/>
-    <router-view></router-view>
+    <TheSubMain :key="$route.path"/>
+    <router-view :key="$route.path"></router-view>
   </div>
 </template>
 
