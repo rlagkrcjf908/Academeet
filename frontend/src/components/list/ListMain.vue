@@ -44,7 +44,7 @@
 import { requestMeetingList } from "@/common/api/meetingAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import MeetSide from "@/components/layouts/MeetSide.vue";
+// import MeetSide from "@/components/layouts/MeetSide.vue";
 
 const router = useRouter();
 const route = useRoute();
