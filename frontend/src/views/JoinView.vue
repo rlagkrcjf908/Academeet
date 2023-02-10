@@ -229,7 +229,7 @@ const dupliCheck= () => {
           console.log(err);
           ElMessage({
             showClose: true,
-            message:'올바른 이메일을 입력해주세요',
+            message:'인증코드 전송에 실패했습니다.',
             type: 'error',
           })
         })

@@ -8,20 +8,29 @@
 </template>
 <script setup>
 import GroupUserItem from '@/components/group/GroupUserItem'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect, watch } from 'vue';
 import { useStore } from 'vuex'
-
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const store = useStore()
-const userid = store.state.accountStore.userId
 
-const members = store.state.groupStore.groupUserList  
+const userId = store.state.accountStore.userId
+const groupId = route.params.groupId
+console.log('userId',userId, 'groupId',groupId)
+const members = ref()
 
-// const members = ref()
-// onMounted (async () => {
-//     await store.dispatch('groupStore/requestUserListAction', userid)
-//     members.value = store.state.groupStore.groupUserList  
-// })
-    
+async function getUsers(){
+    members.value = store.state.groupStore.groupUserList  
+}
+
+onMounted(()=>{
+    getUsers()
+})
+
+watch(groupId,getUsers)
+
 </script>
 
 <style>

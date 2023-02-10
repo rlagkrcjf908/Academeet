@@ -1,13 +1,15 @@
 <template>
   <el-form
+    label-position="top"
     ref="ruleFormRef"
     :model="ruleForm"
     status-icon
     :rules="rules"
     label-width="120px"
-    class="demo-ruleForm"
+    class="demo-ruleForm meeting-create"
   >
-    <div style="border: 1px solid black; padding: 40px">
+
+    <div class="meeting-create-form">
       <!-- 회의이름 -->
       <el-form-item label="회의이름" prop="groupName" required>
         <el-input
@@ -18,9 +20,23 @@
           maxlength="45"
         />
       </el-form-item>
-
       <!-- 시간 -->
-      <div class="demo-time-range">
+      <div>
+
+        <!-- 회의날짜 -->
+        <el-form-item prop="date" label="회의 날짜">
+          <el-date-picker
+            v-model="ruleForm.date"
+            type="date"
+            style="width: 100%"
+            format="YYYY/MM/DD"
+            value-format="YYYY-MM-DD"
+            min="2000-01-01" 
+            max="2500-12-31"
+            placeholder="Pick a Date"
+          />
+        </el-form-item>
+
         <!-- 시작시간 -->
         <el-form-item label="회의 시작 시간" required prop="startTime">
           <el-time-select
@@ -46,14 +62,14 @@
       </div>
     </div>
 
-    <div style="border: 1px solid black; padding: 40px">
+    <div class="meeting-create-form">
       <!-- 그룹선택 -->
       <!-- 내가 호스트인 그룹만 데려옴 -->
       <el-form-item label="그룹 선택" prop="group">
         <el-radio-group v-model="ruleForm.group" @change="selectGroup">
           <el-radio label="선택안함" name="no" />
           <div v-for="(item, index) in groupList" :key="index">
-            <el-radio :label="item?.id">{{ item?.name }}</el-radio>
+            <el-radio :label="item?.id" style="margin-right:2em">{{ item?.name }}</el-radio>
           </div>
         </el-radio-group>
       </el-form-item>
@@ -81,16 +97,11 @@
     </div>
   </el-form>
   <!-- 회의 생성 버튼 -->
-  <el-form-item>
-    <el-button type="success" round @click="submitForm(ruleFormRef)"
-      >미팅생성</el-button
-    >
-  </el-form-item>
+    <el-button type="success" round @click="submitForm(ruleFormRef)">미팅생성</el-button>
 </template>
 
 <script setup>
 import { hostGroup, userSearch } from "@/common/api/meetingAPI";
-// import { userSearch } from '@/common/api/groupAPI'
 import { ref, reactive, onMounted } from "vue";
 import { toRaw } from "vue";
 import { useStore } from "vuex";
@@ -104,6 +115,7 @@ const userid = store.state.accountStore.userId;
 // 유효성 검사할 항목 이름
 const ruleForm = reactive({
   groupName: "",
+  date: "",
   startTime: "",
   endTime: "",
   group: "",
@@ -176,6 +188,9 @@ const remoteMethod = (query) => {
 const rules = reactive({
   groupName: [{ validator: validategroupName, trigger: "blur" }],
   group: [{ required: true, message: "그룹을 선택하세요", trigger: "change" }],
+  date: [
+    { required: true, message: "회의 날짜를 선택하세요", trigger: "change" },
+  ],
   startTime: [
     { required: true, message: "시작 시간을 선택하세요", trigger: "change" },
   ],
@@ -184,16 +199,6 @@ const rules = reactive({
   ],
   user: [{ required: true, message: "참여자를 선택하세요", trigger: "change" }],
 });
-
-// 현재시간
-function getToday() {
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = ("0" + (1 + date.getMonth())).slice(-2);
-  var day = ("0" + date.getDate()).slice(-2);
-
-  return year + "-" + month + "-" + day;
-}
 
 // 회의 생성
 const submitForm = (formEl) => {
@@ -206,7 +211,7 @@ const submitForm = (formEl) => {
         name: ruleForm.groupName,
         starttime: `${ruleForm.startTime}:00`,
         endtime: `${ruleForm.endTime}:00`,
-        date: getToday(),
+        date: ruleForm.date,
       };
       if (isSelectGroup.value === false) {
         const rawArray = toRaw(ruleForm.user);
@@ -234,4 +239,20 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
+.meeting-create{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.meeting-create-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  /* border: 1px solid green; */
+  padding: 8vw;
+}
 </style>

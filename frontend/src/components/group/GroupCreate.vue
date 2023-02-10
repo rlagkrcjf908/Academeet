@@ -1,46 +1,46 @@
 <template>
-  
-  <div>
+  <div class="group-create">
+
     <p style="color: rgba(97, 178, 153, 1); border-bottom: 1px solid rgba(217, 217, 217, 1);">그룹생성</p>
-  </div>
-  <el-form
-    ref="ruleFormRef"
-    :model="ruleForm"
-    status-icon
-    :rules="rules"
-    label-width="120px"
-    class="demo-ruleForm"
-  >
-  <!-- 그룹 이름 생성 폼  -->
-    <el-form-item label="그룹이름" prop="groupName">
-      <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
-    </el-form-item>
-    <!-- 유저 검색 -->
-    <el-form-item label="멤버" prop="user">
-      <el-select
-        v-model="ruleForm.user"
-        multiple
-        filterable
-        remote
-        reserve-keyword
-        placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
-        :remote-method="remoteMethod"
-        :loading="loading"
-        clearable
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </el-form-item>
-    <!-- 그룹 생성 버튼 -->
-    <el-form-item>
+
+    <el-form
+      label-position="top"
+      ref="ruleFormRef"
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      label-width="120px"
+      class="demo-ruleForm"
+    >
+    <!-- 그룹 이름 생성 폼  -->
+      <el-form-item label="그룹이름" prop="groupName">
+        <el-input v-model="ruleForm.groupName" type="text" autocomplete="off" placeholder="그룹이름을 입력해 주세요." maxlength="45"/>
+      </el-form-item>
+      <!-- 유저 검색 -->
+      <el-form-item label="멤버" prop="user">
+        <el-select
+          v-model="ruleForm.user"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          placeholder="초대하고 싶은 멤버 이름을 검색해주세요"
+          :remote-method="remoteMethod"
+          :loading="loading"
+          clearable
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <!-- 그룹 생성 버튼 -->
       <el-button type="success" round @click="submitForm(ruleFormRef)">그룹생성</el-button>
-    </el-form-item>
-    </el-form>
+      </el-form>
+  </div>
 </template>
 
 <script setup>
@@ -110,7 +110,7 @@ const ruleForm = reactive({
 
 // 유효성 검사 규칙
 const rules = reactive({
-  groupName: [{ validator: validategroupName, trigger: 'blur' }],
+  groupName: [{  required: true, validator: validategroupName, trigger: 'blur' }],
   user: [{ required: true, message: '멤버를 선택하세요', trigger: 'change' }],
 })
 
@@ -139,3 +139,9 @@ const submitForm = (formEl) => {
 }
 
 </script>
+
+<style>
+.group-create{
+  padding: 0 2em
+}
+</style>

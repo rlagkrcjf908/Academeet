@@ -13,7 +13,7 @@ const requestUserList = (group_id) => $axios.get(`/group/${group_id}/userList`);
 
 const groupDelete = (group_id, payload) => $axios.delete(`/group/${group_id}/delete`, payload);
 
-const groupUpdate = (group_id, payload) => $axios.put(`/group/${group_id}/update`, payload);
+// const groupUpdate = (group_id, payload) => $axios.put(`/group/${group_id}/update`, payload);
 
 const userSearch = (payload) => $axios.post(`/group/search`,payload);
 
@@ -27,7 +27,7 @@ const requestAttdUser = (group_id, select_user_id) => $axios.get(`/group/${group
 //그룹 내 회원 출석 상세정보 수정
 const attdUserUpdate = (group_id, select_user_id, payload) => $axios.put(`/group/${group_id}/${select_user_id}/update`, payload);
 
-export { groupCreate, requestGroupList, requestGroup, groupDelete, groupUpdate, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate };
+export { groupCreate, requestGroupList, requestGroup, groupDelete, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate };
 
 
 // import $axios from "axios";
