@@ -20,7 +20,7 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
           <tr v-for="(item, index) in meetList" :key="index">
-            <td>{{ item.date }}</td>
+            <td>{{ item.date.toLocaleString() }}</td>
             <td>
               {{ item.startTime }} ~ {{ item.endTime }}
             </td>
@@ -76,9 +76,11 @@ onMounted(async () => {
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
-      date: item.date,
+      date: item.date.toLocaleString(),
       startTime: item.startTime,
       endTime: item.endTime,
+      meetId: item.meetId,
+      
     };
   });
   meetList.value = list;
@@ -86,6 +88,7 @@ onMounted(async () => {
 
 const joinMeet = (item) => {
   const meetInfo = {
+    meetId: item.meetId,
     meetTitle: item.meetTitle,
     userName: JSON.parse(localStorage.getItem("userInfo")).name,
     userId: JSON.parse(localStorage.getItem("userInfo")).id,

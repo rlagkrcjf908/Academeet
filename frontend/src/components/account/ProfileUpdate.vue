@@ -133,7 +133,7 @@ const validateNickname = (rule, value, callback) => {
 
 // 프로필사진 업로드
 const profileImg = ref(
-  "http://i8d108.p.ssafy.io/img/" + profile.profile.filename
+  "https://i8d108.p.ssafy.io/img/" + profile.profile.filename
 );
 const image = ref();
 

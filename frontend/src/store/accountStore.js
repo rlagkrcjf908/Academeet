@@ -81,6 +81,7 @@ const actions = {
     axios.get("https://i8d108.p.ssafy.io/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
+    sessionStorage.removeItem('meetInfo')
     location.reload()
     commit('LOGOUT')
     ElMessage({
