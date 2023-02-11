@@ -81,7 +81,7 @@ const actions = {
   },
 
   logout({ commit }) {
-    axios.get("https://i8d108.p.ssafy.io//api/v1/auth/logout/")
+    axios.get("https://i8d108.p.ssafy.io/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -96,7 +96,7 @@ const actions = {
 
   // 토큰 가져오기
   getToken() {
-    axios.get("https://i8d108.p.ssafy.io//api/v1/")
+    axios.get("https://i8d108.p.ssafy.io/api/v1/")
       .then((res) => console.log(res.data))
   },
   // 프로필 수정
