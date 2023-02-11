@@ -21,7 +21,6 @@ console.log('userId',userId, 'groupId',groupId.value)
 
 async function getUserList() {
     const res = await requestUserList(groupId.value)
-    console.log('resdata',res.data)
     members.value = res.data
 }
 

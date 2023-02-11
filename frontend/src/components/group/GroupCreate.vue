@@ -88,9 +88,6 @@ const remoteMethod = (query) => {
       let list = searchUserList.filter(item =>item.id !== userid).map((item) => {
         return { value: item.id, label: `${item.name}:${item.email}` }
       })
-      
-      console.log(list)
-      console.log(userid)
 
       loading.value = false
       options.value = list

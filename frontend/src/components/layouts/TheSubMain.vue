@@ -9,7 +9,7 @@
       <el-button @click="routeToAttdItem" type="success" link style="margin: 0; margin-bottom: 8px; ">
         출석부
       </el-button>
-      <el-button type="success" link style="margin: 0; margin-bottom: 8px; ">
+      <el-button @click="routeToArticle" type="success" link style="margin: 0; margin-bottom: 8px; ">
         공지사항
       </el-button>
       <!-- 삭제버튼 -->
@@ -74,7 +74,16 @@ const routeToSubMain = () => {
   });
 };
 
-// 확인 메시지 창
+//공지사항 이동
+const routeToArticle = () => {
+  console.log("routeToArticle 이동합니다");
+  router.push({
+    name: "articleList",
+    params: { groupId: groupId.value },
+  });
+};
+
+// 삭제 확인 메시지 창
 const open = () => {
   ElMessageBox.confirm("그룹이 삭제 됩니다. 삭제하시겠습니까?", "Warning", {
     confirmButtonText: "OK",

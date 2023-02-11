@@ -24,24 +24,14 @@ const attdUserUpdate = (group_id, select_user_id, payload) => $axios.put(`/group
 
 // 공지사항 관련 API
 // 공지 글 작성
-const artileCreate = (group_id,user_id,payload) => $axios.post(`/group/${group_id}/${user_id}/article`, payload);
+const artileCreate = (group_id, user_id, payload) => $axios.post(`/group/${group_id}/${user_id}/article`, payload);
 // 선택 된 공지 글
-const requestArtile = (group_id, article_id) => $axios.get(`/group/${group_id}/article/${article_id}`);
+const requestArtile = (article_id) => $axios.get(`/group/${article_id}/article/`);
 // 공지 글 전체 리스트
-const requestArtileList = (group_id) => $axios.get(`/group/${group_id}/artList`);
+const requestArtileList = (group_id, user_id) => $axios.get(`/group/${group_id}/${user_id}/artList`);
 // 공지 글 삭제
 const requestDeleteArtile = (group_id) => $axios.delete(`/group/${group_id}`);
 // 공지 글 수정
-const requestUpdateArtile = (user_id, article_id, payload) => $axios.put(`/group/${user_id}/${article_id}/update`, payload);
+const requestUpdateArtile = (article_id, payload) => $axios.put(`/group/${article_id}/articleupdate`, payload);
 
-// 1. 공지사항 글 하나 조회
-// [어느 그룹의 공지사항인지]/[그 중 어느 글을 조회할건지]
-// get(`/api/v1/group/${params}`) >>> 그룹조회 api 인데  
-// get(`/api/v1/group/${params}`) >>> 공지사항 글 조회api도 이거라서 같아요. 
-
-// 2. 게시글 수정할 때 [어느 그룹의 공지사항인지]/[그 중 어느 글을 수정할건지]
-// 현재는 put(`/api/v1/group/${params}/update`) 그룹수정 안하긴하지만 지금 그룹 수정 api 랑 같아요.
-
-
-
-export { groupCreate, requestGroupList, requestGroup, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate };
+export { groupCreate, requestGroupList, requestGroup, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate, artileCreate, requestArtile, requestArtileList, requestDeleteArtile, requestUpdateArtile};

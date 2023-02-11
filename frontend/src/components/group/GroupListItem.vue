@@ -9,22 +9,17 @@
 
 <script setup>
 
-import { defineProps, onMounted, watch } from "vue";
-import { useStore } from 'vuex'
+import { defineProps } from "vue";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const store = useStore();
 
 const props = defineProps({
   group: Object
 })
 
 function getUserList(groupId){
-  // alert('g');
-  // console.log(groupId)
   router.push({ name: "groupUser", params: { groupId } });
-  // window.location.reload(true);
 }
 
 </script>

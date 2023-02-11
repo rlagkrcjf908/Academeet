@@ -7,8 +7,11 @@ import {
   requestAttdUser,
   requestAttdList,
   attdUserUpdate,
-
+  artileCreate,
+  requestUpdateArtile
 } from "../common/api/groupAPI";
+import router from '../router/index'
+import { ElMessage } from 'element-plus'
 
 //변수들의 집합
 const state = {
@@ -125,7 +128,50 @@ const actions = {
     const response = await attdUserUpdate(groupId);
     commit("UPDATE_ATTD_USER", response.data.groupData);
   },
-
+  // 공지 글 작성
+  articleCreateAction: async ({ commit }, data) => {
+    const payload = {
+      "title" : data.title,
+      "content": data.content,
+    }
+    try{
+      const response = await artileCreate(data.groupId, data.userId, JSON.stringify(payload));
+      console.log(response)
+      console.log('submit!')
+      router.push({ name: 'articleList', params: { groupId : data.groupId} })
+      // router.push(`/group/${data.groupId}/article/`)
+    }
+    catch (error) {
+      console.log(error)
+      ElMessage({
+        showClose: true,
+        message:'게시글 작성에 실패했습니다.2',
+        type: 'error',
+      })
+    }
+  },
+  // 공지 글 수정
+  articleUpdateAction: async ({ commit }, data) => {
+    const payload = {
+      "title" : data.title,
+      "content": data.content,
+    }
+    try{
+      const response = await requestUpdateArtile(data.articleId, JSON.stringify(payload));
+      console.log(response)
+      console.log('submit!')
+      router.push({ name: 'articleList', params: { groupId : data.groupId} })
+      // router.push(`/group/${data.groupId}/article/`)
+    }
+    catch (error) {
+      console.log(error)
+      ElMessage({
+        showClose: true,
+        message:'게시글 작성에 실패했습니다.2',
+        type: 'error',
+      })
+    }
+  },
 };
 
 export default {
