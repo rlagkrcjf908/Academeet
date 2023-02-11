@@ -44,12 +44,9 @@ public class UserRes{
 		res.setBirth(user.getBirth());
 		res.setPhone(user.getPhone());
 		res.setNick(user.getNick());
-//		String path = filePath;
-//		String path = "C:/Users/SSAFY/Pictures/img/";
-//		String path = "../../../resources/dist/img/";
-//		String path = "/app/build/img/";
-		System.out.println("***File Path" + filePath);
-		res.setProfile(new UrlResource("file:"+filePath+user.getProfile()));
+
+		String path = "/app/build/img/";
+		res.setProfile(new UrlResource("file:"+path+user.getProfile()));
 		return res;
 	}
 }
