@@ -20,7 +20,7 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
           <tr v-for="(item, index) in meetList" :key="index">
-            <td>{{ item.date.toLocaleString() }}</td>
+            <td>{{ item.date }}</td>
             <td>
               {{ item.startTime }} ~ {{ item.endTime }}
             </td>
@@ -42,6 +42,7 @@
 
 <script setup>
 import { requestMeetingList } from "@/common/api/meetingAPI";
+import { sortedLastIndex } from "lodash";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 // import MeetSide from "@/components/layouts/MeetSide.vue";
@@ -72,16 +73,33 @@ onMounted(async () => {
   const res = await requestMeetingList(userId);
   console.log("전체  meet", res);
   const datas = res.data;
-  const list = datas.map((item) => {
+  console.log(datas)
+  const sortedDate = (datas) => {
+      const sorted_date = datas.sort(function (a, b) {
+        // return new Date(a.date) - new Date(b.date).getTime();
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+
+        if (a.endTime < b.endTime) return -1;
+        if (a.endTime > b.endTime) return 1;
+      });
+    return sorted_date;
+  };
+  console.log(sortedDate(datas))
+
+  const list = sortedDate(datas).map((item) => {
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
-      date: item.date.toLocaleString(),
+      date: item.date,
       startTime: item.startTime,
       endTime: item.endTime,
       meetId: item.meetId,
-      
     };
+    
   });
   meetList.value = list;
 });
