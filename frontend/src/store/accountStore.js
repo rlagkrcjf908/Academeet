@@ -87,6 +87,7 @@ const actions = {
     axios.get(BASE_URL + "/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
+    sessionStorage.removeItem('meetInfo')
     location.reload()
     commit('LOGOUT')
     ElMessage({
