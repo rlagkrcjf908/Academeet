@@ -14,8 +14,8 @@ module.exports = defineConfig({
     //     // changeOrigin: true,
     //   }
     // },
-    // historyApiFallback: true,
-    // hot: true
+    historyApiFallback: true,
+    hot: true
 
   },
   // css: {
