@@ -45,6 +45,9 @@ const mutations = {
   }
 };
 
+// const BASE_URL = 'https://i8d108.p.ssafy.io'
+const BASE_URL = ''
+
 const actions = {
   // 로그인
   login({ commit }, loginData) {
@@ -53,7 +56,7 @@ const actions = {
       "password": loginData.password
     }
     // i8d108.p.ssafy.io
-    axios.post("https://i8d108.p.ssafy.io:8080/api/v1/auth/login/", JSON.stringify(params), {
+    axios.post(BASE_URL + "/api/v1/auth/login/", JSON.stringify(params), {
       headers: { 'content-type': 'application/json' }
     }).then(res => {
       commit('SET_USERINFO', res.data)
@@ -81,7 +84,7 @@ const actions = {
   },
 
   logout({ commit }) {
-    axios.get("https://i8d108.p.ssafy.io:8080/api/v1/auth/logout/")
+    axios.get(BASE_URL + "/api/v1/auth/logout/")
     localStorage.removeItem('token')
     localStorage.removeItem('userInfo')
     location.reload()
@@ -96,7 +99,7 @@ const actions = {
 
   // 토큰 가져오기
   getToken() {
-    axios.get("https://i8d108.p.ssafy.io:8080/api/v1/")
+    axios.get(BASE_URL + "/api/v1/")
       .then((res) => console.log(res.data))
   },
   // 프로필 수정
