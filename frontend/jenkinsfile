@@ -1,0 +1,125 @@
+pipeline {
+    agent any
+    environment {
+            imagename = "leechanseok/academeet:front"
+            registryCredential = 'dockerhub_d108'
+            dockerImage = ''
+        }
+    tools {nodejs "nodej14"}
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        
+        stage('Prepare') {
+            steps {
+                    echo 'Clonning Repository'
+                    git url: 'https://lab.ssafy.com/s08-webmobile1-sub2/S08P12D108.git',
+                    branch: 'lcs',
+                    credentialsId: 'gitlab_D108'
+                }
+                post {
+                    success { 
+                    echo 'Successfully Cloned Repository'
+                }
+                    failure {
+                    error 'This pipeline stops here...'
+                }
+            }
+        }
+
+        stage('Bulid npm') {
+            steps {
+                echo 'Bulid npm'
+                dir('frontend'){
+                    sh 'npm run build'
+                }
+            }
+            post {
+                failure {
+                error 'This pipeline stops here...'
+                }
+            }
+        }
+        
+        stage('Bulid Docker') {
+            steps {
+                echo 'Bulid Docker'
+                dir('frontend'){
+                    script {
+        
+                        sh "ls -al"
+                        sh "pwd"
+                        
+                        sh """
+                        if ! test docker; then
+                        curl -fsSL https://get.docker.com -o get-docker.sh
+                        get-docker.sh
+                        fi
+                        """
+        
+                        dockerImage = docker.build imagename
+                    }
+                }
+            }
+            post {
+                failure {
+                error 'This pipeline stops here...'
+                }
+            }
+        }
+        stage('Push Docker') {
+            steps {
+                echo 'Push Docker'
+                
+                sshagent(credentials: ['ssh_ec2']) {
+                    
+                    // sh '''
+                    // if test "`docker ps -aq --filter ancestor=leechanseok/academeet:back`"; then
+                    
+                    // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker stop $(docker ps -aq --filter ancestor=leechanseok/academeet:back)"
+                    // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rm -f $(docker ps -aq --filter ancestor=leechanseok/academeet:back)"
+                    // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rmi leechanseok/academeet:back"
+                    
+                    // fi
+                    // '''
+                    sh '''
+                    if test "`docker ps -aq --filter name=fe_d108`"; then
+                    
+                    ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker stop $(docker ps -aq --filter name=fe_d108)"
+                    ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rm -f $(docker ps -aq --filter name=fe_d108)"
+                    ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rmi leechanseok/academeet:front"
+                    
+                    fi
+                    '''
+                }
+                
+                script {
+                    docker.withRegistry( '', registryCredential) {
+                        dockerImage.push() 
+                    }
+                }
+
+            }
+            post {
+                failure {
+                error 'This pipeline stops here...'
+                }
+            }
+        }
+        stage('Docker Run') {
+            steps {
+                echo 'Pull Docker Image & Docker Image Run'
+                sshagent (credentials: ['ssh_ec2']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker pull leechanseok/academeet:front'" 
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker run -d --name fe_d108 -p 3000:80 --network academeet-net -v vue-volume:/app leechanseok/academeet:front'"
+                }
+            
+            }
+        }
+    }
+    
+}
