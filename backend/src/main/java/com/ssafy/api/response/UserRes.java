@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 
@@ -17,6 +18,7 @@ import java.net.MalformedURLException;
 @Getter
 @Setter
 @ApiModel("UserResponse")
+@Component
 public class UserRes{
 
 	public static String filePath;
