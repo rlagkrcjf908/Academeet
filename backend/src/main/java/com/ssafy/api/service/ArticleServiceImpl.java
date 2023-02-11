@@ -30,12 +30,12 @@ public class ArticleServiceImpl implements ArticleService {
         if(articlePostReq.getTitle()==null||articlePostReq.getContent()==null){
             return false;
         }
-        Group group = groupRepositorySupport.findGroupById(groupId).get();
-        User user = userRepositorySupport.findUserById(userId).get();
+        Group group = groupRepository.findGroupById(groupId);
+        User user = userRepository.findUserById(userId);
         Article article  = new Article();
         article.setTitle(articlePostReq.getTitle());
         article.setContent(articlePostReq.getContent());
-        article.setFile(articlePostReq.getFile());
+        article.setDate(articlePostReq.getDate());
         article.setGroupid(group);
         article.setUserid(user);
         articleRepository.save(article);
@@ -62,7 +62,6 @@ public class ArticleServiceImpl implements ArticleService {
         if(article == null) return false;
         article.setTitle(articlePostReq.getTitle());
         article.setContent(articlePostReq.getContent());
-        article.setFile(articlePostReq.getFile());
         articleRepository.save(article);
         return true;
 
