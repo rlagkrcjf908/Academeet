@@ -18,8 +18,13 @@ import java.net.MalformedURLException;
 @Setter
 @ApiModel("UserResponse")
 public class UserRes{
-	@Value("${FILE_PATH}")
+
 	static String filePath;
+	@Value("${FILE_PATH}")
+	public void setValue(String value){
+			filePath = value;
+	}
+
 	@ApiModelProperty(name = "user id")
 	int id;
 	@ApiModelProperty(name="User Email")
@@ -45,8 +50,7 @@ public class UserRes{
 		res.setPhone(user.getPhone());
 		res.setNick(user.getNick());
 
-		String path = "/app/build/img/";
-		res.setProfile(new UrlResource("file:"+path+user.getProfile()));
+		res.setProfile(new UrlResource("file:"+filePath+user.getProfile()));
 		return res;
 	}
 }
