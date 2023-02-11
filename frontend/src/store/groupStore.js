@@ -2,7 +2,6 @@ import {
   groupCreate,
   requestGroupList, 
   requestGroup, 
-  groupDelete, 
   requestUserList, 
   userSearch ,
   requestAttdUser,
@@ -103,12 +102,6 @@ const actions = {
   requestUserListAction: async ({ commit }, groupId) => {
     const response = await requestUserList(groupId);
     commit("SET_GROUP_USER_LIST", response.data);
-  },
-  // 그룹삭제
-  groupDeleteAction: async ({ commit }) => {
-    const response = await groupDelete(groupId)
-    console.log(response);
-    commit("DELETE_GROUP_INFO");
   },
   // 회원 검색
   requestUserSearchAction: async ({ commit }, usrname) => {

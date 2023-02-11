@@ -1,20 +1,17 @@
 import $axios from "axios";
 
+// 그룹 생성 및 정보 관련 API
+// 그룹생성
 const groupCreate = (user_id,payload) => $axios.post(`/group/${user_id}`, payload);
-
+// 현재 로그인 된 사용자가 속한 그룹의 리스트
 const requestGroupList = (user_id) => $axios.get(`/group/${user_id}/list`);
-
-// 학철이형한테 requestGroup 요청을 하면 다시 groupId, name, usesrId(호스트)를 달라고 요청하기
+// 선택한 그룹의 정보
 const requestGroup = (group_id) => $axios.get(`/group/${group_id}`);//그룹호스트id 부르는 API
-
-// const requestGroupHost = (group_id) => $axios.get(`/group/${group_id}`);
-
+// 선택한 그룹의 유저들 리스트
 const requestUserList = (group_id) => $axios.get(`/group/${group_id}/userList`);
-
-const groupDelete = (group_id, payload) => $axios.delete(`/group/${group_id}/delete`, payload);
-
+// 유저 검색
 const userSearch = (payload) => $axios.post(`/group/search`,payload);
-
+// 그룹 삭제
 const requestDeleteGroup = (group_id) => $axios.delete(`/group/${group_id}/delete`);
 
 // 출석관련 API
@@ -25,4 +22,26 @@ const requestAttdUser = (group_id, select_user_id) => $axios.get(`/group/${group
 //그룹 내 회원 출석 상세정보 수정
 const attdUserUpdate = (group_id, select_user_id, payload) => $axios.put(`/group/${group_id}/${select_user_id}/update`, payload);
 
-export { groupCreate, requestGroupList, requestGroup, groupDelete, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate };
+// 공지사항 관련 API
+// 공지 글 작성
+const artileCreate = (group_id,user_id,payload) => $axios.post(`/group/${group_id}/${user_id}/article`, payload);
+// 선택 된 공지 글
+const requestArtile = (group_id, article_id) => $axios.get(`/group/${group_id}/article/${article_id}`);
+// 공지 글 전체 리스트
+const requestArtileList = (group_id) => $axios.get(`/group/${group_id}/artList`);
+// 공지 글 삭제
+const requestDeleteArtile = (group_id) => $axios.delete(`/group/${group_id}`);
+// 공지 글 수정
+const requestUpdateArtile = (user_id, article_id, payload) => $axios.put(`/group/${user_id}/${article_id}/update`, payload);
+
+// 1. 공지사항 글 하나 조회
+// [어느 그룹의 공지사항인지]/[그 중 어느 글을 조회할건지]
+// get(`/api/v1/group/${params}`) >>> 그룹조회 api 인데  
+// get(`/api/v1/group/${params}`) >>> 공지사항 글 조회api도 이거라서 같아요. 
+
+// 2. 게시글 수정할 때 [어느 그룹의 공지사항인지]/[그 중 어느 글을 수정할건지]
+// 현재는 put(`/api/v1/group/${params}/update`) 그룹수정 안하긴하지만 지금 그룹 수정 api 랑 같아요.
+
+
+
+export { groupCreate, requestGroupList, requestGroup, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate };

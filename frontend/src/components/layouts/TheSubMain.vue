@@ -23,7 +23,7 @@
 import { useRouter, useRoute } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
-import { requestDeleteGroup, requestGroup } from "@/common/api/groupAPI";
+import { requestDeleteGroup } from "@/common/api/groupAPI";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
 
@@ -37,26 +37,15 @@ const groupId = ref(route.params.groupId);
 const getGroup = async () => {
   await store.dispatch("groupStore/requestGroupAction", groupId.value);
   groupInfo.value = store.state.groupStore.groupInfo;
-  // console.log(
-  //   "groupInfo.value:",
-  //   groupInfo.value,
-  //   "/ groupInfo.ownerId: ",
-  //   groupInfo.value.ownerid
-  // );
 };
 
 getGroup();
-
-
 
 const userId = store.state.accountStore.userId; //로그인된 유저
 console.log("로그인 된 userId: ", userId);
 
 //출석부 이동
 function routeToAttdItem() {
-  // console.log("routeToAttdView 이동합니다");
-  // console.log("hostId(groupInfo.value.ownerid): ", groupInfo.value.ownerid);
-  // console.log("userId: ", userId);
 
   if (groupInfo.value.ownerid === userId) {
     router.push({
@@ -74,15 +63,6 @@ function routeToAttdItem() {
       },
     });
   }
-  // console.log(
-  //   "groupInfo.value.ownerid:",
-  //   groupInfo.value.ownerid.value,
-  //   "/ userId:",
-  //   userId,
-  //   "/ groupId:",
-  //   groupId.value
-  // );
-  // console.log("++++++++++++++++++++++++++++++++++=");
 }
 
 //서브메인 이동
