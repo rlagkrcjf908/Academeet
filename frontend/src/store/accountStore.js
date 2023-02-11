@@ -45,8 +45,8 @@ const mutations = {
   }
 };
 
-// const BASE_URL = 'https://i8d108.p.ssafy.io'
-const BASE_URL = ''
+const BASE_URL = 'https://i8d108.p.ssafy.io'
+// const BASE_URL = ''
 
 const actions = {
   // 로그인
