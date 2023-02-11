@@ -99,7 +99,7 @@ pipeline {
                 
                 script {
                     docker.withRegistry( '', registryCredential) {
-                        dockerImage.push("back") 
+                        dockerImage.push("front") 
                     }
                 }
 
