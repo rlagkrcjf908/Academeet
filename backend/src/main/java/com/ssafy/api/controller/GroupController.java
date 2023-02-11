@@ -242,7 +242,7 @@ public class GroupController {
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
 
-    @GetMapping("/{group_id/{user_id}/artlist")
+    @GetMapping("/{group_id}/{user_id}/artlist")
     @ApiOperation(value = "게시판 글목록", notes = "모든 게시글의 정보를 반환한다.")
     public ResponseEntity<ArticleParamRes> listArticle(@PathVariable("group_id")int groupId,@PathVariable("user_id")int userId){
         return ResponseEntity.status(200).body(ArticleParamRes.of(articleService.listArticle(groupId,userId)));
