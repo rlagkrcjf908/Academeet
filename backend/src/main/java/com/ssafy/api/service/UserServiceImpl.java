@@ -8,6 +8,7 @@ import com.ssafy.api.response.UserRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailException;
@@ -65,6 +66,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Value("${FILE_PATH}")
+    String filePath;
+
 
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo,MultipartFile profile) {
@@ -81,7 +85,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(user);
         } else {
             String imageFileName = profile.getOriginalFilename();
-            String path = "C:/Users/SSAFY/Pictures/img/";
+            String path = filePath;
             Path imagePath = Paths.get(path + imageFileName);
             try {
                 Files.write(imagePath, profile.getBytes());
@@ -122,7 +126,7 @@ public class UserServiceImpl implements UserService {
         user.setBirth(registerInfo.getBirth());
         user.setNick(registerInfo.getNick());
         user.setPhone(registerInfo.getPhone());
-        String path = "C:/Users/SSAFY/Pictures/img";
+        String path = filePath;
         if (user.getProfile() == profile.getOriginalFilename()) {
             userRepository.save(user);
             return 1;
@@ -236,7 +240,7 @@ public class UserServiceImpl implements UserService {
             userRes.setNick(user.get(i).getNick());
             userRes.setBirth(user.get(i).getBirth());
             userRes.setPhone(user.get(i).getPhone());
-            String path = "C:/Users/SSAFY/Pictures/";
+            String path = filePath;
             userRes.setProfile(new UrlResource(path+user.get(i).getProfile()));
         }
         return users;
