@@ -199,11 +199,8 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
-// const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io/";
-// const APPLICATION_SERVER_URL = "http://192.168.100.88:5000/";
-const APPLICATION_SERVER_URL = "https://192.168.100.88/";
-const OPENVIDU_SERVER_URL = "https://localhost:4443";
+const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io/";
+const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443/";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
@@ -213,8 +210,6 @@ components: {
     UserVideo,
     // SpeechRecognition,
 },
-
-
 
 
 data() {
