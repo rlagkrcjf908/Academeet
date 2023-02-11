@@ -1,6 +1,7 @@
 package com.ssafy.config;
 
 import com.ssafy.common.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +17,14 @@ import javax.servlet.Filter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("${FILE_PATH}")
+    private String filePath;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*");
+//         configuration.addAllowedOrigin("*");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
@@ -33,9 +38,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
+        String path = "file://" + filePath;
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///app/build/img/")
+                .addResourceLocations(path)
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 
@@ -16,7 +18,16 @@ import java.net.MalformedURLException;
 @Getter
 @Setter
 @ApiModel("UserResponse")
+@Component
 public class UserRes{
+
+	public static String filePath;
+	@Value("${FILE_PATH}")
+	public void setValue(String value){
+		filePath = value;
+	}
+	static public String getFilePath() {return filePath;}
+
 	@ApiModelProperty(name = "user id")
 	int id;
 	@ApiModelProperty(name="User Email")
@@ -33,6 +44,7 @@ public class UserRes{
 	Resource profile;
 
 	public static UserRes of(User user) throws MalformedURLException {
+
 		UserRes res = new UserRes();
 		res.setId(user.getId());
 		res.setEmail(user.getEmail());
@@ -40,10 +52,8 @@ public class UserRes{
 		res.setBirth(user.getBirth());
 		res.setPhone(user.getPhone());
 		res.setNick(user.getNick());
-//		String path = "C:/Users/SSAFY/Pictures/img/";
-//		String path = "../../../resources/dist/img/";
-		String path = "/app/build/img/";
-		res.setProfile(new UrlResource("file:"+path+user.getProfile()));
+
+		res.setProfile(new UrlResource("file:"+getFilePath() +user.getProfile()));
 		return res;
 	}
 }
