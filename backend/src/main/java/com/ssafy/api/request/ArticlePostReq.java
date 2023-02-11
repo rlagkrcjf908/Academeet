@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ApiModel("ArticlePostRequest")
@@ -17,8 +19,9 @@ public class ArticlePostReq {
     @ApiModelProperty(name="content", example="article_content")
     @JsonProperty("content")
     String content;
-    @ApiModelProperty(name="file", example="file")
-    @JsonProperty("file")
-    String file;
+
+    @ApiModelProperty(name="date", example="date")
+    @JsonProperty("date")
+    Date date;
 
 }
