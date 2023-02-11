@@ -115,7 +115,7 @@ pipeline {
                 echo 'Pull Docker Image & Docker Image Run'
                 sshagent (credentials: ['ssh_ec2']) {
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker pull leechanseok/academeet:front'" 
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker run -d --name fe_d108 -p 3000:80 --network academeet-net -v vue-volume:/app leechanseok/academeet:front'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker run -d --name fe_d108 -p 3000:80 --network academeet-net leechanseok/academeet:front'"
                 }
             
             }
