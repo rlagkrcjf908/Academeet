@@ -12,7 +12,7 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        
+
         stage('Prepare') {
             steps {
                     echo 'Clonning Repository'
@@ -21,7 +21,7 @@ pipeline {
                     credentialsId: 'gitlab_D108'
                 }
                 post {
-                    success { 
+                    success {
                     echo 'Successfully Cloned Repository'
                 }
                     failure {
@@ -44,23 +44,23 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Bulid Docker') {
             steps {
                 echo 'Bulid Docker'
                 dir('backend'){
                     script {
-        
+
                         sh "ls -al"
                         sh "pwd"
-                        
+
                         sh """
                         if ! test docker; then
                         curl -fsSL https://get.docker.com -o get-docker.sh
                         get-docker.sh
                         fi
                         """
-        
+
                         dockerImage = docker.build imagename
                     }
                 }
@@ -74,32 +74,32 @@ pipeline {
         stage('Push Docker') {
             steps {
                 echo 'Push Docker'
-                
+
                 sshagent(credentials: ['ssh_ec2']) {
-                    
+
                     // sh '''
                     // if test "`docker ps -aq --filter ancestor=leechanseok/academeet:back`"; then
-                    
+
                     // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker stop $(docker ps -aq --filter ancestor=leechanseok/academeet:back)"
                     // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rm -f $(docker ps -aq --filter ancestor=leechanseok/academeet:back)"
                     // ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rmi leechanseok/academeet:back"
-                    
+
                     // fi
                     // '''
                     sh '''
                     if test "`docker ps -aq --filter name=be_d108`"; then
-                    
+
                     ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker stop $(docker ps -aq --filter name=be_d108)"
                     ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rm -f $(docker ps -aq --filter name=be_d108)"
                     ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 "docker rmi leechanseok/academeet:back"
-                    
+
                     fi
                     '''
                 }
-                
+
                 script {
                     docker.withRegistry( '', registryCredential) {
-                        dockerImage.push("back") 
+                        dockerImage.push("back")
                     }
                 }
 
@@ -114,11 +114,11 @@ pipeline {
             steps {
                 echo 'Pull Docker Image & Docker Image Run'
                 sshagent (credentials: ['ssh_ec2']) {
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker pull leechanseok/academeet:back'" 
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker run -d --name be_d108 -p 8080:8080 --network academeet-net -v spring-volume:/app -v /var/www/i8d108.p.ssafy.io/html/img:/app/build/img leechanseok/academeet:back'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker pull leechanseok/academeet:back'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@15.165.74.132 'docker run -d --name be_d108 -p 8080:8080 --network academeet-net -v /var/www/i8d108.p.ssafy.io/html:/app/build leechanseok/academeet:back'"
                 }
             }
         }
     }
-    
+
 }
