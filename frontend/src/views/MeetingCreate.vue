@@ -128,6 +128,9 @@ const validategroupName = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("그룹이름을 입력해 주세요."));
   } else {
+    // if (value.replace(' ','') !== value){
+    //   callback(new Error('공백은 입력할 수 없습니다.'))
+    // }
     callback();
   }
 };

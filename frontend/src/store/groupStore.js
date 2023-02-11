@@ -3,7 +3,6 @@ import {
   requestGroupList, 
   requestGroup, 
   groupDelete, 
-  groupUpdate, 
   requestUserList, 
   userSearch ,
   requestAttdUser,
@@ -25,9 +24,11 @@ const getters = {
   getGroupInfo: state => {
     return state.groupInfo;
   },
-  
   getGroupList: state => {
     return state.groupList;
+  },
+  getUserList: state => {
+    return state.groupUserList;
   },
   getGroupListLength: state => {
     return state.groupList.length;
@@ -108,11 +109,6 @@ const actions = {
     const response = await groupDelete(groupId)
     console.log(response);
     commit("DELETE_GROUP_INFO");
-  },
-  // 그룹 수정
-  groupUpdateAction: async ({ commit }, groupData) => {
-    const response = await groupUpdate(groupId, groupData);
-    commit("UPDATE_GROUP_INFO", response.data);
   },
   // 회원 검색
   requestUserSearchAction: async ({ commit }, usrname) => {

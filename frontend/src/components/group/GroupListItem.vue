@@ -1,6 +1,7 @@
 <template>
   <div style="border-bottom: 1px solid rgba(217, 217, 217, 1); display: flex; align-self: start;">
-      <p @click="getGroupInfo(props.group?.id)">
+
+      <p @click="getUserList(props.group?.id)">
         {{ props.group?.name }}
       </p>
   </div>
@@ -8,7 +9,7 @@
 
 <script setup>
 
-import { defineProps } from "vue";
+import { defineProps, onMounted, watch } from "vue";
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';
 
@@ -19,12 +20,15 @@ const props = defineProps({
   group: Object
 })
 
-const getGroupInfo = async (groupId) => {
-  await store.dispatch("groupStore/requestUserListAction", groupId);
+function getUserList(groupId){
+  // alert('g');
+  // console.log(groupId)
   router.push({ name: "groupUser", params: { groupId } });
+  // window.location.reload(true);
 }
 
 </script>
+
 <style>
   
 </style>
