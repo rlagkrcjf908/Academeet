@@ -589,16 +589,43 @@ methods: {
         return this.createSession(mySessionId).then((sessionId) => this.createToken(sessionId));
     },
 
-    async createSession(sessionId) {
-    const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions",
-        { customSessionId: sessionId },
-        {
-        headers: { "Content-Type": "application/json" },
-        }
-    );
-    return response.data; // The sessionId
+    createSession(sessionId) {
+        return new Promise((resolve, reject) => {
+            axios
+            .post(
+                `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+                JSON.stringify({
+                customSessionId: sessionId,
+                }),
+                {
+                auth: {
+                    username: "OPENVIDUAPP",
+                    password: OPENVIDU_SERVER_SECRET,
+                },
+                }
+            )
+            .then((response) => response.data)
+            .then((data) => resolve(data.id))
+            .catch((error) => {
+                if (error.response.status === 409) {
+                resolve(sessionId);
+                } else {
+                console.warn(
+                    `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
+                );
+                if (
+                    window.confirm(
+                    `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                    )
+                ) {
+                    location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+                }
+                reject(error.response);
+                }
+            });
+        });
     },
+
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
     createToken(sessionId) {
