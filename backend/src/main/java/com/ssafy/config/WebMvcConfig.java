@@ -38,9 +38,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String path = "/app/build/img/";
+        String path = "file://" + filePath;
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file://" + path)
+                .addResourceLocations(path)
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
