@@ -31,8 +31,7 @@
             style="width: 100%"
             format="YYYY/MM/DD"
             value-format="YYYY-MM-DD"
-            min="2000-01-01" 
-            max="2500-12-31"
+            :disabled-date="disabledDate"
             placeholder="Pick a Date"
           />
         </el-form-item>
@@ -41,10 +40,11 @@
         <el-form-item label="회의 시작 시간" required prop="startTime">
           <el-time-select
             v-model="ruleForm.startTime"
+            :max-time="ruleForm.endTime"
             class="mr-4"
             start="00:00"
             step="00:15"
-            end="24:00"
+            end="23:45"
             id="startTime"
           />
         </el-form-item>
@@ -52,8 +52,8 @@
         <el-form-item label="회의 마치는 시간" required prop="endTime">
           <el-time-select
             v-model="ruleForm.endTime"
-            :min-time="startTime"
-            start="00:00"
+            :min-time="ruleForm.startTime"
+            start="00:15"
             step="00:15"
             end="24:00"
             id="endTime"
@@ -135,6 +135,13 @@ const validategroupName = (rule, value, callback) => {
   }
 };
 
+// 날짜 선택
+const disabledDate = (time) => {
+  let today = new Date();
+  let yesterday = today.setDate(today.getDate() - 1)
+  return time.getTime() < yesterday
+}
+
 // 시간 입력
 const startTime = ref("");
 const endTime = ref("");
@@ -157,7 +164,6 @@ const selectGroup = (data) => {
 };
 
 // 유저검색
-// const list = ref([])
 const options = ref([]);
 const user = ref([]);
 const loading = ref(false);
@@ -255,7 +261,6 @@ const submitForm = (formEl) => {
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  /* border: 1px solid green; */
   padding: 8vw;
 }
 </style>
