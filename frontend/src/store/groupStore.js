@@ -2,14 +2,16 @@ import {
   groupCreate,
   requestGroupList, 
   requestGroup, 
-  groupDelete, 
   requestUserList, 
   userSearch ,
   requestAttdUser,
   requestAttdList,
   attdUserUpdate,
-
+  artileCreate,
+  requestUpdateArtile
 } from "../common/api/groupAPI";
+import router from '../router/index'
+import { ElMessage } from 'element-plus'
 
 //변수들의 집합
 const state = {
@@ -104,12 +106,6 @@ const actions = {
     const response = await requestUserList(groupId);
     commit("SET_GROUP_USER_LIST", response.data);
   },
-  // 그룹삭제
-  groupDeleteAction: async ({ commit }) => {
-    const response = await groupDelete(groupId)
-    console.log(response);
-    commit("DELETE_GROUP_INFO");
-  },
   // 회원 검색
   requestUserSearchAction: async ({ commit }, usrname) => {
     const response = await userSearch(usrname);
@@ -132,7 +128,52 @@ const actions = {
     const response = await attdUserUpdate(groupId);
     commit("UPDATE_ATTD_USER", response.data.groupData);
   },
-
+  // 공지 글 작성
+  articleCreateAction: async ({ commit }, data) => {
+    const payload = {
+      "title" : data.title,
+      "content": data.content,
+      "date" : data.date
+    }
+    try{
+      const response = await artileCreate(data.groupId, data.userId, JSON.stringify(payload));
+      console.log(response)
+      console.log('submit!')
+      router.push({ name: 'articleList', params: { groupId : data.groupId} })
+      // router.push(`/group/${data.groupId}/article/`)
+    }
+    catch (error) {
+      console.log(error)
+      ElMessage({
+        showClose: true,
+        message:'게시글 작성에 실패했습니다.',
+        type: 'error',
+      })
+    }
+  },
+  // 공지 글 수정
+  articleUpdateAction: async ({ commit }, data) => {
+    const payload = {
+      "title" : data.title,
+      "content": data.content,
+      "date": data.date
+    }
+    try{
+      const response = await requestUpdateArtile(data.articleId, JSON.stringify(payload));
+      console.log(response)
+      console.log('submit!')
+      router.push({ name: 'articleList', params: { groupId : data.groupId} })
+      // router.push(`/group/${data.groupId}/article/`)
+    }
+    catch (error) {
+      console.log(error)
+      ElMessage({
+        showClose: true,
+        message:'게시글 작성에 실패했습니다.',
+        type: 'error',
+      })
+    }
+  },
 };
 
 export default {

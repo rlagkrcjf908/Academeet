@@ -12,6 +12,7 @@ import ListView from '../views/ListView'
 import store from "@/store/index"
 
 const routes = [
+  // 로그인
   {
     path: '/login',
     name: 'login',
@@ -26,6 +27,7 @@ const routes = [
       }
     }
   },
+  // 회원가입
   {
     path: '/join',
     name: 'join',
@@ -40,7 +42,7 @@ const routes = [
       }
     }
   },
-
+  // 메인페이지
   {
     path: '/',
     name: 'main',
@@ -57,16 +59,19 @@ const routes = [
         name: 'profile',
         component: ProfileView,
         children: [
+          // 프로필 상세
           {
             path: '',
             name: 'profileDetail',
             component: () => import(/* webpackChunkName: "groupMain" */ '@/components/account/ProfileDetail')
           },
+          // 프로필 수정
           {
             path: 'update',
             name: 'profileUpdate',
             component: () => import(/* webpackChunkName: "groupMain" */ '@/components/account/ProfileUpdate.vue')
           },
+          // 비밀번호 변경
           {
             path: 'changepassword',
             name: 'changePassword',
@@ -79,11 +84,13 @@ const routes = [
         name: 'group',
         component: GroupView,
         children: [
+          // 로그인 된 유저의 그룹 리스트
           {
             path: '',
             name: 'groupMain',
             component: () => import(/* webpackChunkName: "groupMain" */ '@/components/group/GroupMain.vue')
           },
+          // 그룹 생성
           {
             path: 'create',
             name: 'groupCreate',
@@ -93,8 +100,8 @@ const routes = [
             path: ':groupId',
             name: 'groupDetail',
             component: () => import(/* webpackChunkName: "GroupDetail" */ '@/components/group/GroupDetail.vue'),
-          
             children: [
+              // 그룹의 유저 리스트
               {
                 path: '',
                 name: 'groupUser',
@@ -113,6 +120,30 @@ const routes = [
                 name: "attdList",
                 component: () => import(/* webpackChunkName: "attdList" */"@/components/group/attendance/AttdList.vue"),
               },
+              // 전체 공지사항 조회
+              {
+                path: 'article',
+                name: 'articleList',
+                component: () => import(/* webpackChunkName: "articleList" */"@/components/group/article/ArticleList.vue"),
+              },
+              // 공지글 작성
+              {
+                path: 'article/create',
+                name: 'articleCreate',
+                component: () => import(/* webpackChunkName: "articleCreate" */"@/components/group/article/ArticleCreate.vue"),
+              },
+              // 공지글 조회
+              {
+                path: 'article/:articleId',
+                name: 'articleDetail',
+                component: () => import(/* webpackChunkName: "articleDetail" */"@/components/group/article/ArticleDetail.vue"),
+              },
+              // 공지글 수정
+              {
+                path: 'article/:articleId/update',
+                name: 'articleUpdate',
+                component: () => import(/* webpackChunkName: "articleUpdate" */"@/components/group/article/ArticleUpdate.vue"),
+              }
             ]
           },
         ],

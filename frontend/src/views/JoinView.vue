@@ -71,8 +71,7 @@
           style="width: 100%"
           format="YYYY/MM/DD"
           value-format="YYYY-MM-DD"
-          min="2022-04-01" 
-          max="2023-02-09"
+          :disabled-date="disabledDate"
         />
       </el-form-item>
       <!-- 비밀번호 -->
@@ -287,16 +286,21 @@ const validatePass2 = (rule, value, callback) => {
   }
 }
 
+// 생일 선택
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
+}
+
 // 유효성 검사 룰
 const rules = reactive({
-  name : [{ validator : validateName, trigger : 'blur' }],
-  phone : [{ validator : checkPhone, trigger : 'blur' }],
-  nick : [{ validator : validateName, trigger : 'blur' }],
+  name : [{ required : true, validator : validateName, trigger : 'blur' }],
+  phone : [{ required : true, validator : checkPhone, trigger : 'blur' }],
+  nick : [{ required : true, validator : validateName, trigger : 'blur' }],
   birth : [{ required : true, message : '날짜를 입력해 주세요.', trigger : 'change',  }],
-  email : [{ validator : validateEmail, trigger : 'blur' }],
-  authPin : [{ validator : validateAuthPin, trigger : 'blur' }],
-  password: [{ validator: validatePass, trigger: 'blur' }],
-  checkPass: [{ validator: validatePass2, trigger: 'blur' }]
+  email : [{ required : true, validator : validateEmail, trigger : 'blur' }],
+  authPin : [{ required : true, validator : validateAuthPin, trigger : 'blur' }],
+  password: [{ required : true, validator: validatePass, trigger: 'blur' }],
+  checkPass: [{ required : true, validator: validatePass2, trigger: 'blur' }]
 })
 
 // 회원가입 제출
@@ -304,6 +308,19 @@ const submitForm = (formEl) => {
   if (!formEl) return
     formEl.validate( (valid) => {
       console.log(isCheck.value)
+    if (isCheck.value === false){
+      ElMessage({
+          showClose: true,
+          message:'인증코드를 확인해주세요',
+          type: 'error',
+        })}
+    if (image.value.files[0] === undefined){
+      ElMessage({
+          showClose: true,
+          message:'사진을 선택해주세요',
+          type: 'error',
+        })
+    }
     if (valid && isCheck.value === true) {
       const config = {
         headers: {
