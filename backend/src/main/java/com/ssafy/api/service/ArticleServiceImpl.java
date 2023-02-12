@@ -71,7 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
     public boolean deleteArticle(int articleno) {
         Article article = articleRepository.findArticleById(articleno);
         if (article ==null) return false;
-        articleRepository.deleteArticleById(articleno);
+        articleRepository.deleteById(articleno);
         return true;
     }
 }
