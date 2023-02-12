@@ -18,8 +18,8 @@
         <tbody>
           <tr v-for="(item, index) in articleList" :key="index" @click="routeToArticle(item.articleId)">
             <td>{{ index + 1 }}</td>
-            <td>{{ item.authName }}</td>
             <td>{{ item.title }}</td>
+            <td>{{ item.authName }}</td>
             <td>{{ item.date }}</td>
           </tr>
         </tbody>

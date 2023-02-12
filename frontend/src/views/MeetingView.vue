@@ -10,21 +10,23 @@
         <div class="form-group">
         <p>
           <label>회의제목</label>
-          <input
+          <h3>{{ mySessionTitle }}</h3>
+          <!-- <input
           v-model="mySessionTitle"
           class="form-control"
           type="text"
           required
-          />
+          /> -->
         </p>
         <p>
           <label>참가자</label>
-          <input
+          <h3>{{ myUserName }}</h3>
+          <!-- <input
           v-model="myUserName"
           class="form-control"
           type="text"
           required
-          />
+          /> -->
         </p>
         <p class="text-center">
           <button class="btn btn-lg btn-success" @click="joinSession()">
