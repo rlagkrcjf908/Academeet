@@ -17,7 +17,7 @@ public class ArticleRes {
     @ApiModelProperty(name="articleContent")
     String content;
     @ApiModelProperty(name="articleFile")
-    String autor;
+    int userId;
 
     @ApiModelProperty(name="articleDate")
     Date date;
@@ -26,7 +26,7 @@ public class ArticleRes {
 
         ArticleRes res = new ArticleRes();
         res.setTitle(article.getTitle());
-        res.setAutor(article.getUserid().getName());
+        res.setUserId(article.getUserid().getId());
         res.setContent(article.getContent());
         res.setDate(article.getDate());
         return res;
