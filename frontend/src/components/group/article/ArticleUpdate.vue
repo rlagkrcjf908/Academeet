@@ -69,7 +69,6 @@ async function getArticle() {
     content: '',
   })
 
-
 const rules = reactive({
   title: [
     { required: true, message: '제목을 입력해 주세요.', trigger: 'blur' },

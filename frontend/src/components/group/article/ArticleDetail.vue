@@ -3,8 +3,10 @@
   {{ title }}
   <hr>
   {{ content }}
-  <el-button v-if="(userId === authId)" type="success" round @click="articleUpdate">수정</el-button>
-  <el-button v-if="(userId === authId)" type="success" round @click="articleDelete">삭제</el-button>
+  <div>
+    <el-button v-if="(userId === authId)" type="success" round @click="articleUpdate">수정</el-button>
+    <el-button v-if="(userId === authId)" type="success" round @click="articleDelete">삭제</el-button>
+  </div>
   <div>
     <el-icon @click="$router.go(-1)"><Back/></el-icon>
   </div>
@@ -53,7 +55,7 @@ const articleDelete = () => {
     .then(async () => {
       try {
         await requestDeleteArtile(articleId);
-        router.push({ name: "attdList", params: { groupId: groupId}});
+        router.push({ name: "articleList", params: { groupId: groupId }});
         console.log("delete!");
         ElMessage({
           type: "success",
