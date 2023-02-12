@@ -681,7 +681,7 @@
             .then((data) => resolve(data.id))
             .catch((error) => reject(error.response));
         });
-
+        console.log("recording id" + this.recordingId);
         document.getElementById('buttonStartRecording').style.visibility = "hidden";
         document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
