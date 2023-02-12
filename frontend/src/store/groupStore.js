@@ -145,7 +145,7 @@ const actions = {
       console.log(error)
       ElMessage({
         showClose: true,
-        message:'게시글 작성에 실패했습니다.2',
+        message:'게시글 작성에 실패했습니다.',
         type: 'error',
       })
     }
@@ -167,7 +167,7 @@ const actions = {
       console.log(error)
       ElMessage({
         showClose: true,
-        message:'게시글 작성에 실패했습니다.2',
+        message:'게시글 작성에 실패했습니다.',
         type: 'error',
       })
     }

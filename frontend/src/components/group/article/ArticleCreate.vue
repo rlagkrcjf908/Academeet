@@ -66,7 +66,6 @@ const createDate = ()=>{
       month: 'long',
       day: 'numeric'
   });
-  console.log(dateString);
   
   return dateString
 }

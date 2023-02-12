@@ -1,4 +1,5 @@
 <template>
+  <el-icon @click="routeToArticleCreate"><EditPen/></el-icon>
   <section>
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
@@ -31,7 +32,7 @@
 import { requestArtileList } from "@/common/api/groupAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
+import { EditPen } from '@element-plus/icons-vue'
 const router = useRouter();
 const route = useRoute();
 const groupId = ref(route.params.groupId);
@@ -43,6 +44,15 @@ const routeToArticle = (articeId) => {
     params: {
       groupId: groupId.value,
       articleId: articeId
+    },
+  });
+};
+
+const routeToArticleCreate = () => {
+  router.push({
+    name: "articleCreate",
+    params: {
+      groupId: groupId.value,
     },
   });
 };

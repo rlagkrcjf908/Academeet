@@ -30,7 +30,7 @@ const requestArtile = (article_id) => $axios.get(`/group/${article_id}/article/`
 // 공지 글 전체 리스트
 const requestArtileList = (group_id, user_id) => $axios.get(`/group/${group_id}/${user_id}/artList`);
 // 공지 글 삭제
-const requestDeleteArtile = (group_id) => $axios.delete(`/group/${group_id}`);
+const requestDeleteArtile = (article_id) => $axios.delete(`/group/${article_id}/Delarticle`);
 // 공지 글 수정
 const requestUpdateArtile = (article_id, payload) => $axios.put(`/group/${article_id}/articleupdate`, payload);
 
