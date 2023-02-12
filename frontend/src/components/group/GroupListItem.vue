@@ -6,9 +6,9 @@
       align-self: start;
     "
   >
-    <p class="group-list-item-p" @click="getUserList(props.group?.id)">
+    <h3 class="group-list-item-p" @click="getUserList(props.group?.id)">
       {{ props.group?.name }}
-    </p>
+    </h3>
   </div>
 </template>
 
