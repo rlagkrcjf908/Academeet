@@ -696,7 +696,7 @@ methods: {
         const response =
             await axios
             .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${this.recordingId}`,
+                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${recordingId}`,
                 {},
                 {
                     auth: {
@@ -708,7 +708,7 @@ methods: {
 
         // 나중에 오세요(주소)
         //this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
-        this.videoURL = `${OPENVIDU_SERVER_URL}/openvidu/recordings/${this.recordingId}/${this.recordingId}+.mp4"`
+        this.videoURL = `${OPENVIDU_SERVER_URL}/openvidu/recordings/${recordingId}/${recordingId}+".mp4"`
         document.getElementById('buttonStartRecording').style.visibility = "visible";
         document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
