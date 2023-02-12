@@ -1,6 +1,5 @@
 <template>
   <header>
-    <!-- router-link 넣으니까 css 망가짐 -->
     <router-link to="/">
       <img src="@/assets/images/logo.png" />
       <h1>
@@ -10,16 +9,16 @@
       </h1>
     </router-link>
 
-    <nav>
+    <nav class="the-header-nav">
       <ul>
         <li style="color: #94d82d">{{ userInfo.name }} 님</li>
-        <small v-if="userInfo" class="text-muted">{{ userInfo.uid }} </small>
         <li><router-link to="/profile">My Page</router-link></li>
         <li><router-link to="/group">Group</router-link></li>
-        <li @click="logout()">Logout</li>
+        <li class="the-header-logout" @click="logout()">Logout</li>
       </ul>
     </nav>
   </header>
+  <hr />
 </template>
 
 <script>
@@ -39,12 +38,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 99%;
+  width: 100%;
   height: 64px;
   padding: 10px;
   position: relative;
@@ -54,32 +53,23 @@ h1 {
   display: inline-block;
   vertical-align: middle;
   color: black;
-  /* color: #fdce7e; */
-  /* margin: 0.1 rem; */
-  padding: 0;
+  padding: 13px;
+  margin: 0;
   position: absolute;
-  left: 92px;
+  left: 95px;
 }
 
-nav {
+.the-header-nav {
   display: inline-block;
   vertical-align: middle;
+  padding: 8px;
 }
 
 ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-nav a.router-link-exact-active {
+  margin: 10px;
   padding: 10px;
-  text-decoration: none;
-  color: black;
-}
-
-nav a.router-link-exact-active:hover {
-  color: #fdce7e;
+  display: flex;
 }
 
 hr {
@@ -89,12 +79,20 @@ hr {
   width: 99%;
   margin: 0px;
 }
-/* user-id는 로그인 했을때 닉네임 보이게 하려고 나둔거 */
-/* .user-id {
-  font-weight: bold;
-  font-size: 1.3rem;
-  position: absolute;
-  top: 11px;
-  left: 40%;
-} */
+.the-header-logout {
+  margin-left: 20px;
+}
+.the-header-logout:hover {
+  margin-left: 20px;
+  color: #fdce7e;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  margin-left: 20px;
+}
+a:-webkit-any-link:hover {
+  text-decoration: none;
+  color: #fdce7e;
+}
 </style>

@@ -1,39 +1,37 @@
 <template>
-  <section>
-    <div class="tbl-header">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>이름</th>
-            <th>전체 출석률</th>
-            <th>상세 보기</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <div class="tbl-content">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tbody>
-          <tr v-for="(item, index) in attdUserList" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
-            <td class="attd-success" v-if="item.allAtt >= 80">
-              {{ item.allAtt }}
-            </td>
-            <td class="attd-fail" v-else>{{ item.allAtt }}</td>
-            <el-button
-              class="detail-btn"
-              @click="routeToUser(item)"
-              type="success"
-              plain
-              >{{ item.name }}:{{ item.userId }}</el-button
-            >
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>이름</th>
+          <th>전체 출석률</th>
+          <th>상세 보기</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+        <tr v-for="(item, index) in attdUserList" :key="index">
+          <td>{{ index + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td class="attd-success" v-if="item.allAtt >= 80">
+            {{ item.allAtt }}
+          </td>
+          <td class="attd-fail" v-else>{{ item.allAtt }}</td>
+          <el-button
+            class="detail-btn"
+            @click="routeToUser(item)"
+            type="success"
+            plain
+            >{{ item.name }}:{{ item.userId }}</el-button
+          >
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
@@ -130,11 +128,6 @@ td {
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
 }
-
-section {
-  margin: 50px;
-}
-
 /* for custom scrollbar for webkit browser  */
 
 ::-webkit-scrollbar {

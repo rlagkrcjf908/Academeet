@@ -6,8 +6,8 @@ html, body {
 body {
   margin: 0px;
   padding: 0;
-  font-family: SpoqaHanSansNeo;
-  font-weight: 400;
+  font-family: LINESeedKR;
+  font-weight: 100;
 }
 
 @media (max-width: 1269px) {
@@ -33,17 +33,17 @@ body {
 }
 
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  font-weight: 600;
-  src: url('../../assets/fonts/SpoqaHanSansNeo-Bold.ttf');
+  font-family: 'LINESeedKR';
+  font-weight: 700;
+  src: url('../../assets/fonts/LINESeedKR-Bd.ttf');
 }
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  font-weight: 500;
-  src: url('../../assets/fonts/SpoqaHanSansNeo-Medium.ttf');
-}
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
+  font-family: 'LINESeedKR';
   font-weight: 400;
-  src: url('../../assets/fonts/SpoqaHanSansNeo-Regular.ttf');
+  src: url('../../assets/fonts/LINESeedKR-Rg.ttf');
+}
+@font-face {
+  font-family: 'LINESeedKR';
+  font-weight: 100;
+  src: url('../../assets/font/LINESeedKR-Th.ttf');
 }

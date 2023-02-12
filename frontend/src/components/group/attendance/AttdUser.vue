@@ -1,58 +1,56 @@
 <template>
-  <section>
-    <div class="tbl-header">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>제목</th>
-            <th>날짜</th>
-            <th>출석률</th>
-            <th>수정</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <div class="tbl-content">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <!-- 호스트 유저 (수정가능하게 하기) -->
-        <tbody v-if="hostId == userId">
-          <tr v-for="(item, index) in attdUserList" :key="index">
-            <td>{{ item.meetId }}</td>
-            <td>{{ item.title }}</td>
-            <td>{{ item.date }}</td>
-            <td class="attd-success" v-if="item.attendance >= 80">
-              <el-input v-model="item.attendance"></el-input>
-            </td>
-            <td class="attd-fail" v-else>
-              <el-input v-model="item.attendance"></el-input>
-            </td>
-            <td>
-              <el-button
-                type="success"
-                @click="saveAttdList(item)"
-                size="small"
-                v-if="hostId == userId"
-                >저장하기</el-button
-              >
-            </td>
-          </tr>
-        </tbody>
-        <!-- 일반 유저 -->
-        <tbody v-else>
-          <tr v-for="(item, index) in attdUserList" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.title }}</td>
-            <td>{{ item.date }}</td>
-            <td class="attd-success" v-if="item.attendance >= 80">
-              {{ item.attendance }}
-            </td>
-            <td class="attd-fail" v-else>{{ item.attendance }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>제목</th>
+          <th>날짜</th>
+          <th>출석률</th>
+          <th>수정</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <!-- 호스트 유저 (수정가능하게 하기) -->
+      <tbody v-if="hostId == userId">
+        <tr v-for="(item, index) in attdUserList" :key="index">
+          <td>{{ item.meetId }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.date }}</td>
+          <td class="attd-success" v-if="item.attendance >= 80">
+            <el-input v-model="item.attendance"></el-input>
+          </td>
+          <td class="attd-fail" v-else>
+            <el-input v-model="item.attendance"></el-input>
+          </td>
+          <td>
+            <el-button
+              type="success"
+              @click="saveAttdList(item)"
+              size="small"
+              v-if="hostId == userId"
+              >저장하기</el-button
+            >
+          </td>
+        </tr>
+      </tbody>
+      <!-- 일반 유저 -->
+      <tbody v-else>
+        <tr v-for="(item, index) in attdUserList" :key="index">
+          <td>{{ index + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.date }}</td>
+          <td class="attd-success" v-if="item.attendance >= 80">
+            {{ item.attendance }}
+          </td>
+          <td class="attd-fail" v-else>{{ item.attendance }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
   
 <script setup>
@@ -191,11 +189,6 @@ td {
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
 }
-
-section {
-  margin: 50px;
-}
-
 /* for custom scrollbar for webkit browser  */
 
 ::-webkit-scrollbar {

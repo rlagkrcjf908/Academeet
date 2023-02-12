@@ -1,19 +1,41 @@
 <template>
   <!-- Sub main 자리 -->
-  <el-header>
+  <el-header class="the-sub-main-header">
     <!-- 링크버튼 -->
-    <div class="sub-main the-sub-main-header">
-      <el-button type="success" @click="routeToSubMain" link style="margin: 0; margin-bottom: 8px; ">
+    <div>
+      <el-button
+        type="success"
+        @click="routeToSubMain"
+        link
+        style="margin: 0; margin-bottom: 8px"
+      >
         {{ groupInfo.name }}
       </el-button>
-      <el-button @click="routeToAttdItem" type="success" link style="margin: 0; margin-bottom: 8px; ">
+      <el-button
+        @click="routeToAttdItem"
+        type="success"
+        link
+        style="margin: 0; margin-bottom: 8px"
+      >
         출석부
       </el-button>
-      <el-button @click="routeToArticle" type="success" link style="margin: 0; margin-bottom: 8px; ">
+      <el-button
+        @click="routeToArticle"
+        type="success"
+        link
+        style="margin: 0; margin-bottom: 8px"
+      >
         공지사항
       </el-button>
-      <!-- 삭제버튼 -->
-      <el-button type="success" :icon="Delete" small @click="open" style="margin-top: 8px; margin-bottom: 8px; width: 5px;"/>
+      <el-button
+        @click="open"
+        type="danger"
+        link
+        style="margin: 0; margin-bottom: 8px"
+        v-if="groupInfo.ownerid === userId"
+      >
+        그룹 삭제
+      </el-button>
     </div>
   </el-header>
 </template>
@@ -44,9 +66,17 @@ getGroup();
 const userId = store.state.accountStore.userId; //로그인된 유저
 console.log("로그인 된 userId: ", userId);
 
+//서브메인 이동
+const routeToSubMain = () => {
+  console.log("routeToSubMain 이동합니다");
+  router.push({
+    name: "groupUser",
+    params: { groupId: groupId.value },
+  });
+};
+
 //출석부 이동
 function routeToAttdItem() {
-
   if (groupInfo.value.ownerid === userId) {
     router.push({
       name: "attdList",
@@ -64,16 +94,6 @@ function routeToAttdItem() {
     });
   }
 }
-
-//서브메인 이동
-const routeToSubMain = () => {
-  console.log("routeToSubMain 이동합니다");
-  router.push({
-    name: "groupDetail",
-    params: { groupId: groupId.value },
-  });
-};
-
 //공지사항 이동
 const routeToArticle = () => {
   console.log("routeToArticle 이동합니다");
@@ -117,17 +137,13 @@ const open = () => {
 </script>
 
 <style>
-.sub-main {
-  margin: 0;
-  padding: 0;
-}
-.sub-main.the-sub-main-header {
-  margin: 0;
+.the-sub-main-header {
+  margin: 10px;
   width: 80vw;
   height: 64px;
   max-height: 64px;
   float: left;
-  position: re;
+  position: relative;
 }
 .button.el-button.el-button--success.is-link {
   max-width: 150px;

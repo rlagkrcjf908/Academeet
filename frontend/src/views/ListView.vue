@@ -2,18 +2,15 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <TheMeetingSide/>
-        <el-container>
-          <router-view></router-view>
-        </el-container>
+      <TheMeetingSide />
+      <router-view></router-view>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import TheMeetingSide from '@/components/layouts/TheMeetingSide.vue'
+import TheMeetingSide from "@/components/layouts/TheMeetingSide.vue";
 </script>
 
 <style>
-
 </style>
