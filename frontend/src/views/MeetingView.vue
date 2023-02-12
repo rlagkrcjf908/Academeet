@@ -669,7 +669,7 @@ methods: {
         const response =
             await axios
             .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/recordings/start`,
+                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/start`,
                 JSON.stringify({
                     //BODY
                     session: this.mySessionId,
@@ -696,7 +696,7 @@ methods: {
         const response =
             await axios
             .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/recordings/stop/${this.recordingId}`,
+                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${this.recordingId}`,
                 {},
                 {
                     auth: {
