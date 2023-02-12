@@ -1,5 +1,8 @@
 <template>
   <section>
+    <div>
+      <!-- <MeetSide/> -->
+    </div>
     <div class="tbl-header">
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
@@ -24,12 +27,12 @@
             <td>{{ item.meetTitle }}</td>
             <td>{{ item.groupTitle }}</td>
             <el-button
-              class="detail-btn"
-              @click="routeToUser(item)"
+              class="meetEnterBtn"
+              @click="joinMeet(item)"
               type="success"
               plain
-              >회의시작</el-button
-            >
+              >회의시작
+            </el-button>
           </tr>
         </tbody>
       </table>
@@ -39,8 +42,10 @@
 
 <script setup>
 import { requestMeetingList } from "@/common/api/meetingAPI";
+import { sortedLastIndex } from "lodash";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+// import MeetSide from "@/components/layouts/MeetSide.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -49,6 +54,7 @@ const route = useRoute();
 // const hostId = ref(route.params.hostId);
 // const selectUserId = ref(); //상세 출석 볼 유저
 const meetList = ref([]);
+const meetTitle = ref();
 const userId = JSON.parse(localStorage.getItem("userInfo")).id
 // const routeToUser = (item) => {
 //   console.log("item.userId: ", item.userId);
@@ -67,19 +73,51 @@ onMounted(async () => {
   const res = await requestMeetingList(userId);
   console.log("전체  meet", res);
   const datas = res.data;
-  const list = datas.map((item) => {
+  console.log(datas)
+  const sortedDate = (datas) => {
+      const sorted_date = datas.sort(function (a, b) {
+        // return new Date(a.date) - new Date(b.date).getTime();
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+
+        if (a.endTime < b.endTime) return -1;
+        if (a.endTime > b.endTime) return 1;
+      });
+    return sorted_date;
+  };
+  console.log(sortedDate(datas))
+
+  const list = sortedDate(datas).map((item) => {
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
       date: item.date,
       startTime: item.startTime,
       endTime: item.endTime,
+      meetId: item.meetId,
     };
+    
   });
   meetList.value = list;
-  console.log("attdList의 전체 유저 출석: ", meetList.value);
-
 });
+
+const joinMeet = (item) => {
+  const meetInfo = {
+    meetId: item.meetId,
+    meetTitle: item.meetTitle,
+    userName: JSON.parse(localStorage.getItem("userInfo")).name,
+    userId: JSON.parse(localStorage.getItem("userInfo")).id,
+  }
+  console.log(meetInfo);
+  sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
+  router.push({ name: "meeting"})
+}
+
+
+
 </script>
 
 <style>
