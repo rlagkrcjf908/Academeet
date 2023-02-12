@@ -14,5 +14,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Integer> 
 
     List<Attendance> findAttendanceByUseridAndGroupid(User user, Group group);
 
+
     Attendance findAttendanceByUseridAndMeetid(User user, Meet meet);
 }
