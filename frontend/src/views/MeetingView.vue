@@ -664,10 +664,11 @@ methods: {
   },
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-    async startRecording(){
+
+    startRecording() {
         console.log("Starting recording");
-        const response =
-            await axios
+        this.recordingId =  new Promise((resolve, reject) => {
+            axios
             .post(
                 `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/start`,
                 JSON.stringify({
@@ -684,19 +685,21 @@ methods: {
                     },
                 }
             )
-
-        this.recordingId = response.data.id;
+            .then((response) => response.data)
+            .then((data) => resolve(data.id))
+            .catch((error) => reject(error.response));
+        });
 
         document.getElementById('buttonStartRecording').style.visibility = "hidden";
         document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
-    async stopRecording(){
-        console.log("Stop recording");
-        const response =
-            await axios
+    stopRecording() {
+        console.log("Starting recording");
+        this.videoURL =  new Promise((resolve, reject) => {
+            axios
             .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${recordingId}`,
+                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${this.recordingId}`,
                 {},
                 {
                     auth: {
@@ -705,10 +708,11 @@ methods: {
                     },
                 }
             )
+            .then((response) => response.data)
+            .then((data) => resolve(data.url))
+            .catch((error) => reject(error.response));
+        });
 
-        // 나중에 오세요(주소)
-        //this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
-        this.videoURL = `${OPENVIDU_SERVER_URL}/openvidu/recordings/${recordingId}/${recordingId}+".mp4"`
         document.getElementById('buttonStartRecording').style.visibility = "visible";
         document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
