@@ -259,7 +259,7 @@
     // Join form
     mySessionTitle: meetInfo.meetTitle,
     // SessionId 는 무적권 알파벳과 숫자만
-    mySessionId: null,
+    mySessionId: String(meetInfo.meetId),
     myUserName: meetInfo.userName,
     
     // recording
