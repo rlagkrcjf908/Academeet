@@ -25,4 +25,8 @@ public class MeetEndReq {
     @ApiModelProperty(name="endtime")
     @JsonProperty("endtime")
     Time endtime;
+
+    @ApiModelProperty(name="attendReqs")
+    @JsonProperty("attendReqs")
+    AttendReq[] attendReqs;
 }
