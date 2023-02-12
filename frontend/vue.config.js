@@ -4,7 +4,7 @@ module.exports = defineConfig({
     // 메인(E2C) 서버에서는 반드시 https:true로 할것
     // 그 이외에는 반드시 false로 할것
     https: true,
-    port: 8083,
+    port: 80,
     open: true,
     proxy: {
       '/api/v1': {
@@ -20,5 +20,5 @@ module.exports = defineConfig({
   // },
   transpileDependencies: true,
   lintOnSave: false,
-  outputDir: '../backend/src/main/resources/dist'
+  // outputDir: '../backend/src/main/resources/dist'
 })
