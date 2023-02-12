@@ -226,7 +226,7 @@ public class GroupController {
     }
     //그룹 게시판 API------------------------------------------------------------------------
 
-    @PostMapping("/{group_id/{user_id}/article")
+    @PostMapping("/{group_id}/{user_id}/article")
     @ApiOperation(value = "게시판 글작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -269,7 +269,7 @@ public class GroupController {
         if (articleService.deleteArticle(articleno)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+        return ResponseEntity.status(403).body(BaseResponseBody.of(401, "Fail"));
     }
 }
 
