@@ -94,7 +94,7 @@ onMounted(async () => {
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
-      date: item.date,
+      date: item.date.substr(0, 10),
       startTime: item.startTime,
       endTime: item.endTime,
       meetId: item.meetId,
@@ -115,7 +115,6 @@ const joinMeet = (item) => {
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting"})
 }
-
 
 
 </script>
