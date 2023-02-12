@@ -46,7 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> listArticle(int groupId, int userId) {
         Group group = groupRepository.findGroupById(groupId);
         User user = userRepository.findUserById(userId);
-        List<Article> articles = articleRepository.findArticleByGroupidAndUserid(group,user);
+        List<Article> articles = articleRepository.findArticleByGroupid(group);
         return articles;
     }
 

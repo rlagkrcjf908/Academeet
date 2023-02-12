@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article,Integer> {
-    List<Article> findArticleByGroupidAndUserid(Group group, User user);
+    List<Article> findArticleByGroupid(Group group);
 
     Article findArticleById(int articleno);
 
