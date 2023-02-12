@@ -196,7 +196,7 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io";
-const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
+const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
@@ -595,7 +595,7 @@ methods: {
             .post(
                 `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
                 JSON.stringify({
-                customSessionId: sessionId,
+                    customSessionId: sessionId,
                 }),
                 {
                 auth: {
@@ -647,44 +647,54 @@ methods: {
         });
     },
 
-
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
     async startRecording(){
-    console.log("Starting recording");
-    const response = await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions/recording/start",
-        {
-        session: this.mySessionId,
-        outputMode: this.outputMode[0],
-        hasAudio: this.hasAudio,
-        hasVideo: this.hasVideo
-        },
-        {
-        headers: { "Content-Type": "application/json" },
-        }
-    )
+        console.log("Starting recording");
+        const response = 
+            await axios
+            .post(
+                `${OPENVIDU_SERVER_URL}/openvidu/recordings/start`,
+                JSON.stringify({
+                    //BODY
+                    session: this.mySessionId,
+                    outputMode: this.outputMode[0],
+                    hasAudio: this.hasAudio,
+                    hasVideo: this.hasVideo
+                }),
+                {
+                    auth: {
+                        username: "OPENVIDUAPP",
+                        password: OPENVIDU_SERVER_SECRET,
+                    },
+                }
+            )
 
-    // console.log(response);
-    this.recordingId = response.data.id;
-    // console.log("recordingId : " + this.recordingId);
+        this.recordingId = response.data.id;
 
-    document.getElementById('buttonStartRecording').style.visibility = "hidden";
-    document.getElementById('buttonStopRecording').style.visibility = "visible";
+        document.getElementById('buttonStartRecording').style.visibility = "hidden";
+        document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
     async stopRecording(){
-    await axios.post(
-        APPLICATION_SERVER_URL + "api/v1/sessions/recording/stop",
-        {
-        recording : this.recordingId,
-        },
-        {
-        headers: { "Content-Type": "application/json" },
-        }
-    );
-    // 나중에 오세요(주소)
-    this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
-    document.getElementById('buttonStartRecording').style.visibility = "visible";
-    document.getElementById('buttonStopRecording').style.visibility = "hidden";
+        console.log("Stop recording");
+        const response = 
+            await axios
+            .post(
+                `${OPENVIDU_SERVER_URL}/openvidu/recordings/stop/${this.recordingId}`,
+                {},
+                {
+                    auth: {
+                        username: "OPENVIDUAPP",
+                        password: OPENVIDU_SERVER_SECRET,
+                    },
+                }
+            )
+
+        // 나중에 오세요(주소)
+        //this.videoURL = "http://localhost:4443/openvidu/recordings/"+this.recordingId+"/"+this.recordingId+".mp4"
+        this.videoURL = `${OPENVIDU_SERVER_URL}/openvidu/recordings/${this.recordingId}/${this.recordingId}+.mp4"`
+        document.getElementById('buttonStartRecording').style.visibility = "visible";
+        document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
 
     async startChecking(){
