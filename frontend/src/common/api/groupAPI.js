@@ -28,7 +28,7 @@ const artileCreate = (group_id, user_id, payload) => $axios.post(`/group/${group
 // 선택 된 공지 글
 const requestArtile = (article_id) => $axios.get(`/group/${article_id}/article/`);
 // 공지 글 전체 리스트
-const requestArtileList = (group_id, user_id) => $axios.get(`/group/${group_id}/${user_id}/artList`);
+const requestArtileList = (group_id, user_id) => $axios.get(`/group/${group_id}/${user_id}/artlist`);
 // 공지 글 삭제
 const requestDeleteArtile = (article_id) => $axios.delete(`/group/${article_id}/Delarticle`);
 // 공지 글 수정

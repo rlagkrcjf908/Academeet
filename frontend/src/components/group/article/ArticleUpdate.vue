@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { requestArtile } from '@/common/api/groupAPI.js'
@@ -46,27 +46,29 @@ const store = useStore()
 const groupId = route.params.groupId
 const articleId = route.params.articleId
 const ruleFormRef = ref()
+// const title = ref()
+// const content = ref()
 
-const title = ref()
-const content = ref()
 
 async function getArticle() {
-    res = await requestArtile(groupId, articleId)
+  const res = await requestArtile(articleId)
+
     console.log(res)  
-    console.log(res.data) 
-    title.value = res.data.title
-    content.value = res.data.content
-}
+    console.log(res.data)
 
-onMounted (() => {
-  getArticle()
-})
+    ruleForm.title = res.data.title
+    ruleForm.content = res.data.content
+  }
 
+  onMounted (() => {
+    getArticle()
+  })
+  
+  const ruleForm = reactive({
+    title: '',
+    content: '',
+  })
 
-const ruleForm = reactive({
-  title: title.value,
-  content: content.value,
-})
 
 const rules = reactive({
   title: [
@@ -77,16 +79,13 @@ const rules = reactive({
   ],
 })
 
-const createDate = ()=>{
-  const today = new Date();
-  const dateString = today.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-  });
-  console.log(dateString);
-  
-  return dateString
+function getToday(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
 }
 
 const submitForm = (formEl) => {
@@ -96,7 +95,7 @@ const submitForm = (formEl) => {
       const data = {
         title : ruleForm.title,
         content : ruleForm.content,
-        date : createDate(),
+        date : getToday(),
         groupId :groupId,
         articleId :articleId
       }

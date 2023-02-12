@@ -222,6 +222,8 @@ const submitForm = (formEl) => {
         endtime: `${ruleForm.endTime}:00`,
         date: ruleForm.date,
       };
+      console.log('시작',meetingData.starttime,'끝',meetingData.endtime)
+      console.log('날짜',meetingData.date)
       if (isSelectGroup.value === false) {
         const rawArray = toRaw(ruleForm.user);
         const guestList = rawArray;

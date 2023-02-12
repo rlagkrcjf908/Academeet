@@ -5,7 +5,9 @@
   {{ content }}
   <el-button v-if="(userId === authId)" type="success" round @click="articleUpdate">수정</el-button>
   <el-button v-if="(userId === authId)" type="success" round @click="articleDelete">삭제</el-button>
-  <el-icon><Back @click="$router.go(-1)"/></el-icon>
+  <div>
+    <el-icon @click="$router.go(-1)"><Back/></el-icon>
+  </div>
 </template>
 
 <script setup>
@@ -13,6 +15,9 @@ import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 import { ref, onMounted } from "vue";
 import { requestDeleteArtile, requestArtile } from "@/common/api/groupAPI";
+import { Back } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from "element-plus";
+
 
 const store = useStore()
 const router = useRouter();
@@ -26,10 +31,9 @@ const content = ref()
 
 // 게시글 불러오기
 onMounted(async () => {
-  const res = await requestArtile(groupId, articleId);
-  // console.log("게시글 res", res);
+  const res = await requestArtile(articleId);
   const article = res.data;
-  authId.value = article.userid
+  authId.value = article.userId
   title.value = article.title
   content.value = article.content
 });
@@ -48,7 +52,7 @@ const articleDelete = () => {
   })
     .then(async () => {
       try {
-        await requestDeleteArtile(groupId, articleId);
+        await requestDeleteArtile(articleId);
         router.push({ name: "attdList", params: { groupId: groupId}});
         console.log("delete!");
         ElMessage({

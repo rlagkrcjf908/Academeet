@@ -59,15 +59,24 @@ const rules = reactive({
   ],
 })
 
-const createDate = ()=>{
-  const today = new Date();
-  const dateString = today.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-  });
+// const createDate = ()=>{
+//   const today = new Date();
+//   const dateString = today.toLocaleDateString('ko-KR', {
+//       year: 'numeric',
+//       month: 'long',
+//       day: 'numeric'
+//   });
   
-  return dateString
+//   return dateString
+// }
+// 시간
+function getToday(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
 }
 
 const submitForm = (formEl) => {
@@ -77,10 +86,11 @@ const submitForm = (formEl) => {
       const data = {
         title : ruleForm.title,
         content : ruleForm.content,
-        date : createDate(),
+        date : getToday(),
         groupId :groupId,
         userId :userId
       }
+      console.log(data.date);
       await store.dispatch('groupStore/articleCreateAction',data)
       }
     else {

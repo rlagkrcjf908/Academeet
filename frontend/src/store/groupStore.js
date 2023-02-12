@@ -133,6 +133,7 @@ const actions = {
     const payload = {
       "title" : data.title,
       "content": data.content,
+      "date" : data.date
     }
     try{
       const response = await artileCreate(data.groupId, data.userId, JSON.stringify(payload));
@@ -155,6 +156,7 @@ const actions = {
     const payload = {
       "title" : data.title,
       "content": data.content,
+      "date": data.date
     }
     try{
       const response = await requestUpdateArtile(data.articleId, JSON.stringify(payload));
