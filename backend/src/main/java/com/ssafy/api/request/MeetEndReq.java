@@ -18,11 +18,15 @@ public class MeetEndReq {
     String chat;
     @ApiModelProperty(name="stt")
     @JsonProperty("stt")
-    String stt;
+    String[] stt;
     @ApiModelProperty(name="video")
     @JsonProperty("video")
     String video;
     @ApiModelProperty(name="endtime")
     @JsonProperty("endtime")
     Time endtime;
+
+    @ApiModelProperty(name="attendReqs")
+    @JsonProperty("attendReqs")
+    AttendReq[] attendReqs;
 }

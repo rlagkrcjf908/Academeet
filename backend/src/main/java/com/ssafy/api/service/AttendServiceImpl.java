@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.AttendUpdateReq;
 import com.ssafy.api.response.AttendGroupRes;
 import com.ssafy.api.response.AttendRes;
 import com.ssafy.db.entity.*;
@@ -27,6 +28,8 @@ public class AttendServiceImpl implements AttendService{
     private User_GroupRepository user_GroupRepository;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private MeetRepository meetRepository;
 
     @Override
     public List<AttendGroupRes> getGroupAttendInfo(int groupId) {
@@ -39,8 +42,8 @@ public class AttendServiceImpl implements AttendService{
             double allatt = 0;
             double sumatt = 0;
 
-            User user = userRepositorySupport.findUserById(id).get();
-            Group group = groupRepositorySupport.findGroupById(groupId).get();
+            User user = userRepository.findUserById(id);
+            Group group = groupRepository.findGroupById(groupId);
 
             List<Attendance> attendance = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
             for (int j = 0; j<attendance.size();j++){
@@ -59,8 +62,8 @@ public class AttendServiceImpl implements AttendService{
 
     @Override
     public List<AttendRes> getAttendance(int userId, int groupId) {
-        User user = userRepositorySupport.findUserById(userId).get();
-        Group group =  groupRepositorySupport.findGroupById(groupId).get();
+        User user = userRepository.findUserById(userId);
+        Group group =  groupRepository.findGroupById(groupId);
 
         //해당유저가 진행한 모든 미팅룸 번호
         List<Attendance> att = attendanceRepository.findAttendanceByUseridAndGroupid(user,group);
@@ -69,6 +72,7 @@ public class AttendServiceImpl implements AttendService{
         for (int i = 0; i<att.size();i++){
             Meet meet = att.get(i).getMeetid();
             AttendRes res = new AttendRes();
+            res.setMeetId(meet.getId());
             res.setTitle(meet.getTitle());
             res.setDate(meet.getDate());
             res.setAttendance(att.get(i).getAttendance());
@@ -76,5 +80,20 @@ public class AttendServiceImpl implements AttendService{
         }
 
         return resList;
+    }
+
+    @Override
+    public boolean updateAttendance(int userId, int groupId, AttendUpdateReq attendUpdateReq) {
+        User user = userRepository.findUserById(userId);
+        Group group =  groupRepository.findGroupById(groupId);
+        Meet meet = meetRepository.findMeetById(attendUpdateReq.getMeetId());
+
+        Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user,meet);
+        if(attendance == null) return false;
+        System.out.println(attendance.getAttendance());
+        attendance.setAttendance(attendUpdateReq.getAttendance());
+        attendanceRepository.save(attendance);
+        System.out.println(attendance.getAttendance());
+        return true;
     }
 }

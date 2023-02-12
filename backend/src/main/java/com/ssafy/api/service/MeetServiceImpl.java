@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.AttendReq;
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
 import com.ssafy.db.entity.*;
@@ -7,8 +8,12 @@ import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service("meetService")
 public class MeetServiceImpl implements MeetService {
@@ -28,6 +33,8 @@ public class MeetServiceImpl implements MeetService {
     private GroupRepository groupRepository;
     @Autowired
     private Group_MeetRepository group_MeetRepository;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
 
     @Override
     public boolean createMeet(int userId, MeetCreateReq createReq) {
@@ -104,20 +111,81 @@ public class MeetServiceImpl implements MeetService {
     }
 
     @Override
-    public boolean endMeet(int meetId, MeetEndReq endReq) {
+    public boolean endMeet(int meetId, MeetEndReq endReq)  {
         Meet meet = meetRepository.findMeetById(meetId);
-        List<User_Meet> um = user_MeetRepository.findByMeetid(meet);
+        AttendReq[] attendReqs = endReq.getAttendReqs();
+        if (meet == null) return false;
+        if(endReq.getStt() !=null) {
+            String[] note = endReq.getStt();
+//           String[] note = {"김학철입니다.","반갑습니다."};
+            String filePath = "/app/build/note";
+            String fileName = meet.getTitle() + "note"+".txt";
+            try {
+                FileWriter fileWriter = new FileWriter(filePath + fileName);
+                for (int i = 0; i < note.length; i++) {
+                    System.out.println(note[i]);
+                    fileWriter.write(note[i] + "\n");
+                }
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            meet.setEndtime(endReq.getEndtime());
+            meet.setChat(endReq.getChat());
+            meet.setStt(fileName);
+            meet.setVideo(endReq.getVideo());
+            meetRepository.save(meet);
+            if (meet.getGroupid()!=null) {
+                for (int i = 0; i < attendReqs.length; i++) {
+                    User user = userRepository.findUserById(attendReqs[i].getUserId());
+                    Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
+                    int count = attendReqs[i].getAttendcount();
+                    Time et = meet.getEndtime();
+                    Time st = meet.getStarttime();
+                    long countTime = (et.getTime() - st.getTime()) / 1000;
+                    attendance.setAttendance((count / countTime) * 100);
+                    attendanceRepository.save(attendance);
+                }
+            }
+            return true;
 
-        if(meet == null) return false;
+        }
         meet.setEndtime(endReq.getEndtime());
         meet.setChat(endReq.getChat());
-        meet.setStt(endReq.getStt());
         meet.setVideo(endReq.getVideo());
         meetRepository.save(meet);
-        // 출석율 저장 개인의 출석율을 저장하는 것
-//        for (int i = 0; i<um.size();i++){
-//
-//        }
+        if (meet.getGroupid()!=null) {
+            for (int i = 0; i < attendReqs.length; i++) {
+                User user = userRepository.findUserById(attendReqs[i].getUserId());
+                Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
+                int count = attendReqs[i].getAttendcount();
+                Time et = meet.getEndtime();
+                Time st = meet.getStarttime();
+                long countTime = (et.getTime() - st.getTime()) / 1000;
+                attendance.setAttendance((count / countTime) * 100);
+                attendanceRepository.save(attendance);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean recogtest(String[] stt) {
+        if(stt == null)return false;
+        String[] note = stt;
+//           String[] note = {"김학철입니다.","반갑습니다."};
+        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+        String fileName = "test" + UUID.randomUUID()+".txt";
+        try {
+            FileWriter fileWriter = new FileWriter(filePath + fileName);
+            for (int i = 0; i < note.length; i++) {
+                System.out.println(note[i]);
+                fileWriter.write(note[i] + "\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 }

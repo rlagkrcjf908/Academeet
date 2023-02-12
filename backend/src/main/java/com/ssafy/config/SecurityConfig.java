@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 //접근권한 설정
-                .antMatchers("/api/v1/users","/api/v1/auth/login").permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers("/api/v1/user","/api/v1/auth/login").permitAll()//인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .anyRequest().permitAll()/*.authenticated()*/
                 .and().cors();
     }

@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.ArticlePostReq;
+import com.ssafy.api.request.AttendUpdateReq;
 import com.ssafy.api.request.GroupCreatePostReq;
 import com.ssafy.api.request.GroupUpdatePostReq;
 import com.ssafy.api.response.*;
@@ -26,6 +27,7 @@ import java.util.Map;
 @Api(value = "인증 API", tags = {"Group."})
 @RestController
 @RequestMapping("/api/v1/group")
+//@CrossOrigin(origins="*")
 public class GroupController {
 
     @Autowired
@@ -113,7 +115,7 @@ public class GroupController {
     }
 
     // 선택한 그룹 정보 조회(ownerId일때)
-    @GetMapping("/{group_id}") //user 로 변경
+    @GetMapping("/{group_id}")
     @ApiOperation(value = "선택한 그룹 조회", notes = "선택한 그룹의 정보를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -121,14 +123,14 @@ public class GroupController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<GroupRes> getUserInfo(@PathVariable("group_id") int group_id) {
+    public ResponseEntity<GroupUserRes> getUserInfo(@PathVariable("group_id") int group_id) {
         /**
          * 요청 헤더 액세스 토큰이 포함된 경우G에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
          */
         Group group = groupService.getGroupByGroupId(group_id);
 
-        return ResponseEntity.status(200).body(GroupRes.of(group));
+        return ResponseEntity.status(200).body(GroupUserRes.of(group));
     }
 
     // 그룹 삭제
@@ -213,14 +215,18 @@ public class GroupController {
     }
     //그룹 내 회원 출석 상세정보 수정
     @PutMapping("/{group_id}/{user_id}/update")
-    public ResponseEntity<List<AttendGroupRes>> updateAttendance(@PathVariable("user_id")int userId, @PathVariable("group_id")int groupId,
-    @RequestBody double att){
-        List<AttendGroupRes> agr = attendService.getGroupAttendInfo(groupId);
-        return ResponseEntity.status(200).body(agr);
+    public ResponseEntity<? extends BaseResponseBody> updateAttendance(@PathVariable("user_id")int userId, @PathVariable("group_id")int groupId,
+                                                      @RequestBody AttendUpdateReq attendUpdateReq){
+        boolean agr = attendService.updateAttendance(userId,groupId,attendUpdateReq);
+        if(agr) {
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }else{
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403,"Fail"));
+        }
     }
     //그룹 게시판 API------------------------------------------------------------------------
 
-    @PostMapping("/{group_id/{user_id}/article")
+    @PostMapping("/{group_id}/{user_id}/article")
     @ApiOperation(value = "게시판 글작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -236,19 +242,19 @@ public class GroupController {
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
 
-    @GetMapping("/{group_id/{user_id}/artlist")
+    @GetMapping("/{group_id}/{user_id}/artlist")
     @ApiOperation(value = "게시판 글목록", notes = "모든 게시글의 정보를 반환한다.")
     public ResponseEntity<ArticleParamRes> listArticle(@PathVariable("group_id")int groupId,@PathVariable("user_id")int userId){
         return ResponseEntity.status(200).body(ArticleParamRes.of(articleService.listArticle(groupId,userId)));
     }
 
-    @GetMapping("/{articleno}")
+    @GetMapping("/{articleno}/article")
     @ApiOperation(value = "게시판 글보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.")
     public ResponseEntity<ArticleRes> getArticle(@PathVariable("articleno") @ApiParam(value = "얻어올 글의 글번호.", required = true) int articleno){
         return ResponseEntity.status(200).body(ArticleRes.of(articleService.getArticle(articleno)));
     }
 
-    @PutMapping("/{articleno}/update")
+    @PutMapping("/{articleno}/articleupdate")
     @ApiOperation(value = "게시판 글수정", notes = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<? extends BaseResponseBody> updateArticle(@PathVariable("articleno")int articleno,@RequestBody @ApiParam(value = "수정할 글정보.", required = true) ArticlePostReq articlePostReq){
         if (articleService.updateArticle(articleno,articlePostReq)) {
@@ -257,13 +263,13 @@ public class GroupController {
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
     }
 
-    @DeleteMapping("/{articleno}")
+    @DeleteMapping("/{articleno}/Delarticle")
     @ApiOperation(value = "게시판 글삭제", notes = "글번호에 해당하는 게시글의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<? extends BaseResponseBody> deleteArticle(@PathVariable("articleno") @ApiParam(value = "살제할 글의 글번호.", required = true) int articleno){
         if (articleService.deleteArticle(articleno)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+        return ResponseEntity.status(403).body(BaseResponseBody.of(401, "Fail"));
     }
 }
 

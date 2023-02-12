@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
+import com.ssafy.api.request.test;
 import com.ssafy.api.service.GroupService;
 import com.ssafy.api.service.MeetService;
 import com.ssafy.api.service.UserService;
@@ -14,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @Api(value = "유저 API", tags = {"Meet"})
 @RestController
 @RequestMapping("/api/v1/meet")
+//@CrossOrigin(origins="*")
 public class MeetController {
     @Autowired
     MeetService meetService;
@@ -79,11 +82,23 @@ public class MeetController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> endMeet(@PathVariable("meet_id") int meetId,
-                                                              @RequestBody @ApiParam(value = "회원가입 정보", required = true) MeetEndReq endReq) {
+                                                              @RequestBody @ApiParam(value = "회원가입 정보", required = true) MeetEndReq endReq) throws IOException {
         if (meetService.endMeet(meetId, endReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
         return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+    }
+
+
+    @PostMapping("/recognize")
+    public ResponseEntity<? extends BaseResponseBody> recogtest(@RequestBody test test){
+        for (int i = 0; i<test.getStt().length;i++){
+            System.out.println(test.getStt()[i]);
+        }
+        if(meetService.recogtest(test.getStt())){
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
+        }
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
     }
 
 }

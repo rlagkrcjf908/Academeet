@@ -1,6 +1,7 @@
 package com.ssafy.config;
 
 import com.ssafy.common.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +17,19 @@ import javax.servlet.Filter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("${FILE_PATH}")
+    private String filePath;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.addAllowedOrigin("*");
+//         configuration.addAllowedOrigin("*");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader(JwtTokenUtil.HEADER_STRING);
-//        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -33,9 +38,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
+        String path = "file://" + filePath;
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///C:/Users/SSAFY/Pictures/img/")
+                .addResourceLocations(path)
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
@@ -83,6 +88,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.addUrlPatterns("/api/*");
         return registration;
     }
+
 
 
 }

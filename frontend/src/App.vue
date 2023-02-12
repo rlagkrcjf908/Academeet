@@ -1,18 +1,16 @@
 <template>
-  <the-header></the-header>
   <router-view></router-view>
 </template>
-<script>
-import TheHeader from "./components/layouts/TheHeader.vue";
 
+<script>
 export default {
-  components: { TheHeader },
+  components: {  },
+
 };
 </script>
 
 <style lang="scss">
 #app {
-  // font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -30,11 +28,8 @@ nav {
   a {
     font-weight: bold;
     color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: black;
-      // color: #42b983;
-    }
   }
 }
+body{ margin: 0px}
+
 </style>

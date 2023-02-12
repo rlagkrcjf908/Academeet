@@ -11,6 +11,8 @@ import java.util.Date;
 @Setter
 @ApiModel("AttendanceResponse")
 public class AttendRes {
+    @ApiModelProperty(name="meetid")
+    int meetId;
     @ApiModelProperty(name="title")
     String title;
     @ApiModelProperty(name="MeetDate")

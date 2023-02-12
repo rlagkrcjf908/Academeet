@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ApiModel("ArticleResponse")
@@ -15,13 +17,18 @@ public class ArticleRes {
     @ApiModelProperty(name="articleContent")
     String content;
     @ApiModelProperty(name="articleFile")
-    String file;
+    int userId;
+
+    @ApiModelProperty(name="articleDate")
+    Date date;
 
     public static ArticleRes of(Article article){
+
         ArticleRes res = new ArticleRes();
         res.setTitle(article.getTitle());
-        res.setFile(article.getContent());
+        res.setUserId(article.getUserid().getId());
         res.setContent(article.getContent());
+        res.setDate(article.getDate());
         return res;
     }
 

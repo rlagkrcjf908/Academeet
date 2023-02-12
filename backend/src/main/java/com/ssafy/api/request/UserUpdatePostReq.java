@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ public class UserUpdatePostReq {
     @ApiModelProperty(name="phone", example="your_phone")
     @JsonProperty("phone")
     String phone;
-    @ApiModelProperty(name="profile", example="your_profile")
-    @JsonProperty("profile")
-    MultipartFile profile;
+//    @ApiModelProperty(name="profile", example="your_profile")
+//    @JsonProperty("profile")
+//    MultipartFile profile;
 }
