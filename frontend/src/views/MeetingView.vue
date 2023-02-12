@@ -659,7 +659,14 @@
 
     startRecording() {
         console.log("Starting recording");
-        this.recordingId =  new Promise((resolve, reject) => {
+        this.recordingId = this.recordingStartFunc();
+        console.log("recording id" + this.recordingId);
+        document.getElementById('buttonStartRecording').style.visibility = "hidden";
+        document.getElementById('buttonStopRecording').style.visibility = "visible";
+    },
+
+    recordingStartFunc(){
+        return new Promise((resolve, reject) => {
             axios
             .post(
                 `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/start`,
@@ -681,14 +688,18 @@
             .then((data) => resolve(data.id))
             .catch((error) => reject(error.response));
         });
-        console.log("recording id" + this.recordingId);
-        document.getElementById('buttonStartRecording').style.visibility = "hidden";
-        document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
     stopRecording() {
         console.log("Starting recording");
-        this.videoURL =  new Promise((resolve, reject) => {
+        this.videoURL =  this.recordingStopFunc();
+
+        document.getElementById('buttonStartRecording').style.visibility = "visible";
+        document.getElementById('buttonStopRecording').style.visibility = "hidden";
+    },
+
+    recordingStopFunc(){
+        return new Promise((resolve, reject) => {
             axios
             .post(
                 `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${this.recordingId}`,
@@ -704,9 +715,6 @@
             .then((data) => resolve(data.url))
             .catch((error) => reject(error.response));
         });
-
-        document.getElementById('buttonStartRecording').style.visibility = "visible";
-        document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
 
     async startChecking(){
