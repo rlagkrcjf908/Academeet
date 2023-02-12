@@ -211,7 +211,7 @@ import { meetingCreate } from "@/common/api/meetingAPI";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io";
-const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
+const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
