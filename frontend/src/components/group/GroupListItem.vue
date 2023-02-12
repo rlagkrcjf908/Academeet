@@ -30,6 +30,7 @@ function getUserList(groupId) {
 <style>
 .group-list-item-p:hover {
   cursor: pointer;
-  color: white;
+  color: rgba(97, 178, 153, 1);
+  text-shadow: 2px 2px 2px white;
 }
 </style>

@@ -1,26 +1,35 @@
 <template>
-  <p>공지사항상세</p>
-  {{ title }}
   <hr />
-  {{ content }}
+  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 상세 -</h2>
+  <div class="atritcle-title">
+    <h3>제목 : {{ title }}</h3>
+  </div>
+  <div class="atritcle-content">
+    {{ content }}
+  </div>
   <div>
     <el-button
+      class="article-detail-btn"
       v-if="userId === authId"
       type="success"
+      plain
       round
       @click="articleUpdate"
       >수정</el-button
     >
     <el-button
+      class="article-detail-btn"
       v-if="userId === authId"
       type="success"
+      plain
       round
       @click="articleDelete"
       >삭제</el-button
     >
   </div>
-  <div>
-    <el-icon @click="$router.go(-1)"><Back /></el-icon>
+
+  <div class="article-detail-back">
+    <el-icon @click="$router.go(-1)"><Back /> </el-icon> 돌아가기
   </div>
 </template>
 
@@ -93,4 +102,23 @@ const articleDelete = () => {
 </script>
 
 <style>
+.atritcle-title {
+  margin: 3em;
+}
+.atritcle-content {
+  margin: auto;
+  padding: auto;
+  border: 1px solid;
+  width: 1200px;
+  height: 400px;
+}
+
+.article-detail-btn {
+  width: 120px;
+  height: 50px;
+}
+.article-detail-back {
+  color: gray;
+  cursor: pointer;
+}
 </style>

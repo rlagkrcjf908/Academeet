@@ -1,5 +1,6 @@
 <template>
-  <p>공지사항수정</p>
+  <hr />
+  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 수정 -</h2>
   <el-form
     label-position="top"
     ref="ruleFormRef"
@@ -9,82 +10,77 @@
     class="demo-ruleForm"
     status-icon
   >
-  <!-- 글 제목 -->
+    <!-- 글 제목 -->
     <el-form-item label="제목" prop="title">
       <el-input
-          v-model="ruleForm.title"
-          type="text"
-          autocomplete="off"
-          maxlength="100"
-        />
+        v-model="ruleForm.title"
+        type="text"
+        autocomplete="off"
+        maxlength="100"
+      />
     </el-form-item>
-  <!-- 글 내용 -->
+    <!-- 글 내용 -->
     <el-form-item label="글 내용" prop="content">
-      <el-input
-          v-model="ruleForm.content"
-          type="textarea"
-          autocomplete="off"
-        />
-    </el-form-item>
-  <!-- 저장 -->
-    <el-form-item>
-      <el-button type="success" round @click="submitForm(ruleFormRef)">
-        저장
-      </el-button>
+      <el-input v-model="ruleForm.content" type="textarea" autocomplete="off" />
     </el-form-item>
   </el-form>
+  <!-- 저장 -->
+  <el-form-item class="article-update-save-btn">
+    <el-button type="success" round @click="submitForm(ruleFormRef)">
+      저장하기
+    </el-button>
+  </el-form-item>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-import { requestArtile } from '@/common/api/groupAPI.js'
+import { reactive, ref, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import { requestArtile } from "@/common/api/groupAPI.js";
 
 const route = useRoute();
-const store = useStore()
-const groupId = route.params.groupId
-const articleId = route.params.articleId
-const ruleFormRef = ref()
+const store = useStore();
+const groupId = route.params.groupId;
+const articleId = route.params.articleId;
+const ruleFormRef = ref();
 // const title = ref()
 // const content = ref()
 
-
 async function getArticle() {
-  const res = await requestArtile(articleId)
+  const res = await requestArtile(articleId);
 
-    console.log(res)  
-    console.log(res.data)
+  console.log(res);
+  console.log(res.data);
 
-    ruleForm.title = res.data.title
-    ruleForm.content = res.data.content
-  }
+  ruleForm.title = res.data.title;
+  ruleForm.content = res.data.content;
+}
 
-  onMounted (() => {
-    getArticle()
-  })
-  
-  const ruleForm = reactive({
-    title: '',
-    content: '',
-  })
+onMounted(() => {
+  getArticle();
+});
+
+const ruleForm = reactive({
+  title: "",
+  content: "",
+});
 
 const rules = reactive({
   title: [
-    { required: true, message: '제목을 입력해 주세요.', trigger: 'blur' },
+    { required: true, message: "제목을 입력해 주세요.", trigger: "blur" },
   ],
   content: [
-    { required: true, message: '내용을 입력해 주세요.', trigger: 'blur' },
+    { required: true, message: "내용을 입력해 주세요.", trigger: "blur" },
   ],
-})
+});
 
-function getToday(){
-    var date = new Date();
-    var year = date.getFullYear();
-    var month = ("0" + (1 + date.getMonth())).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
+function getToday() {
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = ("0" + (1 + date.getMonth())).slice(-2);
+  var day = ("0" + date.getDate()).slice(-2);
 
-    return year + "-" + month + "-" + day;
+  return year + "-" + month + "-" + day;
 }
 
 const submitForm = (formEl) => {
@@ -92,25 +88,36 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
       const data = {
-        title : ruleForm.title,
-        content : ruleForm.content,
-        date : getToday(),
-        groupId :groupId,
-        articleId :articleId
-      }
-      await store.dispatch('groupStore/articleUpdateAction',data)
-      }
-    else {
-      console.log('error submit!')
-      return false
-    }    
-    })
-  }
-  
-  // 일단 작성 후 라우터 가드 걸어서 작성자만 가능하고 아니면 접급권한이 없습니다.
+        title: ruleForm.title,
+        content: ruleForm.content,
+        date: getToday(),
+        groupId: groupId,
+        articleId: articleId,
+      };
+      await store.dispatch("groupStore/articleUpdateAction", data);
+    } else {
+      console.log("error submit!");
+      return false;
+    }
+  });
+};
 </script>
 
 
 <style>
+.demo-ruleForm {
+  margin: 3em;
+}
+.article-update-save-btn {
+  margin: auto;
+  display: inline-block;
+  text-align: center;
+}
 
+.el-textarea__inner {
+  height: 400px;
+}
+.el-input__inner {
+  height: 50px;
+}
 </style>

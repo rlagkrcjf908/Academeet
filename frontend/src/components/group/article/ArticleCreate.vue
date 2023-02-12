@@ -1,5 +1,6 @@
 <template>
-  <h2>공지사항 작성</h2>
+  <hr />
+  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 작성 -</h2>
   <el-form
     label-position="top"
     ref="ruleFormRef"
@@ -96,7 +97,7 @@ const submitForm = (formEl) => {
   margin: 3em;
 }
 .article-create-save-btn {
-  margin: 0px;
+  margin: auto;
   display: inline-block;
   text-align: center;
 }
