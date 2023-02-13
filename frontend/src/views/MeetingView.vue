@@ -418,16 +418,23 @@
 
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
-
     });
-
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
       if(this.speechEnabled){
-      //this.stopSpeeching();
-      //this.sendSpeech();
-      //this.recognizedText = "";
+        this.sendSpeech();
+        this.speechRecognition.stop();
+        this.recognizedText = "";
+
+        this.speechRecognition.onresult = (event) => {
+          this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
+        };
+        this.speechRecognition.start();
+        // this.stopSpeeching();
+        // this.sendSpeech();
+        // this.recognizedText = "";
+        // this.startSpeeching();
       }
     });
 
@@ -682,28 +689,7 @@
     this.message = "";
     },
 
-    sendSpeech() {
-    /*
-    const sendData = {
-        nickname: this.myUserName,
-        msg: this.message,
-    };
-    */
-    this.sessionCamera
-      .signal({
-      data: this.myUserName + "/" + this.recognizedText,
-      // data: JSON.stringify(sendData),
-      to: [],
-      type: "my-speech",
-      })
-      .then(() => {
-      console.log("Speech successfully sent");
-      })
-      .catch((error) => {
-      console.error(error);
-      });
-      this.recognizedText = "";
-    },
+    
 
     /**
      * --------------------------------------------
@@ -877,6 +863,31 @@
     document.getElementById('buttonStartSpeech').style.visibility = "visible";
     document.getElementById('buttonStopSpeech').style.visibility = "hidden";
     },
+
+    sendSpeech() {
+      /*
+      const sendData = {
+          nickname: this.myUserName,
+          msg: this.message,
+      };
+      */
+      this.sessionCamera
+        .signal({
+        data: this.myUserName + "/" + this.recognizedText,
+        // data: JSON.stringify(sendData),
+        to: [],
+        type: "my-speech",
+        })
+        .then(() => {
+        console.log("Speech successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+
+        this.recognizedText = "";
+    },
+
   },
 
   };
