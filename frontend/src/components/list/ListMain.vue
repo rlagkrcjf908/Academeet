@@ -1,43 +1,39 @@
 <template>
-  <section>
-    <div>
-      <!-- <MeetSide/> -->
-    </div>
-    <div class="tbl-header">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <thead>
-          <tr>
-            <th>날짜</th>
-            <th>회의 시간</th>
-            <th>회의 이름</th>
-            <th>그룹 이름</th>
-            <th>회의 참여</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <div class="tbl-content">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tbody>
-          <tr v-for="(item, index) in meetList" :key="index">
-            <td>{{ item.date }}</td>
-            <td>
-              {{ item.startTime }} ~ {{ item.endTime }}
-            </td>
-            <td>{{ item.meetTitle }}</td>
-            <td>{{ item.groupTitle }}</td>
-            <el-button
-              class="meetEnterBtn"
-              @click="joinMeet(item)"
-              type="success"
-              plain
-              >회의시작
-            </el-button>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div>
+    <!-- <MeetSide/> -->
+  </div>
+  <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+          <th>날짜</th>
+          <th>회의 시간</th>
+          <th>회의 이름</th>
+          <th>그룹 이름</th>
+          <th>회의 참여</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+        <tr v-for="(item, index) in meetList" :key="index">
+          <td>{{ item.date }}</td>
+          <td>{{ item.startTime }} ~ {{ item.endTime }}</td>
+          <td>{{ item.meetTitle }}</td>
+          <td>{{ item.groupTitle }}</td>
+          <el-button
+            class="meetEnterBtn"
+            @click="joinMeet(item)"
+            type="success"
+            plain
+            >회의시작
+          </el-button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
@@ -55,7 +51,7 @@ const route = useRoute();
 // const selectUserId = ref(); //상세 출석 볼 유저
 const meetList = ref([]);
 const meetTitle = ref();
-const userId = JSON.parse(localStorage.getItem("userInfo")).id
+const userId = JSON.parse(localStorage.getItem("userInfo")).id;
 // const routeToUser = (item) => {
 //   console.log("item.userId: ", item.userId);
 //   selectUserId.value = item.userId;
@@ -73,22 +69,22 @@ onMounted(async () => {
   const res = await requestMeetingList(userId);
   console.log("전체  meet", res);
   const datas = res.data;
-  console.log(datas)
+  console.log(datas);
   const sortedDate = (datas) => {
-      const sorted_date = datas.sort(function (a, b) {
-        // return new Date(a.date) - new Date(b.date).getTime();
-        if (a.date < b.date) return -1;
-        if (a.date > b.date) return 1;
+    const sorted_date = datas.sort(function (a, b) {
+      // return new Date(a.date) - new Date(b.date).getTime();
+      if (a.date < b.date) return -1;
+      if (a.date > b.date) return 1;
 
-        if (a.startTime < b.startTime) return -1;
-        if (a.startTime > b.startTime) return 1;
+      if (a.startTime < b.startTime) return -1;
+      if (a.startTime > b.startTime) return 1;
 
-        if (a.endTime < b.endTime) return -1;
-        if (a.endTime > b.endTime) return 1;
-      });
+      if (a.endTime < b.endTime) return -1;
+      if (a.endTime > b.endTime) return 1;
+    });
     return sorted_date;
   };
-  console.log(sortedDate(datas))
+  console.log(sortedDate(datas));
 
   const list = sortedDate(datas).map((item) => {
     return {
@@ -99,7 +95,6 @@ onMounted(async () => {
       endTime: item.endTime,
       meetId: item.meetId,
     };
-    
   });
   meetList.value = list;
 });
@@ -110,13 +105,11 @@ const joinMeet = (item) => {
     meetTitle: item.meetTitle,
     userName: JSON.parse(localStorage.getItem("userInfo")).name,
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
-  }
+  };
   console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
-  router.push({ name: "meeting"})
-}
-
-
+  router.push({ name: "meeting" });
+};
 </script>
 
 <style>
@@ -170,10 +163,6 @@ td {
   font-size: 12px;
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-}
-
-section {
-  margin: 50px;
 }
 
 /* for custom scrollbar for webkit browser  */
