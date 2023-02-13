@@ -72,6 +72,15 @@
                 <!-- 비디오 버튼 -->
                 <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
                 <button v-else type="button" @click="videoTrigger()">video off</button>
+                
+                <!-- Host-->
+                <!-- 음성 버튼 -->
+                <button type="button" @click="audioOn()">Master audio on</button>
+                <button type="button" @click="audioOff()">Master audio off</button>
+
+                <!-- 비디오 버튼 -->
+                <button type="button" @click="videoOn()">Master video on</button>
+                <button type="button" @click="videoOff()">Master video off</button>
 
                 <!-- 회의녹화 -->
                 <input
