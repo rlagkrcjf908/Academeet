@@ -73,65 +73,65 @@
                 <div>
                   <div class="meeting-btn">
                     <!-- 마이크 오프 -->
-                      <button class="meeting-bnt-item" style="margin:auto" v-if="!audioEnabled" @click="audioTrigger()">
+                      <button data-tooltip="마이크 켜기" class="meeting-bnt-item"  v-if="!audioEnabled" @click="audioTrigger()">
                         <!-- <img  src="https://img.icons8.com/external-kmg-design-basic-outline-kmg-design/32/null/external-mic-off-interface-essentials-kmg-design-basic-outline-kmg-design.png"/> -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
                       </button>
                     <!-- 마이크 온 -->
-                      <button class="meeting-bnt-item" style="margin:auto" v-if="audioEnabled" @click="audioTrigger()">
+                      <button data-tooltip="마이크 끄기" class="meeting-bnt-item"  v-if="audioEnabled" @click="audioTrigger()">
                         <!-- <img  src="https://img.icons8.com/material-rounded/48/null/microphone.png"/>                     -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/fluency-systems-filled/48/40C057/microphone.png"/>
                       </button>
                     <!-- 비디오 오프 -->
-                      <button class="meeting-bnt-item"  style="margin:auto" v-if="!videoEnabled" @click="videoTrigger()">
+                      <button data-tooltip="비디오 켜기" class="meeting-bnt-item"   v-if="!videoEnabled" @click="videoTrigger()">
                         <!-- <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/null/no-video--v1.png"/>                     -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/no-video--v1.png"/>
                       </button>
                     <!-- 비디오 온 -->
-                      <button class="meeting-bnt-item" style="margin:auto" v-if="videoEnabled" @click="videoTrigger()">
+                      <button data-tooltip="비디오 끄기" class="meeting-bnt-item"  v-if="videoEnabled" @click="videoTrigger()">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
                       </button>
-                      <!-- 회의 나가기 -->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="leaveSession">
-                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/x.png"/>
-                      </button>
                       <!-- 출석체크 시작-->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="startChecking">
+                      <button data-tooltip="출석체크 시작" class="meeting-bnt-item"  @click="startChecking">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
                       </button>
                       <!-- 출석체크 끝-->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="stopChecking">
+                      <button data-tooltip="출석체크 끝" class="meeting-bnt-item"  @click="stopChecking">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
                       </button>
                       <!-- 화면공유-->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="publishScreenShare">
+                      <button data-tooltip="화면 공유" class="meeting-bnt-item"  @click="publishScreenShare">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                       </button>
                       <!-- 회의 녹화 시작 -->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="startRecording">
+                      <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item"  @click="startRecording">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
                       </button>
                       <!-- 회의 녹화 끝 -->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="stopRecording">
+                      <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item"  @click="stopRecording">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
                       </button>
                       <!-- 음성 기록 시작 -->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="startSpeeching">
+                      <button data-tooltip="음성 기록 시작" class="meeting-bnt-item"  @click="startSpeeching">
                         <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
                       </button>
                       <!-- 음성 기록 끝 -->
-                      <button class="meeting-bnt-item" style="margin:auto" @click="stopSpeeching">
+                      <button data-tooltip="음성 기록 끝" class="meeting-bnt-item"  @click="stopSpeeching">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
                       </button>
                     </div>
+                    <!-- 회의 나가기 -->
+                    <button class="meeting-bnt-leave"  @click="leaveSession">
+                      <div><span data-tooltip="회의 나가기">회의 나가기</span></div>
+                    </button>
                   </div>
                   
                 <!-- 카메라 온 -->
                 <!-- <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-                <button v-else type="button" @click="audioTrigger()">audio off</button> -->
+                  <button v-else type="button" @click="audioTrigger()">audio off</button> -->
                 
-                <!-- 비디오 버튼 -->
-                <!-- <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
+                  <!-- 비디오 버튼 -->
+                  <!-- <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
                 <button v-else type="button" @click="videoTrigger()">video off</button> -->
                   
                 <!-- 회의녹화 -->
@@ -836,6 +836,17 @@
     width:40px;
     height:40px;
     margin: 2em;
+    margin: auto;
+  }
+  .meeting-bnt-leave{
+    border:none ;
+    background-color:rgb(216, 3, 3);
+    color: white;
+    font-size: 2em;
+    border-radius: 8px;
+    height:56px;
+    margin: 2em;
+    margin: auto;
   }
 
   .meeting-btn{
@@ -850,4 +861,11 @@
     height: 20px; 
     width: 20px;
   }
+[data-tooltip]{position:relative;}
+[data-tooltip]:before,
+[data-tooltip]:after{visibility:hidden;opacity:0;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;transition:all .2s ease;font-size:11px;font-family:dotum;letter-spacing:-1px;}
+[data-tooltip]:before{content:attr(data-tooltip);height:13px;position:absolute;top:-20px;padding:5px 10px;border-radius:5px;color:#fff;background:#2a2a2a;box-shadow:0 3px 8px rgba(165, 165, 165, 0.5);}
+[data-tooltip]:after{content: '';border-left:5px solid transparent;top:2px;border-right:5px solid transparent;border-top:5px solid #2a2a2a;}
+[data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
+[data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
 </style>
