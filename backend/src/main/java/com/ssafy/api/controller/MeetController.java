@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.AttendReq;
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
 import com.ssafy.api.request.test;
@@ -86,10 +87,17 @@ public class MeetController {
         if (meetService.endMeet(meetId, endReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
     }
 
-
+    @PostMapping("/{meet_id}/attend")
+    public ResponseEntity<? extends BaseResponseBody> addAttendance(@PathVariable("meet_id") int meetid,
+                                                                    @RequestBody AttendReq attendReq){
+        if(meetService.addAttendance(meetid,attendReq)){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
+    }
     @PostMapping("/recognize")
     public ResponseEntity<? extends BaseResponseBody> recogtest(@RequestBody test test){
         for (int i = 0; i<test.getStt().length;i++){

@@ -26,6 +26,8 @@ public class Attendance {
     @Column(nullable = false)
     double attendance;
 
+    @Column
+    private Integer attendcount;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     java.util.Date date;

@@ -8,6 +8,7 @@ import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Time;
@@ -109,11 +110,11 @@ public class MeetServiceImpl implements MeetService {
         }
 
     }
-
+    @Transactional
     @Override
     public boolean endMeet(int meetId, MeetEndReq endReq)  {
         Meet meet = meetRepository.findMeetById(meetId);
-        AttendReq[] attendReqs = endReq.getAttendReqs();
+        List<Attendance> attendances = attendanceRepository.findAttendancesByMeetid(meet);
         if (meet == null) return false;
         if(endReq.getStt() !=null) {
             String[] note = endReq.getStt();
@@ -136,16 +137,27 @@ public class MeetServiceImpl implements MeetService {
             meet.setVideo(endReq.getVideo());
             meetRepository.save(meet);
             if (meet.getGroupid()!=null) {
-                for (int i = 0; i < attendReqs.length; i++) {
-                    User user = userRepository.findUserById(attendReqs[i].getUserId());
+                List<Attendance> atts = new ArrayList<>();
+
+                for (int i = 0; i < attendances.size(); i++) {
+                    User user = userRepository.findUserById(attendances.get(i).getUserid().getId());
                     Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
-                    int count = attendReqs[i].getAttendcount();
-                    Time et = meet.getEndtime();
-                    Time st = meet.getStarttime();
-                    long countTime = (et.getTime() - st.getTime()) / 1000;
-                    attendance.setAttendance((count / countTime) * 100);
-                    attendanceRepository.save(attendance);
+                    Integer count = 0;
+                    if (attendance.getAttendcount() == null) {
+                        attendance.setAttendance(0);
+                        atts.add(attendance);
+                    } else {
+                        count = attendance.getAttendcount();
+                        Time et = meet.getEndtime();
+                        Time st = meet.getStarttime();
+                        double countTime =  ((et.getTime() - st.getTime()) / 1000);
+                        double att = (count/countTime) * 100;
+                        attendance.setAttendance(Math.ceil(att));
+                        atts.add(attendance);
+                    }
                 }
+                attendanceRepository.saveAll(atts);
+
             }
             return true;
 
@@ -154,17 +166,33 @@ public class MeetServiceImpl implements MeetService {
         meet.setChat(endReq.getChat());
         meet.setVideo(endReq.getVideo());
         meetRepository.save(meet);
+        System.out.println("그룹아이디"+meet.getGroupid().getId());
         if (meet.getGroupid()!=null) {
-            for (int i = 0; i < attendReqs.length; i++) {
-                User user = userRepository.findUserById(attendReqs[i].getUserId());
+            List<Attendance> atts = new ArrayList<>();
+            for (int i = 0; i < attendances.size(); i++) {
+                User user = userRepository.findUserById(attendances.get(i).getUserid().getId());
                 Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
-                int count = attendReqs[i].getAttendcount();
-                Time et = meet.getEndtime();
-                Time st = meet.getStarttime();
-                long countTime = (et.getTime() - st.getTime()) / 1000;
-                attendance.setAttendance((count / countTime) * 100);
-                attendanceRepository.save(attendance);
+                Integer count = 0;
+                if(attendance.getAttendcount()==null){
+                    attendance.setAttendance(0);
+                    atts.add(attendance);
+                }else {
+                    count = attendance.getAttendcount();
+                    System.out.println(count);
+                    Time et = meet.getEndtime();
+                    Time st = meet.getStarttime();
+                    System.out.println("et+"+et);
+                    System.out.println("st+"+st);
+                    double countTime =  ((et.getTime() - st.getTime()) / 1000);
+                    System.out.println(countTime);
+                    double att = (count/countTime) * 100;
+                    attendance.setAttendance(Math.ceil(att));
+                    System.out.println(Math.ceil(att));
+                    atts.add(attendance);
+                }
+
             }
+            attendanceRepository.saveAll(atts);
         }
         return true;
     }
@@ -186,6 +214,25 @@ public class MeetServiceImpl implements MeetService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+
+    @Override
+    public boolean addAttendance(int meetid, AttendReq attendReq) {
+        Meet meet = meetRepository.findMeetById(meetid);
+        User user = userRepository.findUserByName(attendReq.getUserId());
+        Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user,meet);
+        if(attendance==null) return false;
+        if (attendance.getAttendcount()==null){
+
+            attendance.setAttendcount(attendReq.getAttendcount());
+            attendanceRepository.save(attendance);
+            return true;
+        }
+
+        attendance.setAttendcount(attendance.getAttendcount()+ attendReq.getAttendcount());
+        attendanceRepository.save(attendance);
         return true;
     }
 }
