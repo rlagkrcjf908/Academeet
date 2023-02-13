@@ -65,7 +65,6 @@
                 </div>
               </el-main>
               <el-footer id="consoleBar">
-                <!-- Guest -->
                 <!-- 음성 버튼 -->
                 <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
                 <button v-else type="button" @click="audioTrigger()">audio off</button>
@@ -73,15 +72,6 @@
                 <!-- 비디오 버튼 -->
                 <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
                 <button v-else type="button" @click="videoTrigger()">video off</button>
-
-                <!-- Host-->
-                <!-- 음성 버튼 -->
-                <button type="button" @click="audioOn()">Master audio on</button>
-                <button type="button" @click="audioOff()">Master audio off</button>
-
-                <!-- 비디오 버튼 -->
-                <button type="button" @click="videoOn()">Master video on</button>
-                <button type="button" @click="videoOff()">Master video off</button>
 
                 <!-- 회의녹화 -->
                 <input
@@ -233,7 +223,7 @@
   const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io";
   const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
   const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-
+  let n = 0;
   export default {
   name: "App",
 
@@ -297,7 +287,8 @@
     // Speech
     speechEnabled: false,
     speechRecognition: undefined,
-    recognizedText: ""
+    recognizedText: "",
+    recognizedlog:[]
 
     };
   },
@@ -418,6 +409,7 @@
 
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
+
     });
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
@@ -498,7 +490,7 @@
     //     );
     //   });
     // });
-
+    this.recognizedlog = new this.recognizedlog;
     window.addEventListener("beforeunload", this.leaveSession);
     },
 
@@ -539,6 +531,19 @@
     });
     },
     leaveSession() {
+      axios({
+            url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
+            method:'post',
+            data:{
+                stt:this.recognizedlog
+            }
+        })
+        .then(function a(response){
+            console.log(response);
+        })
+        .catch(function(error){
+            console.log(error);
+        });
     // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
     if (this.sessionCamera) this.sessionCamera.disconnect();
     if (this.sessionScreen) this.sessionScreen.disconnect();
@@ -587,7 +592,7 @@
     },
 
     videoOn() {
-        
+
         this.sessionCamera
         .signal({
             to: [],
@@ -688,8 +693,6 @@
       });
     this.message = "";
     },
-
-    
 
     /**
      * --------------------------------------------

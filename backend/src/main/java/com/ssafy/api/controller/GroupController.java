@@ -182,6 +182,8 @@ public class GroupController {
     @GetMapping("/{group_id}/userList")
     public List<User> getGroupUser(@PathVariable("group_id") int group_id) {
         List<User> user = groupService.getGroupUser(group_id);
+        Group group = groupRepository.findGroupById(group_id);
+        user.add(group.getOwnerid());
         return user;
     }
 
