@@ -305,6 +305,10 @@
   mounted: function() {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.speechRecognition = new SpeechRecognition();
+    this.speechRecognition.lang = "ko-KR"
+    this.speechRecognition.continuous = true;
+    this.speechRecognition.maxAlternatives = 10000;
+
   },
 
   methods: {
@@ -424,20 +428,23 @@
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
       if(this.speechEnabled){
-        this.sendSpeech();
-        this.speechRecognition.stop();
-        this.recognizedText = "";
+        // this.sendSpeech();
+        // this.speechRecognition.stop();
+        // this.recognizedText = "";
 
-        this.speechRecognition.onresult = (event) => {
-          this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
-        };
-        this.speechRecognition.start();
+        // this.speechRecognition.onresult = (event) => {
+        //   this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
+        // };
+        // this.speechRecognition.start();
+
         // this.stopSpeeching();
         // this.sendSpeech();
         // this.recognizedText = "";
         // this.startSpeeching();
       }
     });
+
+
 
     // --- 4) Connect to the session with a valid user token ---
 
@@ -854,9 +861,23 @@
     // this.onFaceDetection = true,
     console.log("startSpeeching");
     this.speechEnabled = true;
+    // this.speechRecognition.onresult = (event) => {
+    //     this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
+    // };
+
+    
     this.speechRecognition.onresult = (event) => {
-        this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
+      for(let i = event.resultIndex, len = event.results.length; i < len; i++){
+        let transcript = event.results[i][0].transcript;
+        console.log(transcript);
+        this.recognizedText += transcript;
+        if(event.results[i].isFinal){ 
+          this.sendSpeech();
+        }
+      }
+        // this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
     };
+
     this.speechRecognition.start();
 
     document.getElementById('buttonStartSpeech').style.visibility = "hidden";
@@ -868,7 +889,7 @@
     console.log("stopSpeeching");
     this.speechEnabled = false;
 
-    this.sendSpeech();
+    // this.sendSpeech();
     this.speechRecognition.stop();
 
     this.recognizedText = "";
