@@ -898,7 +898,7 @@
         });
 
         //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
-        this.recognizedlog.add(this.myUserName+" : "+this.recognizedText);
+        this.recognizedlog.push(this.myUserName+" : "+this.recognizedText);
         this.recognizedText = "";
 
     },
