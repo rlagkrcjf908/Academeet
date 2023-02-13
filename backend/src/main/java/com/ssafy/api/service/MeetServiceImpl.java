@@ -118,7 +118,7 @@ public class MeetServiceImpl implements MeetService {
         if(endReq.getStt() !=null) {
             String[] note = endReq.getStt();
 //           String[] note = {"김학철입니다.","반갑습니다."};
-            String filePath = "/app/build/note";
+            String filePath = "/app/build/note/";
             String fileName = meet.getTitle() + "note"+".txt";
             try {
                 FileWriter fileWriter = new FileWriter(filePath + fileName);
@@ -174,7 +174,7 @@ public class MeetServiceImpl implements MeetService {
         if(stt == null)return false;
         String[] note = stt;
 //           String[] note = {"김학철입니다.","반갑습니다."};
-        String filePath = "/app/build/note";
+        String filePath = "/app/build/note/";
         String fileName = "test" + UUID.randomUUID()+".txt";
         try {
             FileWriter fileWriter = new FileWriter(filePath + fileName);
