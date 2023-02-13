@@ -64,17 +64,78 @@
                   />
                 </div>
               </el-main>
+              <!-- 호스트인지 유저인지에따라 버튼 보이는거 다르게 해주세요 -->
               <el-footer id="consoleBar">
                 <!-- 음성 버튼 -->
-                <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-                <button v-else type="button" @click="audioTrigger()">audio off</button>
-
+                <!-- <el-icon :size="size" :color="color" circle>
+                  <VideoCameraFilled />
+                </el-icon> -->
+                <div>
+                  <div class="meeting-btn">
+                    <!-- 마이크 오프 -->
+                      <button class="meeting-bnt-item" style="margin:auto" v-if="!audioEnabled" @click="audioTrigger()">
+                        <!-- <img  src="https://img.icons8.com/external-kmg-design-basic-outline-kmg-design/32/null/external-mic-off-interface-essentials-kmg-design-basic-outline-kmg-design.png"/> -->
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
+                      </button>
+                    <!-- 마이크 온 -->
+                      <button class="meeting-bnt-item" style="margin:auto" v-if="audioEnabled" @click="audioTrigger()">
+                        <!-- <img  src="https://img.icons8.com/material-rounded/48/null/microphone.png"/>                     -->
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/fluency-systems-filled/48/40C057/microphone.png"/>
+                      </button>
+                    <!-- 비디오 오프 -->
+                      <button class="meeting-bnt-item"  style="margin:auto" v-if="!videoEnabled" @click="videoTrigger()">
+                        <!-- <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/null/no-video--v1.png"/>                     -->
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/no-video--v1.png"/>
+                      </button>
+                    <!-- 비디오 온 -->
+                      <button class="meeting-bnt-item" style="margin:auto" v-if="videoEnabled" @click="videoTrigger()">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
+                      </button>
+                      <!-- 회의 나가기 -->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="leaveSession">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/x.png"/>
+                      </button>
+                      <!-- 출석체크 시작-->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="startChecking">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
+                      </button>
+                      <!-- 출석체크 끝-->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="stopChecking">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
+                      </button>
+                      <!-- 화면공유-->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="publishScreenShare">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
+                      </button>
+                      <!-- 회의 녹화 시작 -->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="startRecording">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
+                      </button>
+                      <!-- 회의 녹화 끝 -->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="stopRecording">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
+                      </button>
+                      <!-- 음성 기록 시작 -->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="startSpeeching">
+                        <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
+                      </button>
+                      <!-- 음성 기록 끝 -->
+                      <button class="meeting-bnt-item" style="margin:auto" @click="stopSpeeching">
+                        <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
+                      </button>
+                    </div>
+                  </div>
+                  
+                <!-- 카메라 온 -->
+                <!-- <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
+                <button v-else type="button" @click="audioTrigger()">audio off</button> -->
+                
                 <!-- 비디오 버튼 -->
-                <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
-                <button v-else type="button" @click="videoTrigger()">video off</button>
-
+                <!-- <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
+                <button v-else type="button" @click="videoTrigger()">video off</button> -->
+                  
                 <!-- 회의녹화 -->
-                <input
+                <!-- <input
                 class="btn btn-md"
                 type="button"
                 id="buttonStartRecording"
@@ -88,26 +149,26 @@
                 @click="stopRecording"
                 value="Stop recording"
                 style="visibility: hidden"
-                />
+                /> -->
                 <!-- 화면공유 -->
-                <input
+                <!-- <input
                 class="btn btn-large"
                 type="button"
                 id="buttonScreenShare"
                 @click="publishScreenShare"
                 value="Screen share"
                 style="visibility: hidden"
-                />
+                /> -->
                 <!-- 세션 떠나기 -->
-                <input
+                <!-- <input
                 class="btn btn-large btn-danger"
                 type="button"
                 id="buttonLeaveSession"
                 @click="leaveSession"
                 value="Leave session"
-                />
+                /> -->
                 <!-- 출석 자동 체크 -->
-                <input
+                <!-- <input
                 class="btn btn-md"
                 type="button"
                 id="buttonStartPresent"
@@ -122,9 +183,9 @@
                 @click="stopChecking"
                 value="Stop Checking"
                 style="visibility: hidden"
-                />
+                /> -->
                 <!-- 음성기록 -->
-                <input
+                <!-- <input
                 class="btn btn-md"
                 type="button"
                 id="buttonStartSpeech"
@@ -138,7 +199,7 @@
                 @click="stopSpeeching"
                 value="Stop Speeching"
                 style="visibility: hidden"
-                />
+                /> -->
               </el-footer>
             </el-container>
 
@@ -200,6 +261,7 @@
 
 
     </div>
+
   </template>
 
   <script>
@@ -208,6 +270,8 @@
   import axios from "axios";
   import UserVideo from "../components/meeting/UserVideo";
   import { meetingCreate } from "@/common/api/meetingAPI";
+  // import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled } from '@element-plus/icons-vue'
+  import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled, Delete } from '@element-plus/icons-vue'
   // import SpeechRecognition from "./components/SpeechRecognition";
   //import * as faceapi from 'face-api.js';
   axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -763,3 +827,27 @@
 
   };
   </script>
+
+<style>
+  .meeting-bnt-item{
+    border:none ;
+    background-color: white;
+    border-radius: 100%;
+    width:40px;
+    height:40px;
+    margin: 2em;
+  }
+
+  .meeting-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(91, 88, 88, 1);
+    padding: 1em;
+  }
+  .meeting-btn-item-img{
+    height: 20px; 
+    width: 20px;
+  }
+</style>
