@@ -215,7 +215,7 @@
   const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io";
   const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
   const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-
+  let n = 0;
   export default {
   name: "App",
 
@@ -279,8 +279,9 @@
     // Speech
     speechEnabled: false,
     speechRecognition: undefined,
-    recognizedText: ""
-
+    recognizedText: "",
+    recognizedlog:[]
+  
     };
   },
 
@@ -443,7 +444,7 @@
     //     );
     //   });
     // });
-
+    this.recognizedlog = new this.recognizedlog;
     window.addEventListener("beforeunload", this.leaveSession);
     },
 
@@ -484,6 +485,19 @@
     });
     },
     leaveSession() {
+      axios({
+            url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
+            method:'post',
+            data:{
+                stt:this.recognizedlog
+            }
+        })
+        .then(function a(response){
+            console.log(response);
+        })
+        .catch(function(error){
+            console.log(error);
+        });
     // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
     if (this.sessionCamera) this.sessionCamera.disconnect();
     if (this.sessionScreen) this.sessionScreen.disconnect();
@@ -584,6 +598,7 @@
       .catch((error) => {
       console.error(error);
       });
+      this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
       this.recognizedText = "";
     },
 
