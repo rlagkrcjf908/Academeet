@@ -65,26 +65,18 @@
                 </div>
               </el-main>
               <!-- 호스트인지 유저인지에따라 버튼 보이는거 다르게 해주세요 -->
-              <el-footer id="consoleBar">
-                <!-- 음성 버튼 -->
-                <!-- <el-icon :size="size" :color="color" circle>
-                  <VideoCameraFilled />
-                </el-icon> -->
                 <div>
                   <div class="meeting-btn">
                     <!-- 마이크 오프 -->
                       <button data-tooltip="마이크 켜기" class="meeting-bnt-item"  v-if="!audioEnabled" @click="audioTrigger()">
-                        <!-- <img  src="https://img.icons8.com/external-kmg-design-basic-outline-kmg-design/32/null/external-mic-off-interface-essentials-kmg-design-basic-outline-kmg-design.png"/> -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
                       </button>
                     <!-- 마이크 온 -->
                       <button data-tooltip="마이크 끄기" class="meeting-bnt-item"  v-if="audioEnabled" @click="audioTrigger()">
-                        <!-- <img  src="https://img.icons8.com/material-rounded/48/null/microphone.png"/>                     -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/fluency-systems-filled/48/40C057/microphone.png"/>
                       </button>
                     <!-- 비디오 오프 -->
                       <button data-tooltip="비디오 켜기" class="meeting-bnt-item"   v-if="!videoEnabled" @click="videoTrigger()">
-                        <!-- <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/null/no-video--v1.png"/>                     -->
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/no-video--v1.png"/>
                       </button>
                     <!-- 비디오 온 -->
@@ -92,11 +84,11 @@
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
                       </button>
                       <!-- 출석체크 시작-->
-                      <button data-tooltip="출석체크 시작" class="meeting-bnt-item"  @click="startChecking">
+                      <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!isAttdChecking" @click="startChecking">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
                       </button>
                       <!-- 출석체크 끝-->
-                      <button data-tooltip="출석체크 끝" class="meeting-bnt-item"  @click="stopChecking">
+                      <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="isAttdChecking" @click="stopChecking">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
                       </button>
                       <!-- 화면공유-->
@@ -104,19 +96,19 @@
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                       </button>
                       <!-- 회의 녹화 시작 -->
-                      <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item"  @click="startRecording">
+                      <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!isRecoding" @click="startRecording">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
                       </button>
                       <!-- 회의 녹화 끝 -->
-                      <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item"  @click="stopRecording">
+                      <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="isRecoding" @click="stopRecording">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
                       </button>
                       <!-- 음성 기록 시작 -->
-                      <button data-tooltip="음성 기록 시작" class="meeting-bnt-item"  @click="startSpeeching">
+                      <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled" @click="startSpeeching">
                         <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
                       </button>
                       <!-- 음성 기록 끝 -->
-                      <button data-tooltip="음성 기록 끝" class="meeting-bnt-item"  @click="stopSpeeching">
+                      <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled" @click="stopSpeeching">
                         <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
                       </button>
                     </div>
@@ -200,7 +192,6 @@
                 value="Stop Speeching"
                 style="visibility: hidden"
                 /> -->
-              </el-footer>
             </el-container>
 
             <!-- 사이드바 -->
@@ -270,8 +261,6 @@
   import axios from "axios";
   import UserVideo from "../components/meeting/UserVideo";
   import { meetingCreate } from "@/common/api/meetingAPI";
-  // import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled } from '@element-plus/icons-vue'
-  import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled, Delete } from '@element-plus/icons-vue'
   // import SpeechRecognition from "./components/SpeechRecognition";
   //import * as faceapi from 'face-api.js';
   axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -288,12 +277,9 @@
     // SpeechRecognition,
   },
 
-
-
-
   data() {
     const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
-    console.log(meetInfo);
+    // console.log(meetInfo);
     return {
     publisher : "publisher",
     subscriber : "subscriber",
@@ -310,6 +296,7 @@
     // Audio, Video Control
     videoEnabled: true,
     audioEnabled: true,
+    isAttdChecking : false,
 
     // chatting
     message: "",
@@ -335,6 +322,7 @@
     recordingMode : ["ALWAYS", "MANUAL"],
     recordingId : undefined,
     videoURL : undefined,
+    isRecoding: false,
 
     // face detection
     interval : undefined,
@@ -400,9 +388,9 @@
 
     this.sessionCamera.on("signal:my-chat", (event) => {
       //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+      // console.log(event.data); // Message
+      // console.log(event.from); // Connection object of the sender
+      // console.log(event.type); // The type of message ("my-chat")
 
       let receive = event.data.split("/");
       let userName = receive[0];
@@ -417,9 +405,9 @@
 
     this.sessionCamera.on("signal:my-speech", (event) => {
       //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+      // console.log(event.data); // Message
+      // console.log(event.from); // Connection object of the sender
+      // console.log(event.type); // The type of message ("my-chat")
 
       let receive = event.data.split("/");
       let userName = receive[0];
@@ -602,7 +590,6 @@
 
     speechTrigger() {
     this.speechEnabled = !this.speechEnabled;
-    // console.log("speechEnabled : " + this.speechEnabled);
     },
 
     sendChat() {
@@ -672,7 +659,7 @@
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-session
 		createSession (sessionId) {
-      console.log("seesionId",sessionId)
+      // console.log("seesionId",sessionId)
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
@@ -723,13 +710,14 @@
 
     startRecording() {
         console.log("Starting recording");
+        this.isRecoding = true;
         this.recordingStartFunc(this.mySessionId).then((recordingId) => {
-                console.log("Recording ID", recordingId);
+                // console.log("Recording ID", recordingId);
                 this.recordingId = recordingId;
             }
         );
-        document.getElementById('buttonStartRecording').style.visibility = "hidden";
-        document.getElementById('buttonStopRecording').style.visibility = "visible";
+        // document.getElementById('buttonStartRecording').style.visibility = "hidden";
+        // document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
     recordingStartFunc(sessionId){
@@ -758,13 +746,14 @@
     },
 
     stopRecording() {
-        console.log("Stop recording");
+        // console.log("Stop recording");
+        this.isRecoding = false;
         this.recordingStopFunc(this.recordingId).then((url) => {
                 this.videoURL = url
             }
         );
-        document.getElementById('buttonStartRecording').style.visibility = "visible";
-        document.getElementById('buttonStopRecording').style.visibility = "hidden";
+        // document.getElementById('buttonStartRecording').style.visibility = "visible";
+        // document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
 
     recordingStopFunc(recordingId){
