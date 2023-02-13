@@ -490,7 +490,7 @@
     //     );
     //   });
     // });
-    this.recognizedlog = new this.recognizedlog;
+    this.recognizedlog = [];
     window.addEventListener("beforeunload", this.leaveSession);
     },
 
@@ -888,7 +888,9 @@
         console.error(error);
         });
 
+        this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
         this.recognizedText = "";
+
     },
 
   },
