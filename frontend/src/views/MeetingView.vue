@@ -65,6 +65,7 @@
                 </div>
               </el-main>
               <el-footer id="consoleBar">
+                <!-- Guest -->
                 <!-- 음성 버튼 -->
                 <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
                 <button v-else type="button" @click="audioTrigger()">audio off</button>
@@ -72,6 +73,15 @@
                 <!-- 비디오 버튼 -->
                 <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
                 <button v-else type="button" @click="videoTrigger()">video off</button>
+
+                <!-- Host-->
+                <!-- 음성 버튼 -->
+                <button type="button" @click="audioOn()">Master audio on</button>
+                <button type="button" @click="audioOff()">Master audio off</button>
+
+                <!-- 비디오 버튼 -->
+                <button type="button" @click="videoOn()">Master video on</button>
+                <button type="button" @click="videoOff()">Master video off</button>
 
                 <!-- 회의녹화 -->
                 <input
@@ -105,6 +115,14 @@
                 id="buttonLeaveSession"
                 @click="leaveSession"
                 value="Leave session"
+                />
+                <!-- 세션 종료하기 -->
+                <input
+                class="btn btn-large btn-danger"
+                type="button"
+                id="buttonLeaveSession"
+                @click="endSession"
+                value="End session"
                 />
                 <!-- 출석 자동 체크 -->
                 <input
@@ -369,10 +387,40 @@
       // ).innerHTML += `<p>${message}</p>`;
     });
 
+    this.sessionCamera.on("signal:master-audio-on", (event) => {
+        console.log(event.type); // The type of message ("my-chat")
+        this.audioEnabled = true;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
+    });
+
+    this.sessionCamera.on("signal:master-audio-off", (event) => {
+        console.log(event.type); // The type of message ("my-chat")
+        this.audioEnabled = false;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
+    });
+
+    this.sessionCamera.on("signal:master-video-on", (event) => {
+        console.log(event.type); // The type of message ("my-chat")
+        this.vedioEnabled = true;
+        this.PublisherCamera.publishVideo(this.vedioEnabled);
+    });
+
+    this.sessionCamera.on("signal:master-video-off", (event) => {
+        console.log(event.type); // The type of message ("my-chat")
+        this.vedioEnabled = false;
+        this.PublisherCamera.publishVideo(this.vedioEnabled);
+    });
+
+    this.sessionCamera.on("signal:end-session", (event) => {
+        console.log(event.type); // The type of message ("my-chat")
+        this.leaveSession();
+    });
+
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
 
     });
+
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
@@ -531,11 +579,81 @@
     this.PublisherCamera.publishVideo(this.videoEnabled);
     },
 
-    audioTrigger() {
-    this.audioEnabled = !this.audioEnabled;
-    this.PublisherCamera.publishAudio(this.audioEnabled);
+    videoOn() {
+        
+        this.sessionCamera
+        .signal({
+            to: [],
+            type: "master-video-on",
+        })
+        .then(() => {
+            console.log("master-video-on successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+
+    },
+    videoOff() {
+        this.sessionCamera
+        .signal({
+            to: [],
+            type: "master-video-off",
+        })
+        .then(() => {
+            console.log("master-video-off successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
     },
 
+    audioTrigger() {
+        this.audioEnabled = !this.audioEnabled;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
+    },
+
+    audioOn(){
+        this.sessionCamera
+        .signal({
+            to: [],
+            type: "master-audio-on",
+        })
+        .then(() => {
+            console.log("master-audio-on successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+
+    },
+    audioOff(){
+        this.sessionCamera
+        .signal({
+            to: [],
+            type: "master-audio-off",
+        })
+        .then(() => {
+            console.log("master-audio-off successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+    },
+
+    endSession(){
+        this.sessionCamera
+        .signal({
+            to: [],
+            type: "end-session",
+        })
+        .then(() => {
+            console.log("end-session successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+    },
     speechTrigger() {
     this.speechEnabled = !this.speechEnabled;
     // console.log("speechEnabled : " + this.speechEnabled);
@@ -607,7 +725,7 @@
     },
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-session
-		createSession (sessionId) {
+    createSession (sessionId) {
       console.log("seesionId",sessionId)
 			return new Promise((resolve, reject) => {
 				axios
