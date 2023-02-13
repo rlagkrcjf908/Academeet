@@ -174,7 +174,7 @@ public class MeetServiceImpl implements MeetService {
         if(stt == null)return false;
         String[] note = stt;
 //           String[] note = {"김학철입니다.","반갑습니다."};
-        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+        String filePath = "/app/build/note";
         String fileName = "test" + UUID.randomUUID()+".txt";
         try {
             FileWriter fileWriter = new FileWriter(filePath + fileName);
