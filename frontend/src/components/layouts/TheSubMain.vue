@@ -43,7 +43,7 @@
 <script setup>
 //출석부를 위해서 로컬 스토리지 유저와 그룹 호스트 비교, route.push() 기능 정리
 import { useRouter, useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import { requestDeleteGroup } from "@/common/api/groupAPI";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -60,6 +60,8 @@ const getGroup = async () => {
   await store.dispatch("groupStore/requestGroupAction", groupId.value);
   groupInfo.value = store.state.groupStore.groupInfo;
 };
+
+watch(groupInfo,getGroup)
 
 getGroup();
 

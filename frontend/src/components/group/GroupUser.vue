@@ -19,7 +19,7 @@
           <td>
             <img
               :src="'http://i8d108.p.ssafy.io/img/' + item.profile"
-              style="height: 50px"
+              class="user-img"
             />
           </td>
           <td>{{ item.name }}</td>
@@ -123,5 +123,10 @@ td {
 }
 .attd-success {
   color: #95d475;
+}
+.user-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
 }
 </style>

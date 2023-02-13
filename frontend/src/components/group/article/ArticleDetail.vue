@@ -28,8 +28,8 @@
     >
   </div>
 
-  <div class="article-detail-back">
-    <el-icon @click="$router.go(-1)"><Back /> </el-icon> 돌아가기
+  <div class="article-detail-back" @click="$router.go(-1)">
+    <el-icon ><Back /></el-icon> 돌아가기
   </div>
 </template>
 
@@ -111,6 +111,7 @@ const articleDelete = () => {
   border: 1px solid;
   width: 1200px;
   height: 400px;
+  overflow: auto;
 }
 
 .article-detail-btn {
