@@ -10,6 +10,7 @@
     class="demo-ruleForm"
     status-icon
   >
+
     <!-- 글 제목 -->
     <el-form-item label="제목" prop="title">
       <el-input
@@ -43,14 +44,10 @@ const store = useStore();
 const groupId = route.params.groupId;
 const articleId = route.params.articleId;
 const ruleFormRef = ref();
-// const title = ref()
-// const content = ref()
 
+// 이전 내용 가져오기
 async function getArticle() {
   const res = await requestArtile(articleId);
-
-  console.log(res);
-  console.log(res.data);
 
   ruleForm.title = res.data.title;
   ruleForm.content = res.data.content;
@@ -65,6 +62,7 @@ const ruleForm = reactive({
   content: "",
 });
 
+// 유효성 검사
 const rules = reactive({
   title: [
     { required: true, message: "제목을 입력해 주세요.", trigger: "blur" },
@@ -74,6 +72,7 @@ const rules = reactive({
   ],
 });
 
+// 수정 날짜
 function getToday() {
   var date = new Date();
   var year = date.getFullYear();
@@ -83,6 +82,7 @@ function getToday() {
   return year + "-" + month + "-" + day;
 }
 
+// 수정 제출
 const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {

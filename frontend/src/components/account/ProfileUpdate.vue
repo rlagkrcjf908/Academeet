@@ -81,7 +81,6 @@ import { useStore } from "vuex";
 import axios from "axios";
 import { Message, User, Phone, Present } from '@element-plus/icons-vue'
 
-
 const store = useStore();
 const ruleFormRef = ref();
 const router = useRouter();

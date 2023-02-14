@@ -50,9 +50,7 @@ const userId = JSON.parse(localStorage.getItem("userInfo")).id;
 
 onMounted(async () => {
   const res = await requestMeetingList(userId);
-  console.log("전체  meet", res);
   const datas = res.data;
-  console.log(datas);
   const sortedDate = (datas) => {
     const sorted_date = datas.sort(function (a, b) {
       // return new Date(a.date) - new Date(b.date).getTime();
@@ -67,7 +65,6 @@ onMounted(async () => {
     });
     return sorted_date;
   };
-  console.log(sortedDate(datas));
 
   const list = sortedDate(datas).map((item) => {
     return {
@@ -91,7 +88,6 @@ const joinMeet = (item) => {
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
     ownerId: item.ownerId
   };
-  console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting" });
 };

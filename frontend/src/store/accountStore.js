@@ -46,7 +46,6 @@ const mutations = {
 };
 
 const BASE_URL = 'https://i8d108.p.ssafy.io'
-// const BASE_URL = ''
 
 const actions = {
   // 로그인
@@ -63,8 +62,7 @@ const actions = {
       commit('SET_TOKEN', res)
       commit('SET_USERID', res.data.userRes.id)
       commit('SET_AUTHENTICATED')
-      console.log(res)
-      // localStorage.setItem('token', res.data.accessToken)
+      // console.log(res)
       localStorage.setItem('userInfo', JSON.stringify(res.data.userRes));
       setAuthHeader(res.data.accessToken)
       ElMessage({
@@ -105,10 +103,8 @@ const actions = {
   },
   // 프로필 수정
   profileUpdateAction: async ({ commit }, payload) => {
-    console.log(state.userId)
     const response = await profileUpdate(payload.id, payload.frm, payload.config);
     const profileData = response.data
-    console.log(profileData)
     commit("SET_USER_PROFILE", profileData);
   },
 };

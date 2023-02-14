@@ -1,12 +1,15 @@
 <template>
     <hr />
     <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 상세 -</h2>
+    <!-- 글 제목 -->
     <div class="atritcle-title">
       <h3>제목 : {{ title }}</h3>
     </div>
+    <!-- 글 내용 -->
     <div class="atritcle-content">
       {{ content }}
     </div>
+    <!-- 수정버튼 -->
     <div>
       <el-button
         class="article-detail-btn"
@@ -17,6 +20,7 @@
         @click="articleUpdate"
         >수정</el-button
       >
+      <!-- 삭제버튼 -->
       <el-button
         class="article-detail-btn"
         v-if="userId === authId"
@@ -27,7 +31,7 @@
         >삭제</el-button
       >
     </div>
-  
+    <!-- 돌아가기 버튼 -->
     <div class="article-detail-back" @click="$router.go(-1)">
       <el-icon ><Back /></el-icon> 돌아가기
     </div>

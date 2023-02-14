@@ -117,7 +117,6 @@ const routeToArticle = () => {
 //자료실 이동
 const routeToRefer = () => {
   // console.log("routeToRefer 이동합니다");
-  console.log("groupId.value:", groupId.value);
   router.push({
     name: "groupRefer",
     params: { groupId: groupId.value },

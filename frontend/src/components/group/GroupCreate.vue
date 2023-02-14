@@ -101,7 +101,6 @@ const remoteMethod = (query) => {
   }
 }
 
-
 const ruleForm = reactive({
   groupName: '',
   user: []
@@ -129,7 +128,7 @@ const submitForm = (formEl) => {
       }
       await store.dispatch('groupStore/groupCreateAction',groupData)
       router.push('/group')
-      console.log('submit!')
+      // console.log('submit!')
     } else {
       console.log('error submit!')
       return false

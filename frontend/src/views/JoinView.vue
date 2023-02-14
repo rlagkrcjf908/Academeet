@@ -284,7 +284,7 @@ const dupliCheck = () => {
         }
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data === 1) {
           axios
             .put(
@@ -384,7 +384,6 @@ const rules = reactive({
 const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate((valid) => {
-    console.log(isCheck.value);
     if (isCheck.value === false) {
       ElMessage({
         showClose: true,

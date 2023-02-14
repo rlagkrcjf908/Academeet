@@ -46,8 +46,6 @@
 import { Message, User, Phone, Present } from '@element-plus/icons-vue'
 const profile = JSON.parse(localStorage.getItem('userInfo'))
 
-console.log('받앗다',profile)
-
 </script>
 
 <style>
@@ -58,7 +56,6 @@ console.log('받앗다',profile)
   justify-content: center;
   align-items: center;
   padding-top: 4em;
-
   /* max-width: 960px; */
 }
 

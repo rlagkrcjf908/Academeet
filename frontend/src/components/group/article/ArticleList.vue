@@ -1,6 +1,7 @@
 <template>
   <div class="tbl-header">
     <table cellpadding="0" cellspacing="0" border="0">
+      <!-- 테이블헤드 -->
       <thead>
         <tr>
           <th>No.</th>
@@ -13,6 +14,7 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
+      <!-- 테이블 바디 -->
       <tbody v-if="articleList">
         <tr
           v-for="(item, index) in articleList"
@@ -55,6 +57,7 @@ const userId = store.state.accountStore.userId;
 
 const articleList = ref();
 
+// 공지사항 리스트로 가기
 const routeToArticle = (articleId) => {
   router.push({
     name: "articleDetail",
@@ -65,6 +68,7 @@ const routeToArticle = (articleId) => {
   });
 };
 
+// 글 작성으로 가기
 const routeToArticleCreate = () => {
   router.push({
     name: "articleCreate",

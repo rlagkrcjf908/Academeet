@@ -26,7 +26,6 @@ const actions = {
   // 미팅 리스트 요청
   requestMeetingList : async ({ commit }, id) =>{
     const response = await requestMeetingList(id);
-    console.log(response.data);
     commit("SET_MEET_LIST", response.data);
   },
 };

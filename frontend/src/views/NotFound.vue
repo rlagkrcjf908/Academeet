@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin: auto;">
         <el-empty>
             <el-button type="success" @click="$router.go(-1)">돌아가기</el-button>
         </el-empty>
