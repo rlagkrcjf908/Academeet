@@ -503,8 +503,7 @@ export default {
         this.sessionScreen
         .connect(tokenScreen, { clientData: this.myUserName })
         .then(() => {
-          document.getElementById("buttonScreenShare").style.visibility =
-          "visible";
+          document.getElementById("buttonScreenShare").style.visibility = "visible";
           console.log("Session screen connected");
         })
         .catch((error) => {
@@ -524,6 +523,7 @@ export default {
       // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
       var publisherScreen = this.OVScreen.initPublisher(undefined, {
         videoSource: "screen",
+        publishAudio: false,
       });
 
       // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
