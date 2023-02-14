@@ -164,7 +164,8 @@ const routes = [
       {
         path: 'list',
         name: 'listMain',
-        component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
+        component: ListView
+        // component: () => import(/* webpackChunkName: "listMain" */ '@/components/list/ListMain.vue')
       },
     ]
   },

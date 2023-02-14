@@ -13,11 +13,13 @@ import GroupList from '@/components/group/GroupList'
 <style>
 .el-aside{
   width:304px;
-  height: 90vh;
+  /* height: 90vh; */
   background-color: #CDE59B;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0;
+  padding: 0;
 }
 /* .el-main{
   width: 65vw;

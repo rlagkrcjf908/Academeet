@@ -42,8 +42,8 @@ import { ElButton } from "element-plus";
   justify-content: center; /* 수평 정렬 */
 }
 .btn-group {
-  width: 100%;
-  height: 100vh;
+  /* width: 100%;
+  height: 100vh; */
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;

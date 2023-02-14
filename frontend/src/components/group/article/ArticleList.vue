@@ -13,7 +13,7 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <tbody v-if="articleList.length > 0">
+      <tbody v-if="articleList">
         <tr
           v-for="(item, index) in articleList"
           :key="index"
@@ -77,7 +77,6 @@ const routeToArticleCreate = () => {
 onMounted(async () => {
   const res = await requestArtileList(groupId.value, userId);
   const datas = res.data.articleList;
-  console.log(datas);
   const list = datas.map((item) => {
     return {
       articleId: item.id,
@@ -95,6 +94,7 @@ tr:hover {
   background-color: rgba(97, 178, 153, 0.2);
   font-weight: bolder;
   color: rgba(97, 178, 153, 1);
+  cursor: pointer;
 }
 h1 {
   font-size: 30px;

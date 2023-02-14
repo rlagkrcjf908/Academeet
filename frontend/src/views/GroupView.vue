@@ -1,10 +1,8 @@
 <template>
-  <div class="common-layout">
     <el-container>
       <TheSide />
-      <router-view></router-view>
+      <router-view class="gruop-view"></router-view>
     </el-container>
-  </div>
 </template>
 
 <script setup>
@@ -12,4 +10,15 @@ import TheSide from "@/components/layouts/TheSide.vue";
 </script>
 
 <style>
+  .el-container{
+    width: auto;
+    height: calc(100vh - 86px);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* .gruop-view{
+    height:calc(100vh - 86px)
+
+  } */
 </style>
