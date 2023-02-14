@@ -172,7 +172,6 @@
 
                 <el-main class = "meet-side-main" v-if="isActive">
                   <div id="chatting-content" style=" display: inline-block" >- Chatting -</div>
-
                 </el-main>
                 <el-main class = "meet-side-main" v-else>
                   <div id="speech-content" style="display: inline-block">- Speech -</div>
