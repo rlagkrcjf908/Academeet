@@ -156,14 +156,12 @@
                 value="Stop Speeching"
                 style="visibility: hidden"
                 />
-                <input
+                <!-- <input
                 class="btn btn-md"
                 type="button"
-
                 @click="fileDownload"
                 value="File Download"
-                
-                />
+                /> -->
               </el-footer>
             </el-container>
 
@@ -320,21 +318,21 @@
   },
 
   methods: {
-    fileDownload(){
-      axios.get('https://i8d108.p.ssafy.io/stt/testf3491234-a387-4566-a5ec-4aca2a1d287a.txt', {
-        responseType: "blob"
-      }).then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'test.txt'); //or any other extension
-        document.body.appendChild(link);
-        link.click();
-      }).catch((error) => {
-        console.log(error);
-        alert("파일 다운로드 실패");
-      });
-    },
+    // fileDownload(){
+    //   axios.get('https://i8d108.p.ssafy.io/stt/testf3491234-a387-4566-a5ec-4aca2a1d287a.txt', {
+    //     responseType: "blob"
+    //   }).then(response => {
+    //     const url = window.URL.createObjectURL(new Blob([response.data]));
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.setAttribute('download', 'test.txt'); //or any other extension
+    //     document.body.appendChild(link);
+    //     link.click();
+    //   }).catch((error) => {
+    //     console.log(error);
+    //     alert("파일 다운로드 실패");
+    //   });
+    // },
 
     joinSession() {
     // --- *1) Create two OpenVidu objects.
