@@ -11,22 +11,10 @@
         <p>
           <label>회의제목</label>
           <h3>{{ mySessionTitle }}</h3>
-          <!-- <input
-          v-model="mySessionTitle"
-          class="form-control"
-          type="text"
-          required
-          /> -->
         </p>
         <p>
           <label>참가자</label>
           <h3>{{ myUserName }}</h3>
-          <!-- <input
-          v-model="myUserName"
-          class="form-control"
-          type="text"
-          required
-          /> -->
         </p>
         <p class="text-center">
           <button class="btn btn-lg btn-success" @click="joinSession()">
@@ -64,105 +52,94 @@
                   />
                 </div>
               </el-main>
-              <el-footer id="consoleBar">
-                <!-- 음성 버튼 -->
-                <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-                <button v-else type="button" @click="audioTrigger()">audio off</button>
 
-                <!-- 비디오 버튼 -->
-                <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
-                <button v-else type="button" @click="videoTrigger()">video off</button>
-                
-                <!-- Host-->
-                <!-- 음성 버튼 -->
-                <button type="button" @click="audioOn()">Master audio on</button>
-                <button type="button" @click="audioOff()">Master audio off</button>
+              <!--kaj-->
+              <div>
+                <div class="meeting-btn">
+                    <!-- 마이크 오프 -->
+                    <button data-tooltip="마이크 켜기" class="meeting-bnt-item"  v-if="!audioEnabled" @click="audioTrigger()">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
+                    </button>
+                    <!-- 마이크 온 -->
+                    <button data-tooltip="마이크 끄기" class="meeting-bnt-item"  v-if="audioEnabled" @click="audioTrigger()">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/fluency-systems-filled/48/40C057/microphone.png"/>
+                    </button>
+                    <!-- 비디오 오프 -->
+                    <button data-tooltip="비디오 켜기" class="meeting-bnt-item"   v-if="!videoEnabled" @click="videoTrigger()">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/no-video--v1.png"/>
+                    </button>
+                    <!-- 비디오 온 -->
+                    <button data-tooltip="비디오 끄기" class="meeting-bnt-item"  v-if="videoEnabled" @click="videoTrigger()">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
+                    </button>
+                    <!-- 화면공유-->
+                    <button data-tooltip="화면 공유" class="meeting-bnt-item"  @click="publishScreenShare">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
+                    </button>
+                    
+                    <!-- 그룹 호스트 권한 버튼 -->
+                    <!-- 회의 녹화 시작 -->
+                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled" @click="startRecording">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
+                    </button>
+                    <!-- 회의 녹화 끝 -->
+                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled" @click="stopRecording">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
+                    </button>
+                    <!-- 음성 기록 시작 -->
+                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled" @click="startSpeeching">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
+                    </button>
+                    <!-- 음성 기록 끝 -->
+                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled" @click="stopSpeeching">
+                      <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
+                    </button>
+                    <!-- 출석체크 시작-->
+                    <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!onFaceDetection && userId==ownerId" @click="startChecking">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
+                    </button>
+                    <!-- 출석체크 끝-->
+                    <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="onFaceDetection && userId==ownerId" @click="stopChecking">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
+                    </button>
+                    <!-- 전체 오디오 온 -->
+                    <button data-tooltip="전체 오디오 온" class="meeting-bnt-item" v-if="!masterAudioEnabled && userId==ownerId" @click="audioOn">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-icongeek26-glyph-icongeek26/64/FA5252/external-mute-music-icongeek26-glyph-icongeek26.png"/>
+                    </button>
+                    <!-- 전체 오디오 오프-->
+                    <button data-tooltip="전체 오디오 오프" class="meeting-bnt-item" v-if="masterAudioEnabled && userId==ownerId" @click="audioOff">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-regular-filled/48/12B886/high-volume.png"/>
+                    </button>
+                    <!-- 전체 비디오 온 -->
+                    <button data-tooltip="전체 비디오 온" class="meeting-bnt-item" v-if="!masterVideoEnabled && userId==ownerId" @click="videoOn">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/stop-gesture.png"/>
+                    </button>
+                    <!-- 전체 비디오 오프-->
+                    <button data-tooltip="전체 비디오 오프" class="meeting-bnt-item" v-if="masterVideoEnabled && userId==ownerId" @click="videoOff">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/pastel-glyph/64/12B886/laptop-play-video--v2.png"/>
+                    </button>
+                    <!-- 파일다운받기 -->
+                    <!-- <button data-tooltip="파일 다운" class="meeting-bnt-item">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/windows/64/1A1A1A/file-download.png"/>
+                    </button> -->
+                  </div>
+                  <!-- 회의 나가기 -->
+                  <button class="meeting-bnt-leave"  v-if="userId!==ownerId" @click="leaveSession">
+                    <div><span data-tooltip="회의 나가기">회의 나가기</span></div>
+                  </button>
+                  <!-- 세션 종료하기 -->
+                  <button class="meeting-bnt-leave" v-if="userId==ownerId" @click="endSession">
+                    <div><span data-tooltip="세션 종료하기">세션 종료하기</span></div>
+                  </button>
+                </div>
 
-                <!-- 비디오 버튼 -->
-                <button type="button" @click="videoOn()">Master video on</button>
-                <button type="button" @click="videoOff()">Master video off</button>
+              <!-- kaj -->
 
-                <!-- 회의녹화 -->
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartRecording"
-                @click="startRecording"
-                value="Start recording"
-                />
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopRecording"
-                @click="stopRecording"
-                value="Stop recording"
-                style="visibility: hidden"
-                />
-                <!-- 화면공유 -->
-                <input
-                class="btn btn-large"
-                type="button"
-                id="buttonScreenShare"
-                @click="publishScreenShare"
-                value="Screen share"
-                style="visibility: hidden"
-                />
-                <!-- 세션 떠나기 -->
-                <input
-                class="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                @click="leaveSession"
-                value="Leave session"
-                />
-                <!-- 세션 종료하기 -->
-                <input
-                class="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                @click="endSession"
-                value="End session"
-                />
-                <!-- 출석 자동 체크 -->
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartPresent"
-                @click="startChecking"
-                value="Start Checking"
-                />
 
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopPresent"
-                @click="stopChecking"
-                value="Stop Checking"
-                style="visibility: hidden"
-                />
-                <!-- 음성기록 -->
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartSpeech"
-                @click="startSpeeching"
-                value="Start Speeching"
-                />
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopSpeech"
-                @click="stopSpeeching"
-                value="Stop Speeching"
-                style="visibility: hidden"
-                />
-                <!-- <input
-                class="btn btn-md"
-                type="button"
-                @click="fileDownload"
-                value="File Download"
-                /> -->
-              </el-footer>
+              <!-- ljy -->
+              
+              
+            <!-- ljy -->
             </el-container>
 
             <!-- 사이드바 -->
@@ -195,7 +172,7 @@
           </el-container>
         </div>
 
-        <a id="playVideo" :href=this.videoURL>Video</a>
+        <!-- <a id="playVideo" :href=this.videoURL>Video</a> -->
 
       </div>
         <div id = screens>
@@ -294,6 +271,7 @@
     recordingMode : ["ALWAYS", "MANUAL"],
     recordingId : undefined,
     videoURL : undefined,
+    recodingEnabled : false,
 
     // face detection
     interval : undefined,
@@ -528,6 +506,7 @@
         );
       });
     });
+
     this.recognizedlog = [];
     window.addEventListener("beforeunload", this.leaveSession);
     },
@@ -804,13 +783,14 @@
 
     startRecording() {
         console.log("Starting recording");
+        this.recodingEnabled = true;
         this.recordingStartFunc(this.mySessionId).then((recordingId) => {
                 console.log("Recording ID", recordingId);
                 this.recordingId = recordingId;
             }
         );
-        document.getElementById('buttonStartRecording').style.visibility = "hidden";
-        document.getElementById('buttonStopRecording').style.visibility = "visible";
+        // document.getElementById('buttonStartRecording').style.visibility = "hidden";
+        // document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
     recordingStartFunc(sessionId){
@@ -840,12 +820,13 @@
 
     stopRecording() {
         console.log("Stop recording");
+        this.recodingEnabled = false;
         this.recordingStopFunc(this.recordingId).then((url) => {
                 this.videoURL = url
             }
         );
-        document.getElementById('buttonStartRecording').style.visibility = "visible";
-        document.getElementById('buttonStopRecording').style.visibility = "hidden";
+        // document.getElementById('buttonStartRecording').style.visibility = "visible";
+        // document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
 
     recordingStopFunc(recordingId){
@@ -950,3 +931,45 @@
 
   };
   </script>
+
+<style>
+  .meeting-bnt-item{
+    border:none ;
+    background-color: white;
+    border-radius: 100%;
+    width:40px;
+    height:40px;
+    margin: 2em;
+    margin: auto;
+  }
+  .meeting-bnt-leave{
+    border:none ;
+    background-color:rgb(216, 3, 3);
+    color: white;
+    font-size: 2em;
+    border-radius: 8px;
+    height:56px;
+    margin: 2em;
+    margin: auto;
+  }
+
+  .meeting-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(91, 88, 88, 1);
+    padding: 1em;
+  }
+  .meeting-btn-item-img{
+    height: 20px; 
+    width: 20px;
+  }
+[data-tooltip]{position:relative;}
+[data-tooltip]:before,
+[data-tooltip]:after{visibility:hidden;opacity:0;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;transition:all .2s ease;font-size:11px;font-family:dotum;letter-spacing:-1px;}
+[data-tooltip]:before{content:attr(data-tooltip);height:13px;position:absolute;top:-20px;padding:5px 10px;border-radius:5px;color:#fff;background:#2a2a2a;box-shadow:0 3px 8px rgba(165, 165, 165, 0.5);}
+[data-tooltip]:after{content: '';border-left:5px solid transparent;top:2px;border-right:5px solid transparent;border-top:5px solid #2a2a2a;}
+[data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
+[data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
+</style>
