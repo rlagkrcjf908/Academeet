@@ -166,12 +166,13 @@
             <div class="common-layout meet-side">
               <el-container>
                 <el-header class = "meet-side-header">
-                  <h3 id="session-title">[ {{ mySessionTitle }} ] 참여자수 (N)</h3>
+                  <h3 id="session-title">[ {{ mySessionTitle }} ]</h3>
                 </el-header>
                 <hr style="border:1px solid white; margin: 0;"/>
 
                 <el-main class = "meet-side-main" v-if="isActive">
                   <div id="chatting-content" style=" display: inline-block" >- Chatting -</div>
+
                 </el-main>
                 <el-main class = "meet-side-main" v-else>
                   <div id="speech-content" style="display: inline-block">- Speech -</div>

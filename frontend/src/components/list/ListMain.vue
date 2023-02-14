@@ -94,6 +94,7 @@ onMounted(async () => {
       startTime: item.startTime,
       endTime: item.endTime,
       meetId: item.meetId,
+      ownerId: item.ownerId
     };
   });
   meetList.value = list;
@@ -105,6 +106,7 @@ const joinMeet = (item) => {
     meetTitle: item.meetTitle,
     userName: JSON.parse(localStorage.getItem("userInfo")).name,
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
+    ownerId: item.ownerId
   };
   console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
