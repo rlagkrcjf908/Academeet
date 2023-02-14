@@ -702,16 +702,6 @@ export default {
       });
     },
 
-    speechTrigger() {
-      this.speechEnabled = !this.speechEnabled;
-    // console.log("speechEnabled : " + this.speechEnabled);
-    },
-
-    speechTrigger() {
-      this.speechEnabled = !this.speechEnabled;
-      // console.log("speechEnabled : " + this.speechEnabled);
-    },
-
     sendChat() {
       /*
       const sendData = {
@@ -902,7 +892,7 @@ export default {
           type: "speeching",
         })
         .then(() => {
-          console.log("speech successfully sent");
+          console.log("speechingTrigger successfully sent");
           })
         .catch((error) => {
           console.error(error);
