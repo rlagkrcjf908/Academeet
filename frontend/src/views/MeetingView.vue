@@ -459,9 +459,68 @@ components: {
       );
     });
   });
+  this.getToken(this.mySessionId).then((tokenScreen) => {
+      // Create a token for screen share
+      console.log("얍", tokenScreen, this.myUserName)
+      this.sessionScreen
+      .connect(tokenScreen, { clientData: this.myUserName })
+      .then(() => {
+        document.getElementById("buttonScreenShare").style.visibility =
+        "visible";
+        console.log("Session screen connected");
+      })
+      .catch((error) => {
+        console.warn(
+        "There was an error connecting to the session for screen share:",
+        error.code,
+        error.messag
+        );
+      });
+    });
+
+    this.recognizedlog = [];
+    window.addEventListener("beforeunload", this.leaveSession);
   },
 
+  //ljy screen share creating
   
+
+  publishScreenShare() {
+  // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
+  var publisherScreen = this.OVScreen.initPublisher(undefined, {
+    videoSource: "screen",
+  });
+
+  // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
+  publisherScreen.once("accessAllowed", () => {
+    document.getElementById("buttonScreenShare").style.visibility =
+    "hidden";
+    this.screensharing = true;
+    // If the user closes the shared window or stops sharing it, unpublish the stream
+    publisherScreen.stream
+    .getMediaStream()
+    .getVideoTracks()[0]
+    .addEventListener("ended", () => {
+      console.log('User pressed the "Stop sharing" button');
+      this.sessionScreen.unpublish(publisherScreen);
+      document.getElementById("buttonScreenShare").style.visibility =
+      "visible";
+      this.screensharing = false;
+    });
+
+      this.PublisherScreen = publisherScreen;
+      this.sessionScreen.publish(publisherScreen);
+    });
+    /*
+    publisherScreen.on('videoElementCreated', function (event) {
+      appendUserData(event.element, sessionScreen.connection);
+      event.element['muted'] = true;
+    });
+    */
+    publisherScreen.once("accessDenied", () => {
+      console.error("Screen Share: Access Denied");
+    });
+  },
 
 
   leaveSession() {
