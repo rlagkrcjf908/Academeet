@@ -3,14 +3,21 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.AttendReq;
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
+import com.ssafy.api.request.SttReq;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
+import io.swagger.models.Model;
+import io.swagger.models.auth.In;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +52,7 @@ public class MeetServiceImpl implements MeetService {
         System.out.println(gp);
         if (gp!=null) {
             if (meetRepository.findMeetByTitle(createReq.getTitle()) != null) return false;
+
             meet.setTitle(createReq.getTitle());
             meet.setDate(createReq.getDate());
             meet.setStarttime(createReq.getStarttime());
@@ -53,13 +61,11 @@ public class MeetServiceImpl implements MeetService {
             meet.setGroupid(gp);
             List<User_Group> ug = user_GroupRepository.findByGroupid(gp);
             List<Integer> users = new ArrayList<>();
-            for (int i = 0; i<ug.size();i++){
-                int getId = ug.get(i).getUserid().getId();
-                users.add(getId);
-            }
 
             createReq.setUsers(users);
             meetRepository.save(meet);
+
+
 
             Group_Meet gm = new Group_Meet();
             gm.setGroupid(gp);
@@ -67,6 +73,17 @@ public class MeetServiceImpl implements MeetService {
 
             group_MeetRepository.save(gm);
             insertMeetMember(userId, createReq);
+            for (int i = 0; i<ug.size();i++){
+                int getId = ug.get(i).getUserid().getId();
+                Attendance attendance = new Attendance();
+                attendance.setDate(meet.getDate());
+                attendance.setUserid(ug.get(i).getUserid());
+                attendance.setGroupid(gp);
+                attendance.setMeetid(meet);
+                attendanceRepository.save(attendance);
+                users.add(getId);
+            }
+
             return true;
         }else {
             if (meetRepository.findMeetByTitle(createReq.getTitle()) != null) return false;
@@ -78,7 +95,6 @@ public class MeetServiceImpl implements MeetService {
 
             meetRepository.save(meet);
             insertMeetMember(userId, createReq);
-
             return true;
         }
     }
@@ -234,5 +250,67 @@ public class MeetServiceImpl implements MeetService {
         attendance.setAttendcount(attendance.getAttendcount()+ attendReq.getAttendcount());
         attendanceRepository.save(attendance);
         return true;
+    }
+    @Override
+    public void makeExcelFile() {
+        SttReq sttReq = new SttReq();
+        sttReq.setTitle("학철");
+
+        sttReq.setGroupName("test");
+        sttReq.setName("주인장");
+        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+        String fileName = "test.xlsx";
+        try {
+            File file = new File(filePath + fileName);
+            FileOutputStream fileout = new FileOutputStream(file);
+            SXSSFWorkbook workbook = new SXSSFWorkbook();
+
+            // 시트 생성
+            SXSSFSheet sheet = workbook.createSheet("stt");
+
+            //시트 열 너비 설정
+            sheet.setColumnWidth(0, 1500);
+            sheet.setColumnWidth(0, 3000);
+            sheet.setColumnWidth(0, 3000);
+            sheet.setColumnWidth(0, 1500);
+
+            // 헤더 행 생
+            Row headerRow = sheet.createRow(0);
+            // 해당 행의 첫번째 열 셀 생성
+            Cell headerCell = headerRow.createCell(0);
+            headerCell.setCellValue("작성일자");
+            // 해당 행의 두번째 열 셀 생성
+            headerCell = headerRow.createCell(1);
+            headerCell.setCellValue("작성자");
+            // 해당 행의 세번째 열 셀 생성
+            headerCell = headerRow.createCell(2);
+            headerCell.setCellValue("그룹명");
+            // 해당 행의 네번째 열 셀 생성
+            headerCell = headerRow.createCell(3);
+            headerCell.setCellValue("참여자");
+
+            // 과일표 내용 행 및 셀 생성
+            Row bodyRow = null;
+            Cell bodyCell = null;
+            // 행 생성
+            bodyRow = sheet.createRow(1);
+            bodyCell = bodyRow.createCell(0);
+            bodyCell = bodyRow.createCell(1);
+            bodyCell.setCellValue(sttReq.getDate());
+            bodyCell = bodyRow.createCell(2);
+            bodyCell.setCellValue(sttReq.getName());
+            bodyCell = bodyRow.createCell(3);
+            bodyCell.setCellValue(sttReq.getGroupName());
+
+//            bodyCell.setCellValue(sttReq.getStt());
+
+            workbook.write(fileout);
+            fileout.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -54,7 +54,7 @@ public class MeetController {
         if (meetService.createMeet(userId, createReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Fail"));
+        return ResponseEntity.status(403).body(BaseResponseBody.of(401, "Fail"));
     }
     //미팅룸 생성시 그룹오너이면 그룹리스트를 불러오고 아니면 말고
     @GetMapping("/{user_id}/getGroup")
@@ -107,6 +107,12 @@ public class MeetController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
         }
         return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
+    }
+    @GetMapping("/test")
+    public ResponseEntity<? extends BaseResponseBody> test(){
+        meetService.makeExcelFile();
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
+
     }
 
 }
