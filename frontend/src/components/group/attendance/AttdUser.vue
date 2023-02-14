@@ -74,7 +74,6 @@ const meetId = ref(); //meetid로 받음
 const attendance = ref(); //변하는 출석률 값
 
 onMounted(async () => {
-
   const res = await requestAttdUser(groupId.value, selectUserId.value);
 
   const datas = res.data;
@@ -97,7 +96,7 @@ async function modifyAttdList(payload) {
     await attdUserUpdate(
       groupId.value,
       selectUserId.value,
-      JSON.stringify(payload),
+      JSON.stringify(payload)
       // console.log("modifyAttdList 성공")
     );
   } catch (error) {
@@ -144,7 +143,7 @@ table {
   background-color: rgba(255, 255, 255, 0.3);
 }
 .tbl-content {
-  height: 400px;
+  height: 75vh;
   overflow-x: auto;
   margin-top: 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);

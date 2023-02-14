@@ -79,7 +79,7 @@ table {
   background-color: rgba(255, 255, 255, 0.3);
 }
 .tbl-content {
-  height: 400px;
+  height: 75vh;
   overflow-x: auto;
   margin-top: 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -122,7 +122,7 @@ td {
 .attd-success {
   color: #95d475;
 }
-.user-img{
+.user-img {
   width: 50px;
   height: 50px;
   border-radius: 100%;

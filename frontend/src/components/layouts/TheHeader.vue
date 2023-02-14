@@ -76,7 +76,7 @@ ul {
   background: lightgray;
   height: 1.6px;
   border: 0;
-  width: 99%;
+  width: 100%;
   margin: 0px;
 }
 .the-header-logout {

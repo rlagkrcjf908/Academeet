@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 style="color: rgba(97, 178, 153, 1)">-회의 리스트-</h2>
+    <h2 style="color: rgba(97, 178, 153, 1)">- 회의 리스트 -</h2>
   </div>
   <div class="list-view">
     <div class="tbl-header">
@@ -71,18 +71,17 @@ onMounted(async () => {
     return sorted_date;
   };
 
-  const isMeetingEnd = function(timeData) {
-        const currDate = new Date();
-        const meetDate = new Date(timeData);
-        if ( meetDate - currDate < 0 ) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      }
+  const isMeetingEnd = function (timeData) {
+    const currDate = new Date();
+    const meetDate = new Date(timeData);
+    if (meetDate - currDate < 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const list = sortedDate(datas).map((item) => {
-    const meetingEndTime = `${item.date.substr(0, 10)} ${item.endTime}`
+    const meetingEndTime = `${item.date.substr(0, 10)} ${item.endTime}`;
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
@@ -91,12 +90,11 @@ onMounted(async () => {
       endTime: item.endTime,
       meetId: item.meetId,
       ownerId: item.ownerId,
-      isMeetingEnd : isMeetingEnd(meetingEndTime)
+      isMeetingEnd: isMeetingEnd(meetingEndTime),
     };
-    }
-  );
+  });
   meetList.value = list;
-})
+});
 
 const joinMeet = (item) => {
   const meetInfo = {
@@ -104,7 +102,7 @@ const joinMeet = (item) => {
     meetTitle: item.meetTitle,
     userName: JSON.parse(localStorage.getItem("userInfo")).name,
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
-    ownerId: item.ownerId
+    ownerId: item.ownerId,
   };
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting" });
@@ -131,7 +129,7 @@ table {
   background-color: rgba(255, 255, 255, 0.3);
 }
 .tbl-content {
-  height: 400px;
+  height: 50vh;
   overflow-x: auto;
   margin-top: 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -173,8 +171,7 @@ td {
   color: #95d475;
 }
 
-.list-view{
+.list-view {
   padding: 5vw;
 }
-
 </style>
