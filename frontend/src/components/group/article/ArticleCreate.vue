@@ -62,6 +62,7 @@ const rules = reactive({
   ],
 });
 
+// 작성날짜
 function getToday() {
   var date = new Date();
   var year = date.getFullYear();
@@ -71,6 +72,7 @@ function getToday() {
   return year + "-" + month + "-" + day;
 }
 
+// 작성 제출
 const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
@@ -82,7 +84,6 @@ const submitForm = (formEl) => {
         groupId: groupId,
         userId: userId,
       };
-      console.log(data.date);
       await store.dispatch("groupStore/articleCreateAction", data);
     } else {
       console.log("error submit!");

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <MeetSide/> -->
   </div>
   <div class="tbl-header">
     <table cellpadding="0" cellspacing="0" border="0">
@@ -41,35 +40,17 @@ import { requestMeetingList } from "@/common/api/meetingAPI";
 import { sortedLastIndex } from "lodash";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-// import MeetSide from "@/components/layouts/MeetSide.vue";
 
 const router = useRouter();
 const route = useRoute();
 
-// const groupId = ref(route.params.groupId);
-// const hostId = ref(route.params.hostId);
-// const selectUserId = ref(); //상세 출석 볼 유저
 const meetList = ref([]);
 const meetTitle = ref();
 const userId = JSON.parse(localStorage.getItem("userInfo")).id;
-// const routeToUser = (item) => {
-//   console.log("item.userId: ", item.userId);
-//   selectUserId.value = item.userId;
-//   router.push({
-//     name: "attdUser",
-//     params: {
-//       selectUserId: selectUserId.value,
-//       groupId: groupId.value,
-//       hostId: hostId.value,
-//     },
-//   });
-// };
 
 onMounted(async () => {
   const res = await requestMeetingList(userId);
-  console.log("전체  meet", res);
   const datas = res.data;
-  console.log(datas);
   const sortedDate = (datas) => {
     const sorted_date = datas.sort(function (a, b) {
       // return new Date(a.date) - new Date(b.date).getTime();
@@ -84,7 +65,6 @@ onMounted(async () => {
     });
     return sorted_date;
   };
-  console.log(sortedDate(datas));
 
   const list = sortedDate(datas).map((item) => {
     return {
@@ -108,7 +88,6 @@ const joinMeet = (item) => {
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
     ownerId: item.ownerId
   };
-  console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting" });
 };

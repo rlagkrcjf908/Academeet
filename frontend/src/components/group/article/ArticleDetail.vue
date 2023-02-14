@@ -1,36 +1,41 @@
 <template>
-  <hr />
-  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 상세 -</h2>
-  <div class="atritcle-title">
-    <h3>제목 : {{ title }}</h3>
-  </div>
-  <div class="atritcle-content">
-    {{ content }}
-  </div>
-  <div>
-    <el-button
-      class="article-detail-btn"
-      v-if="userId === authId"
-      type="success"
-      plain
-      round
-      @click="articleUpdate"
-      >수정</el-button
-    >
-    <el-button
-      class="article-detail-btn"
-      v-if="userId === authId"
-      type="success"
-      plain
-      round
-      @click="articleDelete"
-      >삭제</el-button
-    >
-  </div>
+    <hr />
+    <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 상세 -</h2>
+    <!-- 글 제목 -->
+    <div class="atritcle-title">
+      <h3>제목 : {{ title }}</h3>
+    </div>
+    <!-- 글 내용 -->
+    <div class="atritcle-content">
+      {{ content }}
+    </div>
+    <!-- 수정버튼 -->
+    <div>
+      <el-button
+        class="article-detail-btn"
+        v-if="userId === authId"
+        type="success"
+        plain
+        round
+        @click="articleUpdate"
+        >수정</el-button
+      >
+      <!-- 삭제버튼 -->
+      <el-button
+        class="article-detail-btn"
+        v-if="userId === authId"
+        type="success"
+        plain
+        round
+        @click="articleDelete"
+        >삭제</el-button
+      >
+    </div>
+    <!-- 돌아가기 버튼 -->
+    <div class="article-detail-back" @click="$router.go(-1)">
+      <el-icon ><Back /></el-icon> 돌아가기
+    </div>
 
-  <div class="article-detail-back" @click="$router.go(-1)">
-    <el-icon ><Back /></el-icon> 돌아가기
-  </div>
 </template>
 
 <script setup>
@@ -109,8 +114,8 @@ const articleDelete = () => {
   margin: auto;
   padding: 8px;
   border: 1px solid rgba(97, 178, 153, 1);
-  width: 1200px;
-  height: 400px;
+  width: 60vw;
+  height: 40vh;
   overflow: auto;
   border-radius: 8px;
 }

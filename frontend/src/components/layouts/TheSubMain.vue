@@ -76,11 +76,10 @@ const getGroup = async () => {
 getGroup();
 
 const userId = store.state.accountStore.userId; //로그인된 유저
-console.log("로그인 된 userId: ", userId);
 
 //서브메인 이동
 const routeToSubMain = () => {
-  console.log("routeToSubMain 이동합니다");
+  // console.log("routeToSubMain 이동합니다");
   router.push({
     name: "groupUser",
     params: { groupId: groupId.value },
@@ -108,7 +107,7 @@ function routeToAttdItem() {
 }
 //공지사항 이동
 const routeToArticle = () => {
-  console.log("routeToArticle 이동합니다");
+  // console.log("routeToArticle 이동합니다");
   router.push({
     name: "articleList",
     params: { groupId: groupId.value },
@@ -117,8 +116,7 @@ const routeToArticle = () => {
 
 //자료실 이동
 const routeToRefer = () => {
-  console.log("routeToRefer 이동합니다");
-  console.log("groupId.value:", groupId.value);
+  // console.log("routeToRefer 이동합니다");
   router.push({
     name: "groupRefer",
     params: { groupId: groupId.value },
@@ -136,7 +134,7 @@ const open = () => {
       try {
         await requestDeleteGroup(groupId.value);
         router.push("/group");
-        console.log("delete!");
+        // console.log("delete!");
         ElMessage({
           type: "success",
           message: "삭제되었습니다",

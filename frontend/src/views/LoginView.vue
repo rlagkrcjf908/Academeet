@@ -38,7 +38,7 @@
       <el-button
         type="success"
         @click="submitForm(ruleFormRef)"
-        style="margin: 0; width: 100%; color: "
+        style="margin: 0; width: 100%;"
         >LOGIN</el-button
       >
       <!-- </div> -->
@@ -111,7 +111,7 @@ const submitForm = (formEl) => {
       };
       try {
         await store.dispatch("accountStore/login", loginData);
-        console.log("submit!");
+        // console.log("submit!");
       } catch (error) {
         console.log(error);
       }

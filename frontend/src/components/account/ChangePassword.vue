@@ -48,7 +48,6 @@
   // 현재 비밀번호 확인
   
   const validateCurrentpass = async (rule, value, callback) => {
-    console.log(id)
     if (value === '') {
       callback(new Error('현재 비밀번호를 입력해주세요.'))
     } else {
@@ -123,16 +122,14 @@
     if (!formEl) return
       formEl.validate( async (valid) => {
       if (valid) {
-        console.log(valid)
-        console.log(ruleForm.pass)
-        console.log('submit!')
+        // console.log('submit!')
         const password = {
           "password" : ruleForm.pass
         }
         try {
           await changePassword(id, password)
           router.push({ name: 'profileDetail' })
-          console.log('submit!')
+          // console.log('submit!')
         }
         catch (error) {
           console.log(error)

@@ -51,7 +51,6 @@ const selectUserId = ref(); //상세 출석 볼 유저
 const attdUserList = ref([]);
 
 const routeToUser = (item) => {
-  console.log("item.userId: ", item.userId);
   selectUserId.value = item.userId;
   router.push({
     name: "attdUser",
@@ -65,7 +64,6 @@ const routeToUser = (item) => {
 
 onMounted(async () => {
   const res = await requestAttdList(groupId.value);
-  // console.log("전체 출석 res", res);
   const datas = res.data;
   const list = datas.map((item) => {
     return {
@@ -75,7 +73,6 @@ onMounted(async () => {
     };
   });
   attdUserList.value = list;
-  // console.log("attdList의 전체 유저 출석: ", attdUserList.value);
 });
 </script>
 

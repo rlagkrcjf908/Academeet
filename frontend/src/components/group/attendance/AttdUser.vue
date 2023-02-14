@@ -65,7 +65,6 @@ import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 
-console.log("attdUserList route.params :", route.params);
 const groupId = ref(route.params.groupId);
 const selectUserId = ref(route.params.selectUserId); //상세보기 선택된 유저
 const userId = store.state.accountStore.userId;
@@ -74,31 +73,13 @@ const attdUserList = ref([]);
 const meetId = ref(); //meetid로 받음
 const attendance = ref(); //변하는 출석률 값
 
-console.log("attdUserList hostId :", hostId.value);
-console.log("attdUserList userId :", userId);
-console.log("hostId.value ==  userId.value :", hostId.value == userId);
-
 onMounted(async () => {
-  console.log(
-    "groupId==",
-    groupId.value,
-    "/ userId==",
-    userId,
-    "/hostId==",
-    hostId.value,
-    "/selectUserId==",
-    selectUserId.value
-  );
 
   const res = await requestAttdUser(groupId.value, selectUserId.value);
-  console.log("개인 출석 res", res);
-  console.log("개인 출석 datas", res.data);
+
   const datas = res.data;
-  // meetId.value = datas.meetId;
-  // console.log("meetId.value", meetId.value);
 
   const list = datas.map((item) => {
-    console.log("attdUserList attendance", item.attendance);
     return {
       title: item.title,
       date: item.date.substr(0, 10),
@@ -106,10 +87,8 @@ onMounted(async () => {
       meetId: item.meetId,
     };
   });
-  // console.log("meetId.value +++++++", meetId.value);
 
   attdUserList.value = list;
-  // console.log("개인 attdUserList", this.attdUserList);
 });
 
 // 수정요청함수
@@ -119,7 +98,7 @@ async function modifyAttdList(payload) {
       groupId.value,
       selectUserId.value,
       JSON.stringify(payload),
-      console.log("modifyAttdList 성공")
+      // console.log("modifyAttdList 성공")
     );
   } catch (error) {
     console.log("modifyAttdList Error", error);
@@ -129,15 +108,12 @@ async function modifyAttdList(payload) {
 
 //저장하기 버튼을 눌렀을 때 실행
 const saveAttdList = (item) => {
-  console.log("item.attendance: ", item.attendance);
   if (0 <= item.attendance && item.attendance <= 100) {
-    console.log("item........: ", item);
     const payload = {
       //미팅 PK를 받고
       meetId: item.meetId,
       attendance: item.attendance,
     };
-    console.log("payload", payload);
     modifyAttdList(payload);
   } else {
     alert("0~100까지만 입력이 가능합니다./n 다시 입력해주세요.");

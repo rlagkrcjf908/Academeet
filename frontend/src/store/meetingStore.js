@@ -14,7 +14,6 @@ const mutations = {
   // 회의생성 정보 저장
   SET_MEETINGINFO: (state, meetingData) => {
     state.meetingInfo = meetingData;
-    console.log(meetingData);
   }
 };
 

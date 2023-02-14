@@ -222,8 +222,7 @@ const submitForm = (formEl) => {
         endtime: `${ruleForm.endTime}:00`,
         date: ruleForm.date,
       };
-      console.log('시작',meetingData.starttime,'끝',meetingData.endtime)
-      console.log('날짜',meetingData.date)
+
       if (isSelectGroup.value === false) {
         const rawArray = toRaw(ruleForm.user);
         const guestList = rawArray;
@@ -233,11 +232,10 @@ const submitForm = (formEl) => {
         const guestList = ruleForm.group;
         meetingData.groupid = guestList;
       }
-      console.log(meetingData);
       try {
         await store.dispatch("meetingStore/meetingCreateAction", meetingData);
         router.push("/");
-        console.log("submit!");
+        // console.log("submit!");
       } catch (error) {
         console.log(error);
       }

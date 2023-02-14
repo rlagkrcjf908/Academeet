@@ -71,12 +71,8 @@ const mutations = {
   },
   //출석관련
   SET_ATTD_LIST: (state, payload) => {
-    console.log("출석리스트 페이로드",payload)
     state.attdList = payload; //그룹 전체 리스트
     state.groupInfo = 1;
-    // console.log("groupList",state.groupList);
-    console.log("state",state.attdList);
-    console.log("attdList",state.attdList);
   },
   SET_ATTD_USER: (state, payload) => {
     state.attdUser = payload; //유저 한명의 출석 리스트
@@ -122,11 +118,7 @@ const actions = {
   },
   //출석관련
   requestAttdListAction: async ({ commit }, groupId) => {
-    console.log("requestAttdListAction Test");
     const response = await requestAttdList(groupId);
-    console.log(response.status);
-    console.log("받은 데이터, response.data");
-    console.log(response.data);
     commit("SET_ATTD_LIST", response.data);
   },
   requestAttdUser: async ({ commit }, data) => {
@@ -146,10 +138,7 @@ const actions = {
     }
     try{
       const response = await artileCreate(data.groupId, data.userId, JSON.stringify(payload));
-      console.log(response)
-      console.log('submit!')
       router.push({ name: 'articleList', params: { groupId : data.groupId} })
-      // router.push(`/group/${data.groupId}/article/`)
     }
     catch (error) {
       console.log(error)
@@ -169,8 +158,7 @@ const actions = {
     }
     try{
       const response = await requestUpdateArtile(data.articleId, JSON.stringify(payload));
-      console.log(response)
-      console.log('submit!')
+      // console.log('submit!')
       router.push({ name: 'articleList', params: { groupId : data.groupId} })
       // router.push(`/group/${data.groupId}/article/`)
     }
