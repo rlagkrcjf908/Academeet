@@ -33,7 +33,7 @@
         <el-container>
           <el-container>
             <el-header>
-              <h1 id="session-title">{{ mySessionTitle }}</h1>
+              
             </el-header>
             <el-main>
               <!-- 비디오 화면 -->
@@ -122,19 +122,19 @@
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
                     </button>
                     <!-- 전체 오디오 온 -->
-                    <button data-tooltip="전체 오디오 온" class="meeting-bnt-item" v-if="!masterAudioEnabled && userId==ownerId" @click="audioOn">
+                    <button data-tooltip="전체 오디오 온" class="meeting-bnt-item" v-if="userId==ownerId" @click="audioOn">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-icongeek26-glyph-icongeek26/64/FA5252/external-mute-music-icongeek26-glyph-icongeek26.png"/>
                     </button>
                     <!-- 전체 오디오 오프-->
-                    <button data-tooltip="전체 오디오 오프" class="meeting-bnt-item" v-if="masterAudioEnabled && userId==ownerId" @click="audioOff">
+                    <button data-tooltip="전체 오디오 오프" class="meeting-bnt-item" v-if="userId==ownerId" @click="audioOff">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-regular-filled/48/12B886/high-volume.png"/>
                     </button>
                     <!-- 전체 비디오 온 -->
-                    <button data-tooltip="전체 비디오 온" class="meeting-bnt-item" v-if="!masterVideoEnabled && userId==ownerId" @click="videoOn">
+                    <button data-tooltip="전체 비디오 온" class="meeting-bnt-item" v-if="userId==ownerId" @click="videoOn">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/FA5252/stop-gesture.png"/>
                     </button>
                     <!-- 전체 비디오 오프-->
-                    <button data-tooltip="전체 비디오 오프" class="meeting-bnt-item" v-if="masterVideoEnabled && userId==ownerId" @click="videoOff">
+                    <button data-tooltip="전체 비디오 오프" class="meeting-bnt-item" v-if="userId==ownerId" @click="videoOff">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/pastel-glyph/64/12B886/laptop-play-video--v2.png"/>
                     </button>
                     <!-- 파일다운받기 -->
