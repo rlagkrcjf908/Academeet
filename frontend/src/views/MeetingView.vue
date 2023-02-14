@@ -794,7 +794,6 @@ methods: {
 }
 
 .my-video {
-  background-color: aqua;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -808,7 +807,6 @@ methods: {
 }
 
 .other-video {
-  background-color: #c71100;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -844,14 +842,7 @@ methods: {
   background: var(--el-color-danger-light-9);
   color: var(--el-color-danger);
 }
-
-.nickname {
-  background: rgba(58, 64, 74, 0.651);
-  padding: 5px !important;
-  position: absolute;
-  z-index: 999;
-  color: #ffffff;
-}
+/* 뒤에 필 */
 .form-control {
   color: black;
 }
@@ -865,12 +856,6 @@ methods: {
   top: -3px;
   right: 0;
   z-index: 999;
-}
-
-#name-error-text {
-  color: #fd6d5f;
-  font-weight: bold;
-  text-align: center;
 }
 
 #nicknameForm {
@@ -897,36 +882,6 @@ video {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-#statusIcons {
-  bottom: 0;
-  background: #c71100;
-  width: 40px;
-  height: fit-content;
-  position: absolute;
-  color: #ffffff;
-}
-
-#camIcon,
-#micIcon {
-  text-align: center;
-  padding: 6px;
-}
-
-#fullscreenButton {
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  z-index: 1000;
-  background-color: #000000c4;
-}
-#volumeButton {
-  background-color: #000000c4;
-  position: absolute;
-  bottom: 45px;
-  right: 1px;
-  z-index: 1000;
-  color: #ffffff;
-}
 /* Contains the video element, used to fix video letter-boxing */
 .OT_widget-container {
   width: 100%;
