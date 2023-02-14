@@ -18,7 +18,7 @@
       </ul>
     </nav>
   </header>
-  <hr />
+  <hr class="the-header-hr" />
 </template>
 
 <script>
@@ -72,7 +72,7 @@ ul {
   display: flex;
 }
 
-hr {
+.the-header-hr {
   background: lightgray;
   height: 1.6px;
   border: 0;

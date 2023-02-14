@@ -33,7 +33,7 @@
         <el-container>
           <el-container>
             <el-header>
-              
+
             </el-header>
             <el-main>
               <!-- 비디오 화면 -->
@@ -162,20 +162,35 @@
             </el-container>
 
           <!-- 사이드바 -->
-          <el-aside width="200px">
+          <el-aside class ="meet-view-side">
+            <div class="common-layout meet-side">
+              <el-container>
+                <el-header class = "meet-side-header">
+                  <h3 id="session-title">[ {{ mySessionTitle }} ] 참여자수 (N)</h3>
+                </el-header>
+                <hr style="border:1px solid white; margin: 0;"/>
 
-            <div id = "chat&STT">
-              <!-- 채팅 창 -->
-              <div id="chatting-content" style="width: 100%; display: inline-block" max-height="100px">Chatting</div>
-              <div>
-                <!-- 채팅 보내기 -->
-                <input type="text" v-model="message" @keydown.enter="sendChat()" />
-                <button type="button" @click="sendChat()">입력</button>
-              </div>
-              <!-- 회의기록보기 창 -->
-              <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
-              <!-- <SpeechRecognition/> -->
-              <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
+                <el-main class = "meet-side-main" v-if="isActive">
+                  <div id="chatting-content" style=" display: inline-block" >- Chatting -</div>
+
+                </el-main>
+                <el-main class = "meet-side-main" v-else>
+                  <div id="speech-content" style="display: inline-block">- Speech -</div>
+                </el-main>
+
+                <el-footer class = "meet-side-footer">
+                  <div class="insert-chatting" v-if="isActive">
+                    <input required type="text" style="margin-right:5px; height: 25px; width: 180px;" v-model="message" @keydown.enter="sendChat()" />
+                    <button class="meet-chat-send-btn" style="height: 32px; width: 50px;" @click="sendChat()">입력</button>
+                  </div>
+                  <button
+                    class="meet-chat-ctrl-btn"
+                    :class="{active:isActive}"
+                    @click="toggle"
+                    >{{isActive ? 'Go Speech' : 'Go Chatting'}}
+                  </button>
+                </el-footer>
+              </el-container>
             </div>
           </el-aside>
 
@@ -218,6 +233,15 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../components/meeting/UserVideo";
 import { meetingCreate } from "@/common/api/meetingAPI";
+// import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled } from '@element-plus/icons-vue'
+import {
+  CloseBold,
+  Microphone,
+  Mute,
+  VideoCamera,
+  VideoCameraFilled,
+  Delete,
+} from "@element-plus/icons-vue";
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -234,15 +258,13 @@ components: {
   // SpeechRecognition,
 },
 
-
-
-
-data() {
-  const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
-  console.log(meetInfo);
-  return {
-  publisher : "publisher",
-  subscriber : "subscriber",
+  data() {
+    const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
+    console.log("meetInfo: ", meetInfo);
+    return {
+      publisher: "publisher",
+      subscriber: "subscriber",
+      isActive: true,
 
   // OpenVidu objects
   //OV: undefined,
@@ -321,6 +343,10 @@ data() {
     //     alert("파일 다운로드 실패");
     //   });
     // },
+
+    toggle() {
+      this.isActive = !this.isActive;
+    },
 
     joinSession() {
     // --- *1) Create two OpenVidu objects.
@@ -1039,6 +1065,62 @@ createToken(sessionId) {
     height: 20px;
     width: 20px;
   }
+  .meet-view-side {
+    overflow: hidden;
+    margin: 10px;
+    width: 200px;
+  }
+  .meet-side-main {
+    background-color: white;
+    margin: 10px;
+    height: 700px;
+    word-break: break-all;
+    /* overflow: hidden; */
+  }
+  .meet-chat-send-btn {
+    width: 50px;
+    height: 30px;
+    background-color: #95d475;
+    border: none;
+    font-size: 15px;
+    color: white;
+  }
+  .meet-chat-send-btn:hover {
+    background-color: #d1edc4;
+    border: none;
+    font-size: 15px;
+    color: #5aba2a;
+  }
+  .meet-chat-ctrl-btn {
+    width: 230px;
+    height: 35px;
+    margin: 10px;
+    background-color: #eebe77;
+    border: none;
+    font-size: 20px;
+    color: white;
+    border-radius: 50px;
+  }
+  .meet-chat-ctrl-btn:hover {
+    width: 230px;
+    height: 35px;
+    margin: 10px;
+    background-color: #f8e3c5;
+    border: none;
+    font-size: 20px;
+    color: #fdb447;
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+  ::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
 [data-tooltip]{position:relative;}
 [data-tooltip]:before,
 [data-tooltip]:after{visibility:hidden;opacity:0;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;transition:all .2s ease;font-size:11px;font-family:dotum;letter-spacing:-1px;}
