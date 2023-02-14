@@ -649,7 +649,7 @@ components: {
     },
 
   audioOff(){
-      this.masterAudioEnabled = false; 
+      this.masterAudioEnabled = false;
       this.sessionCamera
       .signal({
           to: [],
