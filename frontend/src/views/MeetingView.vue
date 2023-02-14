@@ -909,6 +909,8 @@ export default {
 
 
       this.speechRecognition.onresult = (event) => {
+        console.log("speechRecognition successfully!!");
+        console.log(event)
         for(let i = event.resultIndex, len = event.results.length; i < len; i++){
           let transcript = event.results[i][0].transcript;
           console.log(transcript);
