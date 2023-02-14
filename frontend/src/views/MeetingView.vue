@@ -25,33 +25,56 @@
       </div>
       </div>
 
-      <!-- 회의 입장 후 화면 -->
-      <div id="session" v-if="sessionCamera">
-      <div id="session-header">
+    <!-- 회의 입장 후 화면 -->
+    <div id="session" v-if="sessionCamera">
+    <div id="session-header">
 
-        <div class="common-layout">
+      <div class="common-layout">
+        <el-container>
           <el-container>
-            <el-container>
-              <el-header>
-                <h1 id="session-title">{{ mySessionTitle }}</h1>
-              </el-header>
-              <el-main>
-                <!-- 비디오 화면 -->
+            <el-header>
+              <h1 id="session-title">{{ mySessionTitle }}</h1>
+            </el-header>
+            <el-main>
+              <!-- 비디오 화면 -->
                 <!-- 내 메인 화면 -->
-                <div id="video-container" class="col-md-6">
-                  <div id="main-video" class="col-md-6">
-                    <user-video :stream-manager="mainStreamManager" />
+                <el-container style="width:100%; display:inline-block" max-height="100px">
+                    <el-scrollbar>
+                      <div class="scrollbar-flex-content">
+                        <!-- 내 개인화면 -->
+                        <user-video
+                          class = "my-video"
+                          :stream-manager="PublisherCamera"
+                          :role="publisher"
+                          :faceDetection="onFaceDetection"
+                          @click="updateMainVideoStreamManager(PublisherCamera)"
+                        />
+                        <!-- 게스트 -->
+                        <user-video
+                          class = "other-video"
+                          v-for="sub in SubscribersCamera"
+                          :key="sub.stream.connection.connectionId"
+                          :stream-manager="sub"
+                          :role="subscriber"
+                          @click="updateMainVideoStreamManager(sub)"
+                        />
+                      </div>
+                    </el-scrollbar>
+
+                  </el-container>
+                  <div id="video-container" class="col-md-6">
+                  <div id="main-video" class="my-main-container">
+                    <user-video
+                      class = "my-main"
+                      :stream-manager="mainStreamManager"
+                    />
                   </div>
-                  <!-- 게스트 -->
-                  <user-video
-                  v-for="sub in SubscribersCamera"
-                  :key="sub.stream.connection.connectionId"
-                  :stream-manager="sub"
-                  :role="subscriber"
-                  @click="updateMainVideoStreamManager(sub)"
-                  />
                 </div>
               </el-main>
+              <el-footer id="consoleBar">
+                <!-- 음성 버튼 -->
+                <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
+                <button v-else type="button" @click="audioTrigger()">audio off</button>
 
               <!--kaj-->
               <div>
@@ -76,7 +99,7 @@
                     <button data-tooltip="화면 공유" class="meeting-bnt-item"  @click="publishScreenShare">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                     </button>
-                    
+
                     <!-- 그룹 호스트 권한 버튼 -->
                     <!-- 회의 녹화 시작 -->
                     <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="startRecording">
@@ -137,132 +160,123 @@
 
 
               <!-- ljy -->
-              
-              
+
+
             <!-- ljy -->
             </el-container>
 
-            <!-- 사이드바 -->
-            <el-aside width="200px">
-              <el-container style="width:100%; display:inline-block" max-height="50px">
-                <!-- 내 개인화면 -->
-                <user-video
-                  :stream-manager="PublisherCamera"
-                  :role="publisher"
-                  :faceDetection="onFaceDetection"
-                  @click="updateMainVideoStreamManager(PublisherCamera)"
-                />
-              </el-container>
+          <!-- 사이드바 -->
+          <el-aside width="200px">
 
-              <div id = "chat&STT">
-                <!-- 채팅 창 -->
-                <div id="chatting-content" style="width: 100%; display: inline-block" max-height="100px">Chatting</div>
-                <div>
-                  <!-- 채팅 보내기 -->
-                  <input type="text" v-model="message" @keydown.enter="sendChat()" />
-                  <button type="button" @click="sendChat()">입력</button>
-                </div>
-                <!-- 회의기록보기 창 -->
-                <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
-                <!-- <SpeechRecognition/> -->
-                <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
+            <div id = "chat&STT">
+              <!-- 채팅 창 -->
+              <div id="chatting-content" style="width: 100%; display: inline-block" max-height="100px">Chatting</div>
+              <div>
+                <!-- 채팅 보내기 -->
+                <input type="text" v-model="message" @keydown.enter="sendChat()" />
+                <button type="button" @click="sendChat()">입력</button>
               </div>
-            </el-aside>
+              <!-- 회의기록보기 창 -->
+              <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
+              <!-- <SpeechRecognition/> -->
+              <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
+            </div>
+          </el-aside>
 
-          </el-container>
-        </div>
+        </el-container>
+      </div>
 
         <!-- <a id="playVideo" :href=this.videoURL>Video</a> -->
 
-      </div>
-        <div id = screens>
+    </div>
+      <div id = screens>
 
 
-          <!-- 스크린 공유 화면 -->
+        <!-- 스크린 공유 화면 -->
 
-          <div id="screen-container" class="col-md-6">
-            <h2>Screen Share</h2>
-            <!-- 호스트 -->
-            <user-video
-            :stream-manager="PublisherScreen"
-            @click="updateMainVideoStreamManager(PublisherScreen)"
-            />
-            <!-- 게스트 -->
-            <user-video
-            v-for="sub in SubscribersScreen"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-            />
-          </div>
+        <div id="screen-container" class="col-md-6">
+          <h2>Screen Share</h2>
+          <!-- 호스트 -->
+          <user-video
+          :stream-manager="PublisherScreen"
+          @click="updateMainVideoStreamManager(PublisherScreen)"
+          />
+          <!-- 게스트 -->
+          <user-video
+          v-for="sub in SubscribersScreen"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          />
         </div>
-    </div>
+      </div>
+  </div>
 
 
-    </div>
-  </template>
+  </div>
+</template>
 
-  <script>
-  import { mapState } from 'vuex';
-  import { OpenVidu } from "openvidu-browser";
-  import axios from "axios";
-  import UserVideo from "../components/meeting/UserVideo";
-  import { meetingCreate } from "@/common/api/meetingAPI";
-  // import SpeechRecognition from "./components/SpeechRecognition";
-  //import * as faceapi from 'face-api.js';
-  axios.defaults.headers.post["Content-Type"] = "application/json";
+<script>
+import { mapState } from 'vuex';
+import { OpenVidu } from "openvidu-browser";
+import axios from "axios";
+import UserVideo from "../components/meeting/UserVideo";
+import { meetingCreate } from "@/common/api/meetingAPI";
+// import SpeechRecognition from "./components/SpeechRecognition";
+//import * as faceapi from 'face-api.js';
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
   const APPLICATION_SERVER_URL = "https://i8d108.p.ssafy.io";
   const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
   const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-  let n = 0;
+
   export default {
   name: "App",
 
-  components: {
-    UserVideo,
-    // SpeechRecognition,
-  },
+components: {
+  UserVideo,
+  // SpeechRecognition,
+},
 
 
 
 
-  data() {
-    const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
-    console.log(meetInfo);
-    return {
-    publisher : "publisher",
-    subscriber : "subscriber",
+data() {
+  const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
+  console.log(meetInfo);
+  return {
+  publisher : "publisher",
+  subscriber : "subscriber",
 
-    // OpenVidu objects
-    //OV: undefined,
-    //session: undefined,
-    mainStreamManager: undefined,
-    PublisherCamera: undefined,
-    PublisherScreen: undefined,
-    SubscribersCamera: [],
-    SubscribersScreen: [],
+  // OpenVidu objects
+  //OV: undefined,
+  //session: undefined,
+  mainStreamManager: undefined,
+  PublisherCamera: undefined,
+  PublisherScreen: undefined,
+  SubscribersCamera: [],
+  SubscribersScreen: [],
 
-    // Audio, Video Control
-    videoEnabled: true,
-    audioEnabled: true,
+  // Audio, Video Control
+  videoEnabled: true,
+  audioEnabled: true,
 
-    // chatting
-    message: "",
-    chats: [],
+  // chatting
+  message: "",
+  chats: [],
 
-    // screen share
-    OVCamera: undefined,
-    OVScreen: undefined,
-    sessionCamera: undefined,
-    sessionScreen: undefined,
-    screensharing: false,
+  // screen share
+  OVCamera: undefined,
+  OVScreen: undefined,
+  sessionCamera: undefined,
+  sessionScreen: undefined,
+  screensharing: false,
 
-    // Join form
-    mySessionTitle: meetInfo.meetTitle,
-    // SessionId 는 무적권 알파벳과 숫자만
-    mySessionId: String(meetInfo.meetId),
-    myUserName: meetInfo.userName,
+  // Join form
+  mySessionTitle: meetInfo.meetTitle,
+  // SessionId 는 무적권 알파벳과 숫자만
+  mySessionId: String(meetInfo.meetId),
+  myUserName: meetInfo.userName,
 
     // recording
     hasAudio : true,
@@ -273,9 +287,9 @@
     videoURL : undefined,
     recodingEnabled : false,
 
-    // face detection
-    interval : undefined,
-    onFaceDetection: false,
+  // face detection
+  interval : undefined,
+  onFaceDetection: false,
 
     // Speech
     speechEnabled: false,
@@ -283,8 +297,8 @@
     recognizedText: "",
     recognizedlog:[]
 
-    };
-  },
+  };
+},
 
   mounted: function() {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -319,77 +333,77 @@
     this.OVCamera = new OpenVidu();
     this.OVScreen = new OpenVidu();
 
-    // --- *2) Init two OpenVidu Session Objects ---
+  // --- *2) Init two OpenVidu Session Objects ---
 
-    // 'sessionCamera' will handle camera operations
-    // 'sessionScreen' will handle screen sharing operations
-    this.sessionCamera = this.OVCamera.initSession();
-    this.sessionScreen = this.OVScreen.initSession();
+  // 'sessionCamera' will handle camera operations
+  // 'sessionScreen' will handle screen sharing operations
+  this.sessionCamera = this.OVCamera.initSession();
+  this.sessionScreen = this.OVScreen.initSession();
 
-    // --- 3) Specify the actions when events take place in the session ---
+  // --- 3) Specify the actions when events take place in the session ---
 
-    // On every new Stream received...
-    this.sessionCamera.on("streamCreated", ({ stream }) => {
-      if (stream.typeOfVideo == "CAMERA") {
-      const subscriber = this.sessionCamera.subscribe(stream);
-      this.SubscribersCamera.push(subscriber);
-      }
-    });
+  // On every new Stream received...
+  this.sessionCamera.on("streamCreated", ({ stream }) => {
+    if (stream.typeOfVideo == "CAMERA") {
+    const subscriber = this.sessionCamera.subscribe(stream);
+    this.SubscribersCamera.push(subscriber);
+    }
+  });
 
-    this.sessionScreen.on("streamCreated", ({ stream }) => {
-      if (stream.typeOfVideo == "SCREEN") {
-      const subscriber = this.sessionScreen.subscribe(stream);
-      this.SubscribersScreen.push(subscriber);
-      }
-    });
+  this.sessionScreen.on("streamCreated", ({ stream }) => {
+    if (stream.typeOfVideo == "SCREEN") {
+    const subscriber = this.sessionScreen.subscribe(stream);
+    this.SubscribersScreen.push(subscriber);
+    }
+  });
 
-    // On every Stream destroyed...
-    this.sessionCamera.on("streamDestroyed", ({ stream }) => {
-      const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
-      if (index >= 0) {
-      this.SubscribersCamera.splice(index, 1);
-      }
-    });
+  // On every Stream destroyed...
+  this.sessionCamera.on("streamDestroyed", ({ stream }) => {
+    const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
+    if (index >= 0) {
+    this.SubscribersCamera.splice(index, 1);
+    }
+  });
 
-    // On every asynchronous exception...
-    this.sessionCamera.on("exception", ({ exception }) => {
-      console.warn(exception);
-    });
+  // On every asynchronous exception...
+  this.sessionCamera.on("exception", ({ exception }) => {
+    console.warn(exception);
+  });
 
-    this.sessionCamera.on("signal:my-chat", (event) => {
-      //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+  this.sessionCamera.on("signal:my-chat", (event) => {
+    //this.chats.push(JSON.parse(event.data));
+    console.log(event.data); // Message
+    console.log(event.from); // Connection object of the sender
+    console.log(event.type); // The type of message ("my-chat")
 
-      let receive = event.data.split("/");
-      let userName = receive[0];
-      let message = receive[1];
-      document.getElementById(
-      "chatting-content"
-      ).innerHTML += `<p>${userName}: ${message}</p>`;
-      // document.getElementById(
-      //   "chatting-content"
-      // ).innerHTML += `<p>${message}</p>`;
-    });
+    let receive = event.data.split("/");
+    let userName = receive[0];
+    let message = receive[1];
+    document.getElementById(
+    "chatting-content"
+    ).innerHTML += `<p>${userName}: ${message}</p>`;
+    // document.getElementById(
+    //   "chatting-content"
+    // ).innerHTML += `<p>${message}</p>`;
+  });
 
-    this.sessionCamera.on("signal:my-speech", (event) => {
-      //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+  this.sessionCamera.on("signal:my-speech", (event) => {
+    //this.chats.push(JSON.parse(event.data));
+    console.log(event.data); // Message
+    console.log(event.from); // Connection object of the sender
+    console.log(event.type); // The type of message ("my-chat")
 
-      let receive = event.data.split("/");
-      let userName = receive[0];
-      let message = receive[1];
-      document.getElementById(
-      "speech-content"
-      ).innerHTML += `<p>${userName}: ${message}</p>`;
+    let receive = event.data.split("/");
+    let userName = receive[0];
+    let message = receive[1];
+    document.getElementById(
+    "speech-content"
+    ).innerHTML += `<p>${userName}: ${message}</p>`;
 
-      // document.getElementById(
-      //   "speech-content"
-      // ).innerHTML += `<p>${message}</p>`;
-    });
+    // document.getElementById(
+    //   "speech-content"
+    // ).innerHTML += `<p>${message}</p>`;
+  });
 
     this.sessionCamera.on("signal:master-audio-on", (event) => {
         console.log(event.type); // The type of message ("my-chat")
@@ -423,71 +437,59 @@
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
 
-    });
+  });
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
       if(this.speechEnabled){
-        // this.sendSpeech();
-        // this.speechRecognition.stop();
-        // this.recognizedText = "";
-
-        // this.speechRecognition.onresult = (event) => {
-        //   this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
-        // };
-        // this.speechRecognition.start();
-
-        // this.stopSpeeching();
-        // this.sendSpeech();
-        // this.recognizedText = "";
-        // this.startSpeeching();
+      //this.stopSpeeching();
+      //this.sendSpeech();
+      //this.recognizedText = "";
       }
     });
 
+  // --- 4) Connect to the session with a valid user token ---
 
+  // Get a token from the OpenVidu deployment
+  this.getToken(this.mySessionId).then((token) => {
+    // First param is the token. Second param can be retrieved by every user on event
+    // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
+    this.sessionCamera
+    .connect(token, { clientData: this.myUserName })
+    .then(() => {
+      // --- 5) Get your own camera stream with the desired properties ---
 
-    // --- 4) Connect to the session with a valid user token ---
-
-    // Get a token from the OpenVidu deployment
-    this.getToken(this.mySessionId).then((token) => {
-      // First param is the token. Second param can be retrieved by every user on event
-      // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-      this.sessionCamera
-      .connect(token, { clientData: this.myUserName })
-      .then(() => {
-        // --- 5) Get your own camera stream with the desired properties ---
-
-        // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-        // element: we will manage it on our own) and with the desired properties
-        let publisher = this.OVCamera.initPublisher(undefined, {
-        audioSource: undefined, // The source of audio. If undefined default microphone
-        videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-        publishVideo: true, // Whether you want to start publishing with your video enabled or not
-        resolution: "640x480", // The resolution of your video
-        frameRate: 30, // The frame rate of your video
-        insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-        mirror: false, // Whether to mirror your local video or not
-        });
-
-        // Set the main video in the page to display our webcam and store our Publisher
-
-        this.mainStreamManager = publisher;
-        this.PublisherCamera = publisher;
-
-        // --- 6) Publish your stream ---
-
-        this.sessionCamera.publish(this.PublisherCamera);
-
-        })
-      .catch((error) => {
-        console.log(
-        "There was an error connecting to the session:",
-        error.code,
-        error.message
-        );
+      // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+      // element: we will manage it on our own) and with the desired properties
+      let publisher = this.OVCamera.initPublisher(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined, // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
       });
+
+      // Set the main video in the page to display our webcam and store our Publisher
+
+      this.mainStreamManager = publisher;
+      this.PublisherCamera = publisher;
+
+      // --- 6) Publish your stream ---
+
+      this.sessionCamera.publish(this.PublisherCamera);
+
+      })
+    .catch((error) => {
+      console.log(
+      "There was an error connecting to the session:",
+      error.code,
+      error.message
+      );
     });
+  });
 
     this.getToken(this.mySessionId).then((tokenScreen) => {
       // Create a token for screen share
@@ -511,28 +513,28 @@
     window.addEventListener("beforeunload", this.leaveSession);
     },
 
-    publishScreenShare() {
-    // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
-    var publisherScreen = this.OVScreen.initPublisher(undefined, {
-      videoSource: "screen",
-    });
+  publishScreenShare() {
+  // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
+  var publisherScreen = this.OVScreen.initPublisher(undefined, {
+    videoSource: "screen",
+  });
 
-    // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
-    publisherScreen.once("accessAllowed", () => {
+  // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
+  publisherScreen.once("accessAllowed", () => {
+    document.getElementById("buttonScreenShare").style.visibility =
+    "hidden";
+    this.screensharing = true;
+    // If the user closes the shared window or stops sharing it, unpublish the stream
+    publisherScreen.stream
+    .getMediaStream()
+    .getVideoTracks()[0]
+    .addEventListener("ended", () => {
+      console.log('User pressed the "Stop sharing" button');
+      this.sessionScreen.unpublish(publisherScreen);
       document.getElementById("buttonScreenShare").style.visibility =
-      "hidden";
-      this.screensharing = true;
-      // If the user closes the shared window or stops sharing it, unpublish the stream
-      publisherScreen.stream
-      .getMediaStream()
-      .getVideoTracks()[0]
-      .addEventListener("ended", () => {
-        console.log('User pressed the "Stop sharing" button');
-        this.sessionScreen.unpublish(publisherScreen);
-        document.getElementById("buttonScreenShare").style.visibility =
-        "visible";
-        this.screensharing = false;
-      });
+      "visible";
+      this.screensharing = false;
+    });
 
       this.PublisherScreen = publisherScreen;
       this.sessionScreen.publish(publisherScreen);
@@ -543,70 +545,76 @@
       event.element['muted'] = true;
     });
     */
-    publisherScreen.once("accessDenied", () => {
-      console.error("Screen Share: Access Denied");
-    });
-    },
-    leaveSession() {
-      axios({
-            url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
-            method:'post',
-            data:{
-                stt:this.recognizedlog
-            }
-        })
-        .then(function a(response){
-            console.log(response);
-        })
-        .catch(function(error){
-            console.log(error);
-        });
-    // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
-    if (this.sessionCamera) this.sessionCamera.disconnect();
-    if (this.sessionScreen) this.sessionScreen.disconnect();
 
-    // Empty all properties...
-    this.sessionCamera = undefined;
-    this.sessionScreen = undefined;
-    this.mainStreamManager = undefined;
-    this.PublisherCamera = undefined;
-    this.PublisherScreen = undefined;
-    this.SubscribersCamera = [];
-    this.SubscribersScreen = [];
-    this.OVCamera = undefined;
-    this.OVScreen = undefined;
-
-    this.screensharing = false;
-
-    document.getElementById(
-      "chatting-content"
-      ).innerHTML = "";
-
-    document.getElementById(
-      "speech-content"
-      ).innerHTML = "";
-
-    // Remove beforeunload listener
-    window.removeEventListener("beforeunload", this.leaveSession);
     },
 
-    updateMainVideoStreamManager(stream) {
+  /*
+  publisherScreen.on('videoElementCreated', function (event) {
+    appendUserData(event.element, sessionScreen.connection);
+    event.element['muted'] = true;
+  });
+  */
+  },
+  leaveSession() {
+    axios({
+          url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
+          method:'post',
+          data:{
+              stt:this.recognizedlog
+          }
+      })
+      .then(function a(response){
+          console.log(response);
+      })
+      .catch(function(error){
+          console.log(error);
+      });
+  // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
+  if (this.sessionCamera) this.sessionCamera.disconnect();
+  if (this.sessionScreen) this.sessionScreen.disconnect();
 
-    if (this.mainStreamManager === stream) return;
+  // Empty all properties...
+  this.sessionCamera = undefined;
+  this.sessionScreen = undefined;
+  this.mainStreamManager = undefined;
+  this.PublisherCamera = undefined;
+  this.PublisherScreen = undefined;
+  this.SubscribersCamera = [];
+  this.SubscribersScreen = [];
+  this.OVCamera = undefined;
+  this.OVScreen = undefined;
 
-    this.mainStreamManager = null;
-    setTimeout(()=> this.mainStreamManager = stream, 100);
+  this.screensharing = false;
 
-    /*
-    if(this.mainStreamManager !== null) this.mainStreamManager = null;
-    else this.mainStreamManager = stream;
-    */
-    },
+  document.getElementById(
+    "chatting-content"
+    ).innerHTML = "";
 
-    videoTrigger() {
-    this.videoEnabled = !this.videoEnabled;
-    this.PublisherCamera.publishVideo(this.videoEnabled);
-    },
+  document.getElementById(
+    "speech-content"
+    ).innerHTML = "";
+
+  // Remove beforeunload listener
+  window.removeEventListener("beforeunload", this.leaveSession);
+  },
+
+  updateMainVideoStreamManager(stream) {
+
+  if (this.mainStreamManager === stream) return;
+
+  this.mainStreamManager = null;
+  setTimeout(()=> this.mainStreamManager = stream, 100);
+
+  /*
+  if(this.mainStreamManager !== null) this.mainStreamManager = null;
+  else this.mainStreamManager = stream;
+  */
+  },
+
+  videoTrigger() {
+  this.videoEnabled = !this.videoEnabled;
+  this.PublisherCamera.publishVideo(this.videoEnabled);
+  },
 
     videoOn() {
 
@@ -641,6 +649,39 @@
         this.audioEnabled = !this.audioEnabled;
         this.PublisherCamera.publishAudio(this.audioEnabled);
     },
+  videoOn() {
+
+      this.sessionCamera
+      .signal({
+          to: [],
+          type: "master-video-on",
+      })
+      .then(() => {
+          console.log("master-video-on successfully sent");
+      })
+      .catch((error) => {
+      console.error(error);
+      });
+
+  },
+  videoOff() {
+      this.sessionCamera
+      .signal({
+          to: [],
+          type: "master-video-off",
+      })
+      .then(() => {
+          console.log("master-video-off successfully sent");
+      })
+      .catch((error) => {
+      console.error(error);
+      });
+  },
+
+  audioTrigger() {
+      this.audioEnabled = !this.audioEnabled;
+      this.PublisherCamera.publishAudio(this.audioEnabled);
+  },
 
     audioOn(){
         this.sessionCamera
@@ -687,29 +728,74 @@
     this.speechEnabled = !this.speechEnabled;
     // console.log("speechEnabled : " + this.speechEnabled);
     },
-
-    sendChat() {
-    /*
-    const sendData = {
-      nickname: this.myUserName,
-      msg: this.message,
-    };
-    */
-    this.sessionCamera
+  audioOn(){
+      this.sessionCamera
       .signal({
-      data: this.myUserName + "/" + this.message,
-      // data: JSON.stringify(sendData),
-      to: [],
-      type: "my-chat",
+          to: [],
+          type: "master-audio-on",
       })
       .then(() => {
-      console.log("Message successfully sent");
+          console.log("master-audio-on successfully sent");
       })
       .catch((error) => {
       console.error(error);
       });
-    this.message = "";
-    },
+
+  },
+  audioOff(){
+      this.sessionCamera
+      .signal({
+          to: [],
+          type: "master-audio-off",
+      })
+      .then(() => {
+          console.log("master-audio-off successfully sent");
+      })
+      .catch((error) => {
+      console.error(error);
+      });
+  },
+
+  endSession(){
+      this.sessionCamera
+      .signal({
+          to: [],
+          type: "end-session",
+      })
+      .then(() => {
+          console.log("end-session successfully sent");
+      })
+      .catch((error) => {
+      console.error(error);
+      });
+  },
+  speechTrigger() {
+  this.speechEnabled = !this.speechEnabled;
+  // console.log("speechEnabled : " + this.speechEnabled);
+  },
+
+  sendChat() {
+  /*
+  const sendData = {
+    nickname: this.myUserName,
+    msg: this.message,
+  };
+  */
+  this.sessionCamera
+    .signal({
+    data: this.myUserName + "/" + this.message,
+    // data: JSON.stringify(sendData),
+    to: [],
+    type: "my-chat",
+    })
+    .then(() => {
+    console.log("Message successfully sent");
+    })
+    .catch((error) => {
+    console.error(error);
+    });
+  this.message = "";
+  },
 
     /**
      * --------------------------------------------
@@ -759,27 +845,27 @@
 			});
 		},
 
-  // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-  createToken(sessionId) {
-    return new Promise((resolve, reject) => {
-      axios
-      .post(
-        `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-        {},
-        {
-        auth: {
-          username: "OPENVIDUAPP",
-          password: OPENVIDU_SERVER_SECRET,
-        },
-        }
-      )
-      .then((response) => response.data)
-      .then((data) => resolve(data.token))
-      .catch((error) => reject(error.response));
-    });
-  },
+// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+createToken(sessionId) {
+  return new Promise((resolve, reject) => {
+    axios
+    .post(
+      `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+      {},
+      {
+      auth: {
+        username: "OPENVIDUAPP",
+        password: OPENVIDU_SERVER_SECRET,
+      },
+      }
+    )
+    .then((response) => response.data)
+    .then((data) => resolve(data.token))
+    .catch((error) => reject(error.response));
+  });
+},
 
-    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+  // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 
     startRecording() {
         console.log("Starting recording");
@@ -793,30 +879,30 @@
         // document.getElementById('buttonStopRecording').style.visibility = "visible";
     },
 
-    recordingStartFunc(sessionId){
-        return new Promise((resolve, reject) => {
-            axios
-            .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/start`,
-                JSON.stringify({
-                    //BODY
-                    session: sessionId,
-                    outputMode: this.outputMode[0],
-                    hasAudio: this.hasAudio,
-                    hasVideo: this.hasVideo
-                }),
-                {
-                    auth: {
-                        username: "OPENVIDUAPP",
-                        password: OPENVIDU_SERVER_SECRET,
-                    },
-                }
-            )
-            .then((response) => response.data)
-            .then((data) => resolve(data.id))
-            .catch((error) => reject(error.response));
-        });
-    },
+  recordingStartFunc(sessionId){
+      return new Promise((resolve, reject) => {
+          axios
+          .post(
+              `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/start`,
+              JSON.stringify({
+                  //BODY
+                  session: sessionId,
+                  outputMode: this.outputMode[0],
+                  hasAudio: this.hasAudio,
+                  hasVideo: this.hasVideo
+              }),
+              {
+                  auth: {
+                      username: "OPENVIDUAPP",
+                      password: OPENVIDU_SERVER_SECRET,
+                  },
+              }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.id))
+          .catch((error) => reject(error.response));
+      });
+  },
 
     stopRecording() {
         console.log("Stop recording");
@@ -829,36 +915,36 @@
         // document.getElementById('buttonStopRecording').style.visibility = "hidden";
     },
 
-    recordingStopFunc(recordingId){
-        return new Promise((resolve, reject) => {
-            axios
-            .post(
-                `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${recordingId}`,
-                {},
-                {
-                    auth: {
-                        username: "OPENVIDUAPP",
-                        password: OPENVIDU_SERVER_SECRET,
-                    },
-                }
-            )
-            .then((response) => response.data)
-            .then((data) => resolve(data.url))
-            .catch((error) => reject(error.response));
-        });
-    },
+  recordingStopFunc(recordingId){
+      return new Promise((resolve, reject) => {
+          axios
+          .post(
+              `${OPENVIDU_SERVER_URL}/openvidu/api/recordings/stop/${recordingId}`,
+              {},
+              {
+                  auth: {
+                      username: "OPENVIDUAPP",
+                      password: OPENVIDU_SERVER_SECRET,
+                  },
+              }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.url))
+          .catch((error) => reject(error.response));
+      });
+  },
 
-    async startChecking(){
-    this.onFaceDetection = true,
-    document.getElementById('buttonStartPresent').style.visibility = "hidden";
-    document.getElementById('buttonStopPresent').style.visibility = "visible";
-    },
+  async startChecking(){
+  this.onFaceDetection = true,
+  document.getElementById('buttonStartPresent').style.visibility = "hidden";
+  document.getElementById('buttonStopPresent').style.visibility = "visible";
+  },
 
-    async stopChecking(){
-    this.onFaceDetection = false,
-    document.getElementById('buttonStartPresent').style.visibility = "visible";
-    document.getElementById('buttonStopPresent').style.visibility = "hidden";
-    },
+  async stopChecking(){
+  this.onFaceDetection = false,
+  document.getElementById('buttonStartPresent').style.visibility = "visible";
+  document.getElementById('buttonStopPresent').style.visibility = "hidden";
+  },
 
     async startSpeeching(){
     // this.onFaceDetection = true,
@@ -868,13 +954,13 @@
     //     this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
     // };
 
-    
+
     this.speechRecognition.onresult = (event) => {
       for(let i = event.resultIndex, len = event.results.length; i < len; i++){
         let transcript = event.results[i][0].transcript;
         console.log(transcript);
         this.recognizedText += transcript;
-        if(event.results[i].isFinal){ 
+        if(event.results[i].isFinal){
           this.sendSpeech();
         }
       }
@@ -883,14 +969,14 @@
 
     this.speechRecognition.start();
 
-    document.getElementById('buttonStartSpeech').style.visibility = "hidden";
-    document.getElementById('buttonStopSpeech').style.visibility = "visible";
-    },
+  document.getElementById('buttonStartSpeech').style.visibility = "hidden";
+  document.getElementById('buttonStopSpeech').style.visibility = "visible";
+  },
 
-    async stopSpeeching(){
-    // this.onFaceDetection = false,
-    console.log("stopSpeeching");
-    this.speechEnabled = false;
+  async stopSpeeching(){
+  // this.onFaceDetection = false,
+  console.log("stopSpeeching");
+  this.speechEnabled = false;
 
     // this.sendSpeech();
     this.speechRecognition.stop();
@@ -927,10 +1013,8 @@
 
     },
 
-  },
-
-  };
-  </script>
+};
+</script>
 
 <style>
   .meeting-bnt-item{
@@ -962,7 +1046,7 @@
     padding: 1em;
   }
   .meeting-btn-item-img{
-    height: 20px; 
+    height: 20px;
     width: 20px;
   }
 [data-tooltip]{position:relative;}
@@ -972,4 +1056,155 @@
 [data-tooltip]:after{content: '';border-left:5px solid transparent;top:2px;border-right:5px solid transparent;border-top:5px solid #2a2a2a;}
 [data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
 [data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
+.my-main-container{
+  align-items: center;
+  justify-content: center;
+}
+
+.my-video {
+  background-color: aqua;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 90px;
+  margin: 5px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
+}
+
+.other-video {
+  background-color: #c71100;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 90px;
+  margin: 5px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
+}
+
+.my-main{
+  width: 960px;
+  height: 540px;
+  align-items: center;
+}
+
+.scrollbar-flex-content {
+  display: flex;
+  height: 120px;
+}
+.scrollbar-demo-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
+}
+
+.nickname {
+  background: rgba(58, 64, 74, 0.651);
+  padding: 5px !important;
+  position: absolute;
+  z-index: 999;
+  color: #ffffff;
+}
+.form-control {
+  color: black;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+#closeButton {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  z-index: 999;
+}
+
+#name-error-text {
+  color: #fd6d5f;
+  font-weight: bold;
+  text-align: center;
+}
+
+#nicknameForm {
+  padding: 10px;
+}
+.fullscreen {
+  top: 40px;
+}
+
+.streamComponent {
+  height: 100%;
+}
+
+video {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#statusIcons {
+  bottom: 0;
+  background: #c71100;
+  width: 40px;
+  height: fit-content;
+  position: absolute;
+  color: #ffffff;
+}
+
+#camIcon,
+#micIcon {
+  text-align: center;
+  padding: 6px;
+}
+
+#fullscreenButton {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  z-index: 1000;
+  background-color: #000000c4;
+}
+#volumeButton {
+  background-color: #000000c4;
+  position: absolute;
+  bottom: 45px;
+  right: 1px;
+  z-index: 1000;
+  color: #ffffff;
+}
+/* Contains the video element, used to fix video letter-boxing */
+.OT_widget-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+}
+
+#input,
+#label {
+  color: white;
+}
 </style>
