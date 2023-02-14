@@ -423,7 +423,7 @@ export default {
           console.log(event);
           console.log(event.type); // The type of message ("my-chat")
 
-          if(event.data == true){
+          if(event.data == "true"){
             this.onFaceDetection = true;
           }else{
             this.onFaceDetection = false;
@@ -435,10 +435,10 @@ export default {
           console.log(event);
           console.log(event.type); // The type of message ("my-chat")
 
-          if(event.data == true){
-            startSpeeching();
+          if(event.data == "true"){
+            this.startSpeeching();
           }else{
-            stopSpeeching();
+            this.stopSpeeching();
           }
           
       });
