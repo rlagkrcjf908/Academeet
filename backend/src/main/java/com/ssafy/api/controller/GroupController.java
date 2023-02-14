@@ -273,5 +273,14 @@ public class GroupController {
         }
         return ResponseEntity.status(403).body(BaseResponseBody.of(401, "Fail"));
     }
+
+    @GetMapping("/{group_Id}/meetData")
+    public ResponseEntity<List<GroupMeetDataRes>> getMeetData(@PathVariable("group_Id") int groupId){
+        List<GroupMeetDataRes> gmdList = groupService.getMeetData(groupId);
+        if(gmdList != null){
+            return ResponseEntity.status(200).body(gmdList);
+        }
+        return ResponseEntity.status(403).body(null);
+    }
 }
 
