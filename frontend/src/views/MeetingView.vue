@@ -68,27 +68,27 @@
                     </button>
                     <!-- 그룹 호스트 권한 버튼 -->
                     <!-- 회의 녹화 시작 -->
-                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="startRecording">
+                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="recordingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
                     </button>
                     <!-- 회의 녹화 끝 -->
-                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled && userId==ownerId" @click="stopRecording">
+                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled && userId==ownerId" @click="recordingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
                     </button>
                     <!-- 음성 기록 시작 -->
-                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled && userId==ownerId" @click="startSpeeching">
+                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled && userId==ownerId" @click="speechingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
                     </button>
                     <!-- 음성 기록 끝 -->
-                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled && userId==ownerId" @click="stopSpeeching">
+                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled && userId==ownerId" @click="speechingTrigger()">
                       <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
                     </button>
                     <!-- 출석체크 시작-->
-                    <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!onFaceDetection && userId==ownerId" @click="startChecking">
+                    <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!onFaceDetection && userId==ownerId" @click="checkingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
                     </button>
                     <!-- 출석체크 끝-->
-                    <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="onFaceDetection && userId==ownerId" @click="stopChecking">
+                    <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="onFaceDetection && userId==ownerId" @click="checkingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
                     </button>
                     <!-- 전체 오디오 온 -->
@@ -420,6 +420,30 @@ components: {
         this.leaveSession();
     });
 
+    this.sessionCamera.on("signal:checking", (event) => {
+        console.log(event);
+        console.log(event.type); // The type of message ("my-chat")
+
+        if(eveny.data == true){
+          this.onFaceDetection = true;
+        }else{
+          this.onFaceDetection = false;
+        }
+        
+    });
+
+    this.sessionCamera.on("signal:speeching", (event) => {
+        console.log(event);
+        console.log(event.type); // The type of message ("my-chat")
+
+        if(eveny.data == true){
+          startSpeeching();
+        }else{
+          stopSpeeching();
+        }
+        
+    });
+
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
 
@@ -427,11 +451,6 @@ components: {
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
-      if(this.speechEnabled){
-      //this.stopSpeeching();
-      //this.sendSpeech();
-      //this.recognizedText = "";
-      }
     });
 
   // --- 4) Connect to the session with a valid user token ---
@@ -801,40 +820,46 @@ components: {
 			});
 		},
 
-// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-createToken(sessionId) {
-  return new Promise((resolve, reject) => {
-    axios
-    .post(
-      `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-      {},
-      {
-      auth: {
-        username: "OPENVIDUAPP",
-        password: OPENVIDU_SERVER_SECRET,
-      },
-      }
-    )
-    .then((response) => response.data)
-    .then((data) => resolve(data.token))
-    .catch((error) => reject(error.response));
-  });
-},
+  // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+  createToken(sessionId) {
+    return new Promise((resolve, reject) => {
+      axios
+      .post(
+        `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+        {},
+        {
+        auth: {
+          username: "OPENVIDUAPP",
+          password: OPENVIDU_SERVER_SECRET,
+        },
+        }
+      )
+      .then((response) => response.data)
+      .then((data) => resolve(data.token))
+      .catch((error) => reject(error.response));
+    });
+  },
 
   // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 
-    startRecording() {
+    recordingTrigger(){
+      this.recordingEnabled = !this.recodingEnabled;
+      if(this.recodingEnabled){
         console.log("Starting recording");
-        this.recodingEnabled = true;
         this.recordingStartFunc(this.mySessionId).then((recordingId) => {
                 console.log("Recording ID", recordingId);
                 this.recordingId = recordingId;
             }
         );
-        // document.getElementById('buttonStartRecording').style.visibility = "hidden";
-        // document.getElementById('buttonStopRecording').style.visibility = "visible";
+      }else{
+        console.log("Stop recording");
+        this.recordingStopFunc(this.recordingId).then((url) => {
+                this.videoURL = url
+            }
+        );
+      }
     },
-
+    
   recordingStartFunc(sessionId){
       return new Promise((resolve, reject) => {
           axios
@@ -860,17 +885,6 @@ createToken(sessionId) {
       });
   },
 
-    stopRecording() {
-        console.log("Stop recording");
-        this.recodingEnabled = false;
-        this.recordingStopFunc(this.recordingId).then((url) => {
-                this.videoURL = url
-            }
-        );
-        // document.getElementById('buttonStartRecording').style.visibility = "visible";
-        // document.getElementById('buttonStopRecording').style.visibility = "hidden";
-    },
-
   recordingStopFunc(recordingId){
       return new Promise((resolve, reject) => {
           axios
@@ -890,18 +904,48 @@ createToken(sessionId) {
       });
   },
 
-  async startChecking(){
-  this.onFaceDetection = true,
-  document.getElementById('buttonStartPresent').style.visibility = "hidden";
-  document.getElementById('buttonStopPresent').style.visibility = "visible";
+  checkingTrigger(){
+    this.sessionCamera
+      .signal({
+        data: !this.onFaceDetection,
+        to: [],
+        type: "checking",
+      })
+      .then(() => {
+        console.log("checking successfully sent");
+        })
+      .catch((error) => {
+        console.error(error);
+      });
   },
 
-  async stopChecking(){
-  this.onFaceDetection = false,
-  document.getElementById('buttonStartPresent').style.visibility = "visible";
-  document.getElementById('buttonStopPresent').style.visibility = "hidden";
-  },
+  // async startChecking(){
+  // this.onFaceDetection = true,
+  // document.getElementById('buttonStartPresent').style.visibility = "hidden";
+  // document.getElementById('buttonStopPresent').style.visibility = "visible";
+  // },
 
+  // async stopChecking(){
+  // this.onFaceDetection = false,
+  // document.getElementById('buttonStartPresent').style.visibility = "visible";
+  // document.getElementById('buttonStopPresent').style.visibility = "hidden";
+  // },
+
+  speechingTrigger(){
+    this.sessionCamera
+      .signal({
+        data: !this.speechEnabled,
+        to: [],
+        type: "speeching",
+      })
+      .then(() => {
+        console.log("speech successfully sent");
+        })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+  
     async startSpeeching(){
     // this.onFaceDetection = true,
     console.log("startSpeeching");
@@ -924,9 +968,6 @@ createToken(sessionId) {
     };
 
     this.speechRecognition.start();
-
-  document.getElementById('buttonStartSpeech').style.visibility = "hidden";
-  document.getElementById('buttonStopSpeech').style.visibility = "visible";
   },
 
   async stopSpeeching(){
@@ -938,8 +979,6 @@ createToken(sessionId) {
     this.speechRecognition.stop();
 
     this.recognizedText = "";
-    document.getElementById('buttonStartSpeech').style.visibility = "visible";
-    document.getElementById('buttonStopSpeech').style.visibility = "hidden";
     },
 
     sendSpeech() {
