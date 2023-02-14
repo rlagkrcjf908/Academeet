@@ -79,19 +79,19 @@
                     
                     <!-- 그룹 호스트 권한 버튼 -->
                     <!-- 회의 녹화 시작 -->
-                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled" @click="startRecording">
+                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="startRecording">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
                     </button>
                     <!-- 회의 녹화 끝 -->
-                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled" @click="stopRecording">
+                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled && userId==ownerId" @click="stopRecording">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
                     </button>
                     <!-- 음성 기록 시작 -->
-                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled" @click="startSpeeching">
+                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled && userId==ownerId" @click="startSpeeching">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
                     </button>
                     <!-- 음성 기록 끝 -->
-                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled" @click="stopSpeeching">
+                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled && userId==ownerId" @click="stopSpeeching">
                       <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
                     </button>
                     <!-- 출석체크 시작-->
