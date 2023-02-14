@@ -28,12 +28,14 @@
           :remote-method="remoteMethod"
           :loading="loading"
           clearable
+          style ='width: 292px;'
         >
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
+            class="searchOption"
           />
         </el-select>
       </el-form-item>
@@ -139,6 +141,6 @@ const submitForm = (formEl) => {
 
 <style>
 .group-create{
-  padding: 0 2em
+  margin: auto;
 }
 </style>

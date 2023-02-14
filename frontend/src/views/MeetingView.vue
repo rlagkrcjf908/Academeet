@@ -1,34 +1,7 @@
 <template>
     <div id="main-container" class="container">
-      <!-- 회의 입장 전 화면 -->
-      <div id="join" v-if="!sessionCamera">
-      <!-- <div id="img-div">
-        <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
-      </div> -->
-      <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Join a video session</h1>
-        <div class="form-group">
-        <p>
-          <label>회의제목</label>
-          <h3>{{ mySessionTitle }}</h3>
-        </p>
-        <p>
-          <label>참가자</label>
-          <h3>{{ myUserName }}</h3>
-        </p>
-        <p class="text-center">
-          <button class="btn btn-lg btn-success" @click="joinSession()">
-          Join!
-          </button>
-        </p>
-        </div>
-      </div>
-      </div>
-
       <!-- 회의 입장 후 화면 -->
-      <div id="session" v-if="sessionCamera">
       <div id="session-header">
-
         <div class="common-layout">
           <el-container>
             <el-container>
@@ -52,9 +25,9 @@
                   />
                 </div>
               </el-main>
-            <!-- 호스트인지 유저인지에따라 버튼 보이는거 다르게 해주세요 -->
-            <div>
-                <div class="meeting-btn">
+              <el-footer>
+                <div>
+                  <div class="meeting-btn">
                     <!-- 마이크 오프 -->
                     <button data-tooltip="마이크 켜기" class="meeting-bnt-item"  v-if="!audioEnabled" @click="audioTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
@@ -121,90 +94,19 @@
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/windows/64/1A1A1A/file-download.png"/>
                     </button>
                   </div>
-                  <!-- 회의 나가기 -->
-                  <button class="meeting-bnt-leave"  v-if="userId!==ownerId" @click="leaveSession">
-                    <div><span data-tooltip="회의 나가기">회의 나가기</span></div>
-                  </button>
-                  <!-- 세션 종료하기 -->
-                  <button class="meeting-bnt-leave" v-if="userId==ownerId" @click="endSession">
-                    <div><span data-tooltip="세션 종료하기">세션 종료하기</span></div>
-                  </button>
+                  <div>
+                    <!-- 회의 나가기 -->
+                    <button class="meeting-bnt-leave"  v-if="userId!==ownerId" @click="leaveSession">
+                      <div><span data-tooltip="회의 나가기">회의 나가기</span></div>
+                    </button>
+                    <!-- 세션 종료하기 -->
+                    <button class="meeting-bnt-leave" v-if="userId==ownerId" @click="endSession">
+                      <div><span data-tooltip="세션 종료하기">세션 종료하기</span></div>
+                    </button>
+                  </div>
                 </div>
-                <!-- 카메라 온 -->
-                <!-- <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-                  <button v-else type="button" @click="audioTrigger()">audio off</button> -->
-                
-                  <!-- 비디오 버튼 -->
-                  <!-- <button v-if="videoEnabled" type="button" @click="videoTrigger()">video on</button>
-                <button v-else type="button" @click="videoTrigger()">video off</button> -->
-                  
-                <!-- 회의녹화 -->
-                <!-- <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartRecording"
-                @click="startRecording"
-                value="Start recording"
-                />
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopRecording"
-                @click="stopRecording"
-                value="Stop recording"
-                style="visibility: hidden"
-                /> -->
-                <!-- 화면공유 -->
-                <!-- <input
-                class="btn btn-large"
-                type="button"
-                id="buttonScreenShare"
-                @click="publishScreenShare"
-                value="Screen share"
-                style="visibility: hidden"
-                /> -->
-                <!-- 세션 떠나기 -->
-                <!-- <input
-                class="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                @click="leaveSession"
-                value="Leave session"
-                /> -->
-                <!-- 출석 자동 체크 -->
-                <!-- <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartPresent"
-                @click="startChecking"
-                value="Start Checking"
-                />
-
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopPresent"
-                @click="stopChecking"
-                value="Stop Checking"
-                style="visibility: hidden"
-                /> -->
-                <!-- 음성기록 -->
-                <!-- <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStartSpeech"
-                @click="startSpeeching"
-                value="Start Speeching"
-                />
-                <input
-                class="btn btn-md"
-                type="button"
-                id="buttonStopSpeech"
-                @click="stopSpeeching"
-                value="Stop Speeching"
-                style="visibility: hidden"
-                /> -->
-            </el-container>
+              </el-footer>
+          </el-container>
 
             <!-- 사이드바 -->
             <el-aside width="200px">
@@ -228,8 +130,6 @@
                 </div>
                 <!-- 회의기록보기 창 -->
                 <div id="speech-content" style="width: 30%; display: inline-block">Speech</div>
-                <!-- <SpeechRecognition/> -->
-                <!-- <textarea rows="10" v-model="recognizedText"></textarea> -->
               </div>
             </el-aside>
 
@@ -239,6 +139,7 @@
         <a id="playVideo" :href=this.videoURL>Video</a>
 
       </div>
+
         <div id = screens>
 
 
@@ -262,8 +163,6 @@
         </div>
     </div>
 
-
-    </div>
 
   </template>
 
@@ -364,6 +263,10 @@ mounted: function() {
   this.speechRecognition.continuous = true;
   this.speechRecognition.maxAlternatives = 10000;
 
+},
+
+mounted() {
+ this.joinSession()
 },
 
 methods: {
@@ -625,8 +528,10 @@ methods: {
               stt:this.recognizedlog
           }
       })
-      .then(function a(response){
-          console.log(response);
+      .then(() => {
+          this.$router.push({
+          name: "listMain",
+          });
       })
       .catch(function(error){
           console.log(error);
@@ -750,7 +655,10 @@ methods: {
           type: "end-session",
       })
       .then(() => {
-          console.log("end-session successfully sent");
+          this.$router.push({
+          name: "listMain",
+          });
+        console.log("end-session successfully sent");
       })
       .catch((error) => {
       console.error(error);

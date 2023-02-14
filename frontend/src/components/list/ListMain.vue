@@ -84,9 +84,10 @@ onMounted(async () => {
     });
     return sorted_date;
   };
-  console.log(sortedDate(datas));
+  console.log('sortedDate입니다',sortedDate(datas));
 
   const list = sortedDate(datas).map((item) => {
+    console.log('여기를 봅시다item',item);
   
     return {
       groupTitle: item.groupTitle,
@@ -99,6 +100,7 @@ onMounted(async () => {
     };
   });
   meetList.value = list;
+
 });
 
 const joinMeet = (item) => {
@@ -109,7 +111,6 @@ const joinMeet = (item) => {
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
     ownerId: item.ownerId
   };
-  console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting" });
 };

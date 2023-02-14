@@ -55,6 +55,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "SubMain" */ '@/views/SubMain.vue')
       },
       {
+        path: 'meetingCreate',
+        name: 'meetingCreate',
+        component: MeetingCreate
+      },
+      {
         path: 'profile',
         name: 'profile',
         component: ProfileView,
@@ -159,11 +164,6 @@ const routes = [
     path: '/meeting',
     name: 'meeting',
     component: MeetingView
-  },
-  {
-    path: '/meetingCreate',
-    name: 'meetingCreate',
-    component: MeetingCreate
   },
   {
     path: '/meeting-end',

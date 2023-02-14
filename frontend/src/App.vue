@@ -11,6 +11,8 @@ export default {
 
 <style lang="scss">
 #app {
+  margin: 0px;
+  padding: 0px;  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -30,6 +32,9 @@ nav {
     color: #2c3e50;
   }
 }
-body{ margin: 0px}
+body{ 
+  margin: 0px;
+  padding: 0px;
+}
 
 </style>
