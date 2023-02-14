@@ -33,6 +33,11 @@
         Join!
         </button>
       </p>
+      <p class="text-center">
+        <button class="btn btn-lg btn-success" @click="backSession()">
+        Back!
+        </button>
+      </p>
       </div>
     </div>
     </div>
@@ -163,15 +168,6 @@
 
           <!-- 사이드바 -->
           <el-aside width="200px">
-            <el-container style="width:100%; display:inline-block" max-height="50px">
-              <!-- 내 개인화면 -->
-              <user-video
-                :stream-manager="PublisherCamera"
-                :role="publisher"
-                :faceDetection="onFaceDetection"
-                @click="updateMainVideoStreamManager(PublisherCamera)"
-              />
-            </el-container>
 
             <div id = "chat&STT">
               <!-- 채팅 창 -->
@@ -793,60 +789,154 @@ methods: {
 
 <style>
 .my-main-container{
-align-items: center;
-justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .my-video {
-background-color: aqua;
-flex-shrink: 0;
-align-items: center;
-justify-content: center;
-width: 160px;
-height: 90px;
-margin: 5px;
-text-align: center;
-border-radius: 4px;
-background: var(--el-color-danger-light-9);
-color: var(--el-color-danger);
+  background-color: aqua;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 90px;
+  margin: 5px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
 }
 
 .other-video {
-background-color: #c71100;
-flex-shrink: 0;
-align-items: center;
-justify-content: center;
-width: 160px;
-height: 90px;
-margin: 5px;
-text-align: center;
-border-radius: 4px;
-background: var(--el-color-danger-light-9);
-color: var(--el-color-danger);
+  background-color: #c71100;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 90px;
+  margin: 5px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
 }
 
 .my-main{
-width: 960px;
-height: 540px;
-align-items: center;
+  width: 960px;
+  height: 540px;
+  align-items: center;
 }
 
 .scrollbar-flex-content {
-display: flex;
-height: 120px;
+  display: flex;
+  height: 120px;
 }
 .scrollbar-demo-item {
-flex-shrink: 0;
-display: flex;
-align-items: center;
-justify-content: center;
-width: 100px;
-height: 50px;
-margin: 10px;
-text-align: center;
-border-radius: 4px;
-background: var(--el-color-danger-light-9);
-color: var(--el-color-danger);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
 }
 
+.nickname {
+  background: rgba(58, 64, 74, 0.651);
+  padding: 5px !important;
+  position: absolute;
+  z-index: 999;
+  color: #ffffff;
+}
+.form-control {
+  color: black;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+#closeButton {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  z-index: 999;
+}
+
+#name-error-text {
+  color: #fd6d5f;
+  font-weight: bold;
+  text-align: center;
+}
+
+#nicknameForm {
+  padding: 10px;
+}
+.fullscreen {
+  top: 40px;
+}
+
+.streamComponent {
+  height: 100%;
+}
+
+video {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#statusIcons {
+  bottom: 0;
+  background: #c71100;
+  width: 40px;
+  height: fit-content;
+  position: absolute;
+  color: #ffffff;
+}
+
+#camIcon,
+#micIcon {
+  text-align: center;
+  padding: 6px;
+}
+
+#fullscreenButton {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  z-index: 1000;
+  background-color: #000000c4;
+}
+#volumeButton {
+  background-color: #000000c4;
+  position: absolute;
+  bottom: 45px;
+  right: 1px;
+  z-index: 1000;
+  color: #ffffff;
+}
+/* Contains the video element, used to fix video letter-boxing */
+.OT_widget-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+}
+
+#input,
+#label {
+  color: white;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<div v-if="streamManager">
 		<ov-video :stream-manager="streamManager" :role="role" :faceDetection="faceDetection"/>
-		<div><p>{{ clientData }}</p></div>
+		<div><p class="clientData">{{ clientData }}</p></div>
 	</div>
 	</template>
 	
@@ -36,4 +36,10 @@
 		},
 	};
 	</script>
-	
+
+	<style>
+		.clientData{
+			background-color: #61B299;
+			margin: 0px;
+		}
+	</style>
