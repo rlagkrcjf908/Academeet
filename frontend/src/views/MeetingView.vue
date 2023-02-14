@@ -71,10 +71,6 @@
                   </div>
                 </div>
               </el-main>
-              <el-footer id="consoleBar">
-                <!-- 음성 버튼 -->
-                <button v-if="audioEnabled" type="button" @click="audioTrigger()">audio on</button>
-                <button v-else type="button" @click="audioTrigger()">audio off</button>
 
               <!--kaj-->
               <div>
@@ -511,7 +507,7 @@ data() {
 
     this.recognizedlog = [];
     window.addEventListener("beforeunload", this.leaveSession);
-    },
+  },
 
   publishScreenShare() {
   // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
@@ -545,15 +541,9 @@ data() {
       event.element['muted'] = true;
     });
     */
-
-    },
-
-  /*
-  publisherScreen.on('videoElementCreated', function (event) {
-    appendUserData(event.element, sessionScreen.connection);
-    event.element['muted'] = true;
-  });
-  */
+    publisherScreen.once("accessDenied", () => {
+      console.error("Screen Share: Access Denied");
+    });
   },
   leaveSession() {
     axios({
@@ -1012,7 +1002,7 @@ createToken(sessionId) {
         this.recognizedText = "";
 
     },
-
+  },
 };
 </script>
 
