@@ -29,6 +29,7 @@
               @click="joinMeet(item)"
               type="success"
               plain
+              :disabled="item.isMeetingEnd"
               >회의시작
             </el-button>
           </tr>
@@ -36,7 +37,7 @@
       </table>
     </div>
   </div>
-  <el-button type="success" round>HOME</el-button>
+  <el-button type="success" round @click="$router.push('/')">HOME</el-button>
 </template>
 
 <script setup>
@@ -54,9 +55,7 @@ const userId = JSON.parse(localStorage.getItem("userInfo")).id;
 
 onMounted(async () => {
   const res = await requestMeetingList(userId);
-  console.log("전체  meet", res);
   const datas = res.data;
-  console.log(datas);
   const sortedDate = (datas) => {
     const sorted_date = datas.sort(function (a, b) {
       // return new Date(a.date) - new Date(b.date).getTime();
@@ -71,9 +70,19 @@ onMounted(async () => {
     });
     return sorted_date;
   };
-  console.log(sortedDate(datas));
 
+  const isMeetingEnd = function(timeData) {
+        const currDate = new Date();
+        const meetDate = new Date(timeData);
+        if ( meetDate - currDate < 0 ) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
   const list = sortedDate(datas).map((item) => {
+    const meetingEndTime = `${item.date.substr(0, 10)} ${item.endTime}`
     return {
       groupTitle: item.groupTitle,
       meetTitle: item.meetTitle,
@@ -81,11 +90,13 @@ onMounted(async () => {
       startTime: item.startTime,
       endTime: item.endTime,
       meetId: item.meetId,
-      ownerId: item.ownerId
+      ownerId: item.ownerId,
+      isMeetingEnd : isMeetingEnd(meetingEndTime)
     };
-  });
+    }
+  );
   meetList.value = list;
-});
+})
 
 const joinMeet = (item) => {
   const meetInfo = {
@@ -95,7 +106,6 @@ const joinMeet = (item) => {
     userId: JSON.parse(localStorage.getItem("userInfo")).id,
     ownerId: item.ownerId
   };
-  console.log(meetInfo);
   sessionStorage.setItem("meetInfo", JSON.stringify(meetInfo));
   router.push({ name: "meeting" });
 };
