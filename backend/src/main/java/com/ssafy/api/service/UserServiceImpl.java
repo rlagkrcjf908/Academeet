@@ -281,9 +281,6 @@ public class UserServiceImpl implements UserService {
                 umr.setMeetTitle(meet.getTitle());
                 umr.setStartTime(meet.getStarttime());
                 umr.setEndTime(meet.getEndtime());
-                umr.setOwnerId(meet.getUserid().getId());
-
-
                 umrs.add(umr);
             }
         }
