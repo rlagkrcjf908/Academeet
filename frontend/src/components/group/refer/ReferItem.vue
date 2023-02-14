@@ -4,30 +4,23 @@
       <thead>
         <tr>
           <th>No.</th>
-          <th>이름</th>
-          <th>전체 출석률</th>
-          <th>상세 보기</th>
+          <th>제목</th>
+          <th>STT</th>
+          <th>지난 회의 영상</th>
+          <th>날짜</th>
         </tr>
       </thead>
     </table>
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <tbody v-if="attdUserList.length > 0">
-        <tr v-for="(item, index) in attdUserList" :key="index">
+      <tbody v-if="referList.length > 0">
+        <tr v-for="(item, index) in referList" :key="index">
           <td>{{ index + 1 }}</td>
-          <td>{{ item.name }}</td>
-          <td class="attd-success" v-if="item.allAtt >= 80">
-            {{ item.allAtt }}
-          </td>
-          <td class="attd-fail" v-else>{{ item.allAtt }}</td>
-          <el-button
-            class="detail-btn"
-            @click="routeToUser(item)"
-            type="success"
-            plain
-            >{{ item.name }}:{{ item.userId }}</el-button
-          >
+          <td>{{ item.title }}</td>
+          <td>{{ item.stt }}</td>
+          <td>{{ item.video }}</td>
+          <td>{{ item.date }}</td>
         </tr>
       </tbody>
       <tbody v-else>
@@ -38,7 +31,7 @@
 </template>
 
 <script setup>
-import { requestAttdList } from "@/common/api/groupAPI";
+import { requestRefer } from "@/common/api/groupAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
@@ -46,36 +39,24 @@ const router = useRouter();
 const route = useRoute();
 
 const groupId = ref(route.params.groupId);
-const hostId = ref(route.params.hostId);
-const selectUserId = ref(); //상세 출석 볼 유저
-const attdUserList = ref([]);
-
-const routeToUser = (item) => {
-  console.log("item.userId: ", item.userId);
-  selectUserId.value = item.userId;
-  router.push({
-    name: "attdUser",
-    params: {
-      selectUserId: selectUserId.value,
-      groupId: groupId.value,
-      hostId: hostId.value,
-    },
-  });
-};
+console.log("route.params.groupId:", route.params.groupId);
+const referList = ref([]);
 
 onMounted(async () => {
-  const res = await requestAttdList(groupId.value);
-  // console.log("전체 출석 res", res);
+  const res = await requestRefer(groupId.value);
+  console.log("전체 자료 res", res);
+  console.log("res.data.length", res.data.length);
+
   const datas = res.data;
   const list = datas.map((item) => {
     return {
-      userId: item.userId,
-      name: item.name,
-      allAtt: item.allAtt,
+      title: item.title,
+      stt: item.stt,
+      video: item.video,
+      date: item.date.substr(0, 10),
     };
   });
-  attdUserList.value = list;
-  // console.log("attdList의 전체 유저 출석: ", attdUserList.value);
+  referList.value = list;
 });
 </script>
 
@@ -133,12 +114,5 @@ td {
 }
 ::-webkit-scrollbar-thumb {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-.attd-fail {
-  color: #f89898;
-}
-.attd-success {
-  color: #95d475;
 }
 </style>

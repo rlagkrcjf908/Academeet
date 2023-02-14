@@ -34,4 +34,7 @@ const requestDeleteArtile = (article_id) => $axios.delete(`/group/${article_id}/
 // 공지 글 수정
 const requestUpdateArtile = (article_id, payload) => $axios.put(`/group/${article_id}/articleupdate`, payload);
 
-export { groupCreate, requestGroupList, requestGroup, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate, artileCreate, requestArtile, requestArtileList, requestDeleteArtile, requestUpdateArtile};
+//자료실
+const requestRefer = (groupId) => $axios.get(`/group/${groupId}/meetData`);
+
+export { groupCreate, requestGroupList, requestGroup, requestUserList, userSearch, requestDeleteGroup, requestAttdList, requestAttdUser, attdUserUpdate, artileCreate, requestArtile, requestArtileList, requestDeleteArtile, requestUpdateArtile, requestRefer};

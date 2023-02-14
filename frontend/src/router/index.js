@@ -106,6 +106,7 @@ const routes = [
             name: 'groupDetail',
             component: () => import(/* webpackChunkName: "GroupDetail" */ '@/components/group/GroupDetail.vue'),
             children: [
+              
               // 그룹의 유저 리스트
               {
                 path: '',
@@ -148,7 +149,14 @@ const routes = [
                 path: 'article/:articleId/update',
                 name: 'articleUpdate',
                 component: () => import(/* webpackChunkName: "articleUpdate" */"@/components/group/article/ArticleUpdate.vue"),
-              }
+              },
+              //그룹 자료실
+              {
+                path:'refer',
+                name:'groupRefer',
+                component: () => import(/* webpackChunkName: "groupRefer "*/ "@/components/group/refer/ReferItem.vue"),
+              
+              },
             ]
           },
         ],
