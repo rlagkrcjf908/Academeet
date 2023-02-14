@@ -2,7 +2,7 @@
   <header>
     <router-link to="/">
       <img src="@/assets/images/logo.png" />
-      <h1>
+      <h1 class="the-header-title">
         <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
           >M</span
         >eet
@@ -18,7 +18,7 @@
       </ul>
     </nav>
   </header>
-  <hr />
+  <hr class="the-header-hr" />
 </template>
 
 <script>
@@ -49,7 +49,7 @@ header {
   position: relative;
 }
 
-h1 {
+.the-header-title {
   display: inline-block;
   vertical-align: middle;
   color: black;
@@ -72,7 +72,7 @@ ul {
   display: flex;
 }
 
-hr {
+.the-header-hr {
   background: lightgray;
   height: 1.6px;
   border: 0;

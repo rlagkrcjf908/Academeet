@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class MeetEndReq {
     String chat;
     @ApiModelProperty(name="stt")
     @JsonProperty("stt")
-    String[] stt;
+    List<String> stt;
     @ApiModelProperty(name="video")
     @JsonProperty("video")
     String video;

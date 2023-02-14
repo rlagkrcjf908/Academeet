@@ -1,46 +1,60 @@
 <template>
   <div class="login">
-    <h1>
-      <span style="color: #94d82d">A</span>cade<span style="color: #94d82d">M</span>eet
-    </h1>
-      <el-form
-        label-position="top"
-        ref="ruleFormRef"
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        size="large"
-        class="demo-ruleForm login-box"
+    <p class="login-title">
+      - <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
+        >M</span
+      >eet -
+    </p>
+    <el-form
+      label-position="top"
+      ref="ruleFormRef"
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      size="large"
+      class="demo-ruleForm login-box"
+    >
+      <!-- 이메일 -->
+      <el-form-item prop="email" label="EMAIL">
+        <el-input
+          v-model.trim="ruleForm.email"
+          type="email"
+          autocomplete="off"
+          placeholder="이메일을 입력해 주세요."
+          minlength="100"
+        />
+      </el-form-item>
+      <!-- 비밀번호 -->
+      <el-form-item prop="password" label="PASSWORD">
+        <el-input
+          v-model.trim="ruleForm.password"
+          type="password"
+          autocomplete="off"
+          placeholder="비밀번호를 입력해주세요"
+        />
+      </el-form-item>
+
+      <!-- 로그인 버튼 -->
+      <el-button
+        type="success"
+        @click="submitForm(ruleFormRef)"
+        style="margin: 0; width: 100%; color: "
+        >LOGIN</el-button
       >
-        <!-- 이메일 -->
-        <el-form-item prop="email" label="EMAIL">
-          <el-input
-            v-model.trim="ruleForm.email"
-            type="email"
-            autocomplete="off"
-            placeholder="이메일을 입력해 주세요."
-            minlength="100"
-          />
-        </el-form-item>
-        <!-- 비밀번호 -->
-        <el-form-item prop="password" label="PASSWORD">
-          <el-input
-            v-model.trim="ruleForm.password"
-            type="password"
-            autocomplete="off"
-            placeholder="비밀번호를 입력해주세요"
-          />
-        </el-form-item>
-        
-        <!-- 로그인 버튼 -->
-        <el-button type="success" @click="submitForm(ruleFormRef)" style="margin:0; width:100%; color: ;">LOGIN</el-button>
-        <!-- </div> -->
-      </el-form>
-      <!-- 회원가입 -->
-      <router-link to="/join" style="margin-top:16vh; text-decoration: none; color: gray;">회원가입</router-link>
+      <!-- </div> -->
+    </el-form>
+    <!-- 회원가입 -->
+    <router-link
+      to="/join"
+      style="
+        margin-top: 8vh;
+        text-decoration: none;
+        color: gray;
+        margin-left: 0px;
+      "
+      >회원가입</router-link
+    >
   </div>
-
-
 </template>
 
 <script setup>
@@ -110,7 +124,7 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-.login{
+.login {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,9 +132,13 @@ const submitForm = (formEl) => {
   height: 100vh;
 }
 
-.login-box{
+.login-box {
   min-width: 240px;
   max-width: 400px;
 }
 
+.login-title {
+  margin: 32px;
+  font-size: 50px;
+}
 </style>

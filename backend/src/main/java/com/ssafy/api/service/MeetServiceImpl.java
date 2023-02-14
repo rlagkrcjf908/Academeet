@@ -117,15 +117,15 @@ public class MeetServiceImpl implements MeetService {
         List<Attendance> attendances = attendanceRepository.findAttendancesByMeetid(meet);
         if (meet == null) return false;
         if(endReq.getStt() !=null) {
-            String[] note = endReq.getStt();
+            List<String> note = endReq.getStt();
 //           String[] note = {"김학철입니다.","반갑습니다."};
             String filePath = "/app/build/stt/";
             String fileName = meet.getTitle() + "note"+".txt";
             try {
                 FileWriter fileWriter = new FileWriter(filePath + fileName);
-                for (int i = 0; i < note.length; i++) {
-                    System.out.println(note[i]);
-                    fileWriter.write(note[i] + "\n");
+                for (int i = 0; i < note.size(); i++) {
+                    System.out.println(note.get(i));
+                    fileWriter.write(note.get(i) + "\n");
                 }
                 fileWriter.close();
             } catch (IOException e) {

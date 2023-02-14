@@ -65,14 +65,6 @@ tr:hover {
   /* color: #fdce7e; */
   color: rgba(97, 178, 153, 1);
 }
-h1 {
-  font-size: 30px;
-  /* color: #fff; */
-  text-transform: uppercase;
-  font-weight: 300;
-  text-align: center;
-  margin-bottom: 15px;
-}
 table {
   width: 100%;
   table-layout: fixed;
