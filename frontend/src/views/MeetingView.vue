@@ -140,24 +140,24 @@
                 </el-header>
                 <hr style="border:1px solid white; margin: 0;"/>
 
-                <el-main class = "meet-side-main" v-if="isActive">
+                <el-main class = "meet-side-main" v-show="isChatActive">
                   <div id="chatting-content" style=" display: inline-block" >- Chatting -</div>
 
                 </el-main>
-                <el-main class = "meet-side-main" v-else>
+                <el-main class = "meet-side-main" v-show="isSpeechActive">
                   <div id="speech-content" style="display: inline-block">- Speech -</div>
                 </el-main>
 
                 <el-footer class = "meet-side-footer">
-                  <div class="insert-chatting" v-if="isActive">
+                  <div class="insert-chatting" v-if="isChatActive">
                     <input required type="text" style="margin-right:5px; height: 25px; width: 180px;" v-model="message" @keydown.enter="sendChat()" />
                     <button class="meet-chat-send-btn" style="height: 32px; width: 50px;" @click="sendChat()">입력</button>
                   </div>
                   <button
                     class="meet-chat-ctrl-btn"
-                    :class="{active:isActive}"
+                    :class="{active:isChatActive}"
                     @click="toggle"
-                    >{{isActive ? 'Go Speech' : 'Go Chatting'}}
+                    >{{isChatActive ? 'Go Speech' : 'Go Chatting'}}
                   </button>
                 </el-footer>
               </el-container>
@@ -222,7 +222,8 @@ export default {
     return {
       publisher: "publisher",
       subscriber: "subscriber",
-      isActive: true,
+      isChatActive: true,
+      isSpeechActive: false,
 
       // OpenVidu objects
       //OV: undefined,
@@ -308,7 +309,9 @@ export default {
     // },
 
     toggle() {
-      this.isActive = !this.isActive;
+      
+      this.isChatActive = !this.isChatActive,
+      this.isSpeechActive = !this.isSpeechActive
     },
 
     joinSession() {
