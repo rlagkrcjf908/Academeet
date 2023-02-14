@@ -74,7 +74,7 @@
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
                     </button>
                     <!-- 화면공유-->
-                    <button data-tooltip="화면 공유" class="meeting-bnt-item" id="buttonScreenShare" @click="startScreenShare()">
+                    <button data-tooltip="화면 공유" class="meeting-bnt-item" id="buttonScreenShare" @click="publishScreenShare">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                     </button>
                     <!-- 그룹 호스트 권한 버튼 -->
