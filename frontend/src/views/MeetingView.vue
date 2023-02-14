@@ -175,22 +175,25 @@
                 </el-header>
                 <hr style="border:1px solid white; margin: 0;"/>
 
-                <el-main class = "meet-side-main" >
-                  <div id="chatting-content" style=" display: inline-block">- Chatting -</div>
+                <el-main class = "meet-side-main" v-if="isActive">
+                  <div id="chatting-content" style=" display: inline-block" >- Chatting -</div>
                   
                 </el-main>
-                <!-- <el-main class = "meet-side-main" v-else>
-                  <div id="speech-content" style="width: 30%; display: inline-block">- Speech -</div>
-                </el-main> -->
+                <el-main class = "meet-side-main" v-else>
+                  <div id="speech-content" style="display: inline-block">- Speech -</div>
+                </el-main>
 
                 <el-footer class = "meet-side-footer">
-                  <div class="insert-chatting">
-                    <input type="text" style="margin-right:10px;" v-model="message" @keydown.enter="sendChat()" />
-                    <button type="button" @click="sendChat()">입력</button>
+                  <div class="insert-chatting" v-if="isActive">
+                    <input required type="text" style="margin-right:5px; height: 25px; width: 180px;" v-model="message" @keydown.enter="sendChat()" />
+                    <button class="meet-chat-send-btn" style="height: 32px; width: 50px;" @click="sendChat()">입력</button>
                   </div>
-                  <el-button style="width: 200px; height: 30px;" plane round type="success" @clink="isChat()">
-                    Speech
-                  </el-button>
+                  <button
+                    class="meet-chat-ctrl-btn"
+                    :class="{active:isActive}"
+                    @click="toggle"
+                    >{{isActive ? 'Go Speech' : 'Go Chatting'}}
+                  </button>
                 </el-footer>
               </el-container>
             </div>
@@ -264,10 +267,10 @@ export default {
   data() {
     const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
     console.log("meetInfo: ", meetInfo);
-
     return {
       publisher: "publisher",
       subscriber: "subscriber",
+      isActive: true,
 
       // OpenVidu objects
       //OV: undefined,
@@ -325,11 +328,9 @@ export default {
   },
 
   methods: {
-    // 김소희씨가 토글 버튼 만드는중
-    selectCity(item) {
-      item.selected = !item.selected;
+    toggle() {
+      this.isActive = !this.isActive;
     },
-    // -----------------
 
     joinSession() {
       // --- *1) Create two OpenVidu objects.
@@ -837,15 +838,49 @@ export default {
 .meet-side-main {
   background-color: white;
   margin: 10px;
-  width: 255px;
   height: 700px;
   word-break: break-all;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+.common-layout-meet-side {
+  margin: auto;
 }
 .chatting-content {
   margin: 10px;
-  overflow: inherit;
-  word-break: break-all;
+}
+.meet-chat-send-btn {
+  width: 50px;
+  height: 30px;
+  background-color: #95d475;
+  border: none;
+  font-size: 15px;
+  color: white;
+}
+.meet-chat-send-btn:hover {
+  background-color: #d1edc4;
+  border: none;
+  font-size: 15px;
+  color: #5aba2a;
+}
+.meet-chat-ctrl-btn {
+  width: 230px;
+  height: 35px;
+  margin: 10px;
+  background-color: #eebe77;
+  border: none;
+  font-size: 20px;
+  color: white;
+  border-radius: 50px;
+}
+.meet-chat-ctrl-btn:hover {
+  width: 230px;
+  height: 35px;
+  margin: 10px;
+  background-color: #f8e3c5;
+  border: none;
+  font-size: 20px;
+  color: #fdb447;
+  border-radius: 50px;
 }
 ::-webkit-scrollbar {
   width: 6px;
