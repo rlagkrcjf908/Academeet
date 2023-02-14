@@ -1,9 +1,14 @@
 import { meetingCreate } from "../common/api/meetingAPI";
 import router from '../router/index'
+import axios from 'axios';
 
 const state = {
   id:null,
   meetingInfo:null,
+   
+  //attendance
+  clientName:null,
+  meetingAtt:null
 };
 
 const getters = {
@@ -15,6 +20,14 @@ const mutations = {
   SET_MEETINGINFO: (state, meetingData) => {
     state.meetingInfo = meetingData;
     console.log(meetingData);
+  },
+
+  // attendance
+  SET_ATTENDANCE:(state, attendanceData)=>{
+    state.meetingAtt = attendanceData
+  },
+  SET_CLIENTNAME:(state, clientName)=>{
+    state.clientName = clientName
   }
 };
 
@@ -38,6 +51,28 @@ const actions = {
     }
     const response = await meetingCreate(meetingData.userid,JSON.stringify(payload))
     commit("SET_MEETINGINFO", response.data)
+  },
+  //attendance
+  setAttendanceCount: async({commit},payload) =>{
+    const meetingAtt = payload.meetingAtt;
+    const clientName = payload.name;
+    const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
+    commit("SET_ATTENDANCE",meetingAtt)
+    commit("SET_CLIENTNAME",clientName)
+    axios({
+      url:`http://localhost:8080/api/v1/meet/${meetInfo.meetId}/attend`,
+      method:'post',
+      data:{
+          userId:clientName,
+          attendcount:meetingAtt
+      }
+  })
+  .then(function a(response){
+      console.log(response);
+  })
+  .catch(function(error){
+      console.log(error);
+  });
   },
 };
 
