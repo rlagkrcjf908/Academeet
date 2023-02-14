@@ -13,7 +13,7 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <tbody>
+      <tbody v-if="articleList.length > 0">
         <tr
           v-for="(item, index) in articleList"
           :key="index"
@@ -24,6 +24,9 @@
           <td>{{ item.authName }}</td>
           <td>{{ item.date }}</td>
         </tr>
+      </tbody>
+      <tbody v-else>
+        <div style="font-size: 20px; margin-top: 250px">- 글이 없습니다-</div>
       </tbody>
     </table>
   </div>
