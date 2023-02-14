@@ -92,7 +92,7 @@
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/12B886/external-video-social-media-ui-tanah-basah-glyph-tanah-basah.png"/>
                     </button>
                     <!-- 화면공유-->
-                    <button data-tooltip="화면 공유" class="meeting-bnt-item"  @click="publishScreenShare">
+                    <button data-tooltip="화면 공유" class="meeting-bnt-item" id="buttonScreenShare" @click="publishScreenShare">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                     </button>
 
@@ -491,7 +491,7 @@ components: {
       resolution: "640x480", // The resolution of your video
       frameRate: 30, // The frame rate of your video
       insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-      mirror: false, // Whether to mirror your local video or not
+      mirror: true, // Whether to mirror your local video or not
       });
 
       // Set the main video in the page to display our webcam and store our Publisher
@@ -515,6 +515,7 @@ components: {
 
     this.getToken(this.mySessionId).then((tokenScreen) => {
       // Create a token for screen share
+      console.log("얍", tokenScreen, this.myUserName)
       this.sessionScreen
       .connect(tokenScreen, { clientData: this.myUserName })
       .then(() => {
