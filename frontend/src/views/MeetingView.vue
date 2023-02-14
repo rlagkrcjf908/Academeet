@@ -424,7 +424,7 @@ components: {
         console.log(event);
         console.log(event.type); // The type of message ("my-chat")
 
-        if(eveny.data == true){
+        if(event.data == true){
           this.onFaceDetection = true;
         }else{
           this.onFaceDetection = false;
@@ -436,7 +436,7 @@ components: {
         console.log(event);
         console.log(event.type); // The type of message ("my-chat")
 
-        if(eveny.data == true){
+        if(event.data == true){
           startSpeeching();
         }else{
           stopSpeeching();
@@ -703,32 +703,6 @@ components: {
     this.speechEnabled = !this.speechEnabled;
     // console.log("speechEnabled : " + this.speechEnabled);
     },
-  audioOn(){
-      this.sessionCamera
-      .signal({
-          to: [],
-          type: "master-audio-on",
-      })
-      .then(() => {
-          console.log("master-audio-on successfully sent");
-      })
-      .catch((error) => {
-      console.error(error);
-      });
-
-  },
-  audioOff(){
-      this.sessionCamera
-      .signal({
-          to: [],
-          type: "master-audio-off",
-      })
-      .then(() => {
-          console.log("master-audio-off successfully sent");
-      })
-      .catch((error) => {
-      console.error(error);
-      });
   },
 
   endSession(){
