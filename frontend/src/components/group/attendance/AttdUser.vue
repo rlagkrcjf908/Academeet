@@ -15,7 +15,7 @@
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
       <!-- 호스트 유저 (수정가능하게 하기) -->
-      <tbody v-if="hostId == userId">
+      <tbody v-if="hostId == userId && attdUserList.length > 0">
         <tr v-for="(item, index) in attdUserList" :key="index">
           <td>{{ item.meetId }}</td>
           <td>{{ item.title }}</td>
@@ -38,7 +38,7 @@
         </tr>
       </tbody>
       <!-- 일반 유저 -->
-      <tbody v-else>
+      <tbody v-else-if="attdUserList.length > 0">
         <tr v-for="(item, index) in attdUserList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
@@ -48,6 +48,9 @@
           </td>
           <td class="attd-fail" v-else>{{ item.attendance }}</td>
         </tr>
+      </tbody>
+      <tbody v-else>
+        <div style="font-size: 20px; margin-top: 250px">- 정보가 없습니다-</div>
       </tbody>
     </table>
   </div>

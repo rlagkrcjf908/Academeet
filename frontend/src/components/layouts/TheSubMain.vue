@@ -11,6 +11,7 @@
       >
         {{ groupInfo.name }}
       </el-button>
+
       <el-button
         @click="routeToAttdItem"
         type="success"
@@ -19,6 +20,7 @@
       >
         출석부
       </el-button>
+
       <el-button
         @click="routeToArticle"
         type="success"
@@ -27,6 +29,16 @@
       >
         공지사항
       </el-button>
+
+      <el-button
+        @click="routeToRefer"
+        type="success"
+        link
+        style="margin: 0; margin-bottom: 8px"
+      >
+        자료실
+      </el-button>
+
       <el-button
         @click="open"
         type="danger"
@@ -99,6 +111,16 @@ const routeToArticle = () => {
   console.log("routeToArticle 이동합니다");
   router.push({
     name: "articleList",
+    params: { groupId: groupId.value },
+  });
+};
+
+//자료실 이동
+const routeToRefer = () => {
+  console.log("routeToRefer 이동합니다");
+  console.log("groupId.value:", groupId.value);
+  router.push({
+    name: "groupRefer",
     params: { groupId: groupId.value },
   });
 };

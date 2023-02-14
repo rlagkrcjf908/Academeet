@@ -8,7 +8,8 @@ import {
   requestAttdList,
   attdUserUpdate,
   artileCreate,
-  requestUpdateArtile
+  requestUpdateArtile,
+  requestRefer
 } from "../common/api/groupAPI";
 import router from '../router/index'
 import { ElMessage } from 'element-plus'
@@ -20,6 +21,7 @@ const state = {
   groupUserList:[],
   attdList: [], //그룹의 전체 출석
   attdUser: [], //유저 출석
+  // groupReferList:[], //그룹 자료실
 };
 
 const getters = {
@@ -35,6 +37,9 @@ const getters = {
   getGroupListLength: state => {
     return state.groupList.length;
   },
+  // getGroupReferList: state =>{
+  //   return state.groupReferList;
+  // }
 };
 
 //변수를 조작하는 함수들을 선언
@@ -79,6 +84,10 @@ const mutations = {
   UPDATE_ATTD_USER: (state, payload) => {
     state.attdUser = payload; //유저 한명 수정
   },
+  // // 그룹 자료실 리스트
+  // SET_GROUP_REFER_LIST: (state, payload) => {
+  //   state.groupReferList = payload;
+  // },
 };
 
 //비동기 처리를 하는 함수들
@@ -174,6 +183,14 @@ const actions = {
       })
     }
   },
+    // //그룹 자료실
+    // requestReferAction: async ({ commit }, groupId) => {
+    //   console.log("그룹자료실 Test - groupStore");
+    //   const response = await requestRefer(groupId);
+    //   console.log(response.status);
+    //   console.log("받은 데이터, response.data: ", response.data);
+    //   commit("SET_GROUP_REFER_LIST", response.data);
+    // },
 };
 
 export default {
