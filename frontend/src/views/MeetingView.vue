@@ -208,13 +208,13 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
   const OPENVIDU_SERVER_URL = "https://i8d108.p.ssafy.io:8443";
   const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
-  export default {
+export default {
   name: "App",
 
-components: {
-  UserVideo,
-  // SpeechRecognition,
-},
+  components: {
+    UserVideo,
+    // SpeechRecognition,
+  },
 
   data() {
     const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
@@ -224,63 +224,62 @@ components: {
       subscriber: "subscriber",
       isActive: true,
 
-  // OpenVidu objects
-  //OV: undefined,
-  //session: undefined,
-  mainStreamManager: undefined,
-  PublisherCamera: undefined,
-  PublisherScreen: undefined,
-  SubscribersCamera: [],
-  SubscribersScreen: [],
+      // OpenVidu objects
+      //OV: undefined,
+      //session: undefined,
+      mainStreamManager: undefined,
+      PublisherCamera: undefined,
+      PublisherScreen: undefined,
+      SubscribersCamera: [],
+      SubscribersScreen: [],
 
-  // Audio, Video Control
-  videoEnabled: true,
-  audioEnabled: true,
+      // Audio, Video Control
+      videoEnabled: true,
+      audioEnabled: true,
 
-  // Master Audio, Video Control
-  masterVideoEnabled: true,
-  masterAudioEnabled: true,
+      // Master Audio, Video Control
+      masterVideoEnabled: true,
+      masterAudioEnabled: true,
 
-  // chatting
-  message: "",
-  chats: [],
+      // chatting
+      message: "",
+      chats: [],
 
-  // screen share
-  OVCamera: undefined,
-  OVScreen: undefined,
-  sessionCamera: undefined,
-  sessionScreen: undefined,
-  screensharing: false,
+      // screen share
+      OVCamera: undefined,
+      OVScreen: undefined,
+      sessionCamera: undefined,
+      sessionScreen: undefined,
+      screensharing: false,
 
-  // Join form
-  ownerId: meetInfo.ownerId,
-  userId : meetInfo.userId,
-  mySessionTitle: meetInfo.meetTitle,
-  // SessionId 는 무적권 알파벳과 숫자만
-  mySessionId: String(meetInfo.meetId),
-  myUserName: meetInfo.userName,
+      // Join form
+      ownerId: meetInfo.ownerId,
+      userId : meetInfo.userId,
+      mySessionTitle: meetInfo.meetTitle,
+      // SessionId 는 무적권 알파벳과 숫자만
+      mySessionId: String(meetInfo.meetId),
+      myUserName: meetInfo.userName,
 
-    // recording
-    hasAudio : true,
-    hasVideo : true,
-    outputMode : ["COMPOSED", "INDIVIDUAL", "COMPOSED_QUICK_START"],
-    recordingMode : ["ALWAYS", "MANUAL"],
-    recordingId : undefined,
-    videoURL : undefined,
-    recodingEnabled : false,
+      // recording
+      hasAudio : true,
+      hasVideo : true,
+      outputMode : ["COMPOSED", "INDIVIDUAL", "COMPOSED_QUICK_START"],
+      recordingMode : ["ALWAYS", "MANUAL"],
+      recordingId : undefined,
+      videoURL : undefined,
+      recodingEnabled : false,
 
-  // face detection
-  interval : undefined,
-  onFaceDetection: false,
+      // face detection
+      interval : undefined,
+      onFaceDetection: false,
 
-    // Speech
-    speechEnabled: false,
-    speechRecognition: undefined,
-    recognizedText: "",
-    recognizedlog:[]
-
-  };
-},
+      // Speech
+      speechEnabled: false,
+      speechRecognition: undefined,
+      recognizedText: "",
+      recognizedlog:[]
+    };
+  },
 
   mounted: function() {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -313,250 +312,249 @@ components: {
     },
 
     joinSession() {
-    // --- *1) Create two OpenVidu objects.
-    // 'OVCamera' will handle Camera operations.
-    // 'OVScreen' will handle screen sharing operations
-    this.OVCamera = new OpenVidu();
-    this.OVScreen = new OpenVidu();
+      // --- *1) Create two OpenVidu objects.
+      // 'OVCamera' will handle Camera operations.
+      // 'OVScreen' will handle screen sharing operations
+      this.OVCamera = new OpenVidu();
+      this.OVScreen = new OpenVidu();
 
-  // --- *2) Init two OpenVidu Session Objects ---
+      // --- *2) Init two OpenVidu Session Objects ---
 
-  // 'sessionCamera' will handle camera operations
-  // 'sessionScreen' will handle screen sharing operations
-  this.sessionCamera = this.OVCamera.initSession();
-  this.sessionScreen = this.OVScreen.initSession();
+      // 'sessionCamera' will handle camera operations
+      // 'sessionScreen' will handle screen sharing operations
+      this.sessionCamera = this.OVCamera.initSession();
+      this.sessionScreen = this.OVScreen.initSession();
 
-  // --- 3) Specify the actions when events take place in the session ---
+      // --- 3) Specify the actions when events take place in the session ---
 
-  // On every new Stream received...
-  this.sessionCamera.on("streamCreated", ({ stream }) => {
-    if (stream.typeOfVideo == "CAMERA") {
-    const subscriber = this.sessionCamera.subscribe(stream);
-    this.SubscribersCamera.push(subscriber);
-    }
-  });
-
-  this.sessionScreen.on("streamCreated", ({ stream }) => {
-    if (stream.typeOfVideo == "SCREEN") {
-    const subscriber = this.sessionScreen.subscribe(stream);
-    this.SubscribersScreen.push(subscriber);
-    }
-  });
-
-  // On every Stream destroyed...
-  this.sessionCamera.on("streamDestroyed", ({ stream }) => {
-    const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
-    if (index >= 0) {
-    this.SubscribersCamera.splice(index, 1);
-    }
-  });
-
-  // On every asynchronous exception...
-  this.sessionCamera.on("exception", ({ exception }) => {
-    console.warn(exception);
-  });
-
-  this.sessionCamera.on("signal:my-chat", (event) => {
-    //this.chats.push(JSON.parse(event.data));
-    console.log(event.data); // Message
-    console.log(event.from); // Connection object of the sender
-    console.log(event.type); // The type of message ("my-chat")
-
-    let receive = event.data.split("/");
-    let userName = receive[0];
-    let message = receive[1];
-    document.getElementById(
-    "chatting-content"
-    ).innerHTML += `<p>${userName}: ${message}</p>`;
-    // document.getElementById(
-    //   "chatting-content"
-    // ).innerHTML += `<p>${message}</p>`;
-  });
-
-  this.sessionCamera.on("signal:my-speech", (event) => {
-    //this.chats.push(JSON.parse(event.data));
-    console.log(event.data); // Message
-    console.log(event.from); // Connection object of the sender
-    console.log(event.type); // The type of message ("my-chat")
-
-    let receive = event.data.split("/");
-    let userName = receive[0];
-    let message = receive[1];
-    document.getElementById(
-    "speech-content"
-    ).innerHTML += `<p>${userName}: ${message}</p>`;
-
-    // document.getElementById(
-    //   "speech-content"
-    // ).innerHTML += `<p>${message}</p>`;
-  });
-
-    this.sessionCamera.on("signal:master-audio-on", (event) => {
-        console.log(event.type); // The type of message ("my-chat")
-        this.audioEnabled = true;
-        this.PublisherCamera.publishAudio(this.audioEnabled);
-    });
-
-    this.sessionCamera.on("signal:master-audio-off", (event) => {
-        console.log(event.type); // The type of message ("my-chat")
-        this.audioEnabled = false;
-        this.PublisherCamera.publishAudio(this.audioEnabled);
-    });
-
-    this.sessionCamera.on("signal:master-video-on", (event) => {
-        console.log(event.type); // The type of message ("my-chat")
-        this.vedioEnabled = true;
-        this.PublisherCamera.publishVideo(this.vedioEnabled);
-    });
-
-    this.sessionCamera.on("signal:master-video-off", (event) => {
-        console.log(event.type); // The type of message ("my-chat")
-        this.vedioEnabled = false;
-        this.PublisherCamera.publishVideo(this.vedioEnabled);
-    });
-
-    this.sessionCamera.on("signal:end-session", (event) => {
-        console.log(event.type); // The type of message ("my-chat")
-        this.leaveSession();
-    });
-
-    this.sessionCamera.on("signal:checking", (event) => {
-        console.log(event);
-        console.log(event.type); // The type of message ("my-chat")
-
-        if(event.data == true){
-          this.onFaceDetection = true;
-        }else{
-          this.onFaceDetection = false;
+      // On every new Stream received...
+      this.sessionCamera.on("streamCreated", ({ stream }) => {
+        if (stream.typeOfVideo == "CAMERA") {
+        const subscriber = this.sessionCamera.subscribe(stream);
+        this.SubscribersCamera.push(subscriber);
         }
-        
-    });
-
-    this.sessionCamera.on("signal:speeching", (event) => {
-        console.log(event);
-        console.log(event.type); // The type of message ("my-chat")
-
-        if(event.data == true){
-          startSpeeching();
-        }else{
-          stopSpeeching();
-        }
-        
-    });
-
-    this.sessionCamera.on('publisherStartSpeaking', (event) => {
-      console.log('User ' + event.connection.connectionId + ' start speaking');
-
-  });
-
-    this.sessionCamera.on('publisherStopSpeaking', (event) => {
-      console.log('User ' + event.connection.connectionId + ' stop speaking');
-    });
-
-  // --- 4) Connect to the session with a valid user token ---
-
-  // Get a token from the OpenVidu deployment
-  this.getToken(this.mySessionId).then((token) => {
-    // First param is the token. Second param can be retrieved by every user on event
-    // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-    this.sessionCamera
-    .connect(token, { clientData: this.myUserName })
-    .then(() => {
-      // --- 5) Get your own camera stream with the desired properties ---
-
-      // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-      // element: we will manage it on our own) and with the desired properties
-      let publisher = this.OVCamera.initPublisher(undefined, {
-      audioSource: undefined, // The source of audio. If undefined default microphone
-      videoSource: undefined, // The source of video. If undefined default webcam
-      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-      publishVideo: true, // Whether you want to start publishing with your video enabled or not
-      resolution: "640x480", // The resolution of your video
-      frameRate: 30, // The frame rate of your video
-      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-      mirror: true, // Whether to mirror your local video or not
       });
 
-      // Set the main video in the page to display our webcam and store our Publisher
-
-      this.mainStreamManager = publisher;
-      this.PublisherCamera = publisher;
-
-      // --- 6) Publish your stream ---
-
-      this.sessionCamera.publish(this.PublisherCamera);
-
-      })
-    .catch((error) => {
-      console.log(
-      "There was an error connecting to the session:",
-      error.code,
-      error.message
-      );
-    });
-  });
-
-    this.getToken(this.mySessionId).then((tokenScreen) => {
-      // Create a token for screen share
-      console.log("얍", tokenScreen, this.myUserName)
-      this.sessionScreen
-      .connect(tokenScreen, { clientData: this.myUserName })
-      .then(() => {
-        document.getElementById("buttonScreenShare").style.visibility =
-        "visible";
-        console.log("Session screen connected");
-      })
-      .catch((error) => {
-        console.warn(
-        "There was an error connecting to the session for screen share:",
-        error.code,
-        error.messag
-        );
+      this.sessionScreen.on("streamCreated", ({ stream }) => {
+        if (stream.typeOfVideo == "SCREEN") {
+        const subscriber = this.sessionScreen.subscribe(stream);
+        this.SubscribersScreen.push(subscriber);
+        }
       });
-    });
 
-    this.recognizedlog = [];
-    window.addEventListener("beforeunload", this.leaveSession);
-  },
+      // On every Stream destroyed...
+      this.sessionCamera.on("streamDestroyed", ({ stream }) => {
+        const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+        this.SubscribersCamera.splice(index, 1);
+        }
+      });
 
-  publishScreenShare() {
-  // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
-  var publisherScreen = this.OVScreen.initPublisher(undefined, {
-    videoSource: "screen",
-  });
+      // On every asynchronous exception...
+      this.sessionCamera.on("exception", ({ exception }) => {
+        console.warn(exception);
+      });
 
-  // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
-  publisherScreen.once("accessAllowed", () => {
-    document.getElementById("buttonScreenShare").style.visibility =
-    "hidden";
-    this.screensharing = true;
-    // If the user closes the shared window or stops sharing it, unpublish the stream
-    publisherScreen.stream
-    .getMediaStream()
-    .getVideoTracks()[0]
-    .addEventListener("ended", () => {
-      console.log('User pressed the "Stop sharing" button');
-      this.sessionScreen.unpublish(publisherScreen);
-      document.getElementById("buttonScreenShare").style.visibility =
-      "visible";
-      this.screensharing = false;
-    });
+      this.sessionCamera.on("signal:my-chat", (event) => {
+        //this.chats.push(JSON.parse(event.data));
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
 
-      this.PublisherScreen = publisherScreen;
-      this.sessionScreen.publish(publisherScreen);
-    });
-    /*
-    publisherScreen.on('videoElementCreated', function (event) {
-      appendUserData(event.element, sessionScreen.connection);
-      event.element['muted'] = true;
-    });
-    */
-    publisherScreen.once("accessDenied", () => {
-      console.error("Screen Share: Access Denied");
-    });
-  },
-  leaveSession() {
-    axios({
+        let receive = event.data.split("/");
+        let userName = receive[0];
+        let message = receive[1];
+        document.getElementById(
+        "chatting-content"
+        ).innerHTML += `<p>${userName}: ${message}</p>`;
+        // document.getElementById(
+        //   "chatting-content"
+        // ).innerHTML += `<p>${message}</p>`;
+      });
+
+      this.sessionCamera.on("signal:my-speech", (event) => {
+        //this.chats.push(JSON.parse(event.data));
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+
+        let receive = event.data.split("/");
+        let userName = receive[0];
+        let message = receive[1];
+        document.getElementById(
+        "speech-content"
+        ).innerHTML += `<p>${userName}: ${message}</p>`;
+
+        // document.getElementById(
+        //   "speech-content"
+        // ).innerHTML += `<p>${message}</p>`;
+      });
+
+      this.sessionCamera.on("signal:master-audio-on", (event) => {
+          console.log(event.type); // The type of message ("my-chat")
+          this.audioEnabled = true;
+          this.PublisherCamera.publishAudio(this.audioEnabled);
+      });
+
+      this.sessionCamera.on("signal:master-audio-off", (event) => {
+          console.log(event.type); // The type of message ("my-chat")
+          this.audioEnabled = false;
+          this.PublisherCamera.publishAudio(this.audioEnabled);
+      });
+
+      this.sessionCamera.on("signal:master-video-on", (event) => {
+          console.log(event.type); // The type of message ("my-chat")
+          this.vedioEnabled = true;
+          this.PublisherCamera.publishVideo(this.vedioEnabled);
+      });
+
+      this.sessionCamera.on("signal:master-video-off", (event) => {
+          console.log(event.type); // The type of message ("my-chat")
+          this.vedioEnabled = false;
+          this.PublisherCamera.publishVideo(this.vedioEnabled);
+      });
+
+      this.sessionCamera.on("signal:end-session", (event) => {
+          console.log(event.type); // The type of message ("my-chat")
+          this.leaveSession();
+      });
+
+      this.sessionCamera.on("signal:checking", (event) => {
+          console.log(event);
+          console.log(event.type); // The type of message ("my-chat")
+
+          if(event.data == true){
+            this.onFaceDetection = true;
+          }else{
+            this.onFaceDetection = false;
+          }
+          
+      });
+
+      this.sessionCamera.on("signal:speeching", (event) => {
+          console.log(event);
+          console.log(event.type); // The type of message ("my-chat")
+
+          if(event.data == true){
+            startSpeeching();
+          }else{
+            stopSpeeching();
+          }
+          
+      });
+
+      this.sessionCamera.on('publisherStartSpeaking', (event) => {
+        console.log('User ' + event.connection.connectionId + ' start speaking');
+      });
+
+      this.sessionCamera.on('publisherStopSpeaking', (event) => {
+        console.log('User ' + event.connection.connectionId + ' stop speaking');
+      });
+
+      // --- 4) Connect to the session with a valid user token ---
+
+      // Get a token from the OpenVidu deployment
+      this.getToken(this.mySessionId).then((token) => {
+        // First param is the token. Second param can be retrieved by every user on event
+        // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
+        this.sessionCamera
+        .connect(token, { clientData: this.myUserName })
+        .then(() => {
+          // --- 5) Get your own camera stream with the desired properties ---
+
+          // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+          // element: we will manage it on our own) and with the desired properties
+          let publisher = this.OVCamera.initPublisher(undefined, {
+          audioSource: undefined, // The source of audio. If undefined default microphone
+          videoSource: undefined, // The source of video. If undefined default webcam
+          publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+          publishVideo: true, // Whether you want to start publishing with your video enabled or not
+          resolution: "640x480", // The resolution of your video
+          frameRate: 30, // The frame rate of your video
+          insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+          mirror: true, // Whether to mirror your local video or not
+          });
+
+          // Set the main video in the page to display our webcam and store our Publisher
+
+          this.mainStreamManager = publisher;
+          this.PublisherCamera = publisher;
+
+          // --- 6) Publish your stream ---
+
+          this.sessionCamera.publish(this.PublisherCamera);
+
+          })
+        .catch((error) => {
+          console.log(
+          "There was an error connecting to the session:",
+          error.code,
+          error.message
+          );
+        });
+      });
+
+      this.getToken(this.mySessionId).then((tokenScreen) => {
+        // Create a token for screen share
+        console.log("얍", tokenScreen, this.myUserName)
+        this.sessionScreen
+        .connect(tokenScreen, { clientData: this.myUserName })
+        .then(() => {
+          document.getElementById("buttonScreenShare").style.visibility =
+          "visible";
+          console.log("Session screen connected");
+        })
+        .catch((error) => {
+          console.warn(
+          "There was an error connecting to the session for screen share:",
+          error.code,
+          error.messag
+          );
+        });
+      });
+
+      this.recognizedlog = [];
+      window.addEventListener("beforeunload", this.leaveSession);
+    },
+
+    publishScreenShare() {
+      // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
+      var publisherScreen = this.OVScreen.initPublisher(undefined, {
+        videoSource: "screen",
+      });
+
+      // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
+      publisherScreen.once("accessAllowed", () => {
+        document.getElementById("buttonScreenShare").style.visibility = "hidden";
+        this.screensharing = true;
+        // If the user closes the shared window or stops sharing it, unpublish the stream
+        publisherScreen.stream
+        .getMediaStream()
+        .getVideoTracks()[0]
+        .addEventListener("ended", () => {
+          console.log('User pressed the "Stop sharing" button');
+          this.sessionScreen.unpublish(publisherScreen);
+          document.getElementById("buttonScreenShare").style.visibility =
+          "visible";
+          this.screensharing = false;
+        });
+
+        this.PublisherScreen = publisherScreen;
+        this.sessionScreen.publish(publisherScreen);
+      });
+      /*
+      publisherScreen.on('videoElementCreated', function (event) {
+        appendUserData(event.element, sessionScreen.connection);
+        event.element['muted'] = true;
+      });
+      */
+      publisherScreen.once("accessDenied", () => {
+        console.error("Screen Share: Access Denied");
+      });
+    },
+
+    leaveSession() {
+      axios({
           url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
           method:'post',
           data:{
@@ -571,54 +569,55 @@ components: {
       .catch(function(error){
           console.log(error);
       });
-  // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
-  if (this.sessionCamera) this.sessionCamera.disconnect();
-  if (this.sessionScreen) this.sessionScreen.disconnect();
 
-  // Empty all properties...
-  this.sessionCamera = undefined;
-  this.sessionScreen = undefined;
-  this.mainStreamManager = undefined;
-  this.PublisherCamera = undefined;
-  this.PublisherScreen = undefined;
-  this.SubscribersCamera = [];
-  this.SubscribersScreen = [];
-  this.OVCamera = undefined;
-  this.OVScreen = undefined;
+      // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
+      if (this.sessionCamera) this.sessionCamera.disconnect();
+      if (this.sessionScreen) this.sessionScreen.disconnect();
 
-  this.screensharing = false;
+      // Empty all properties...
+      this.sessionCamera = undefined;
+      this.sessionScreen = undefined;
+      this.mainStreamManager = undefined;
+      this.PublisherCamera = undefined;
+      this.PublisherScreen = undefined;
+      this.SubscribersCamera = [];
+      this.SubscribersScreen = [];
+      this.OVCamera = undefined;
+      this.OVScreen = undefined;
 
-  document.getElementById(
-    "chatting-content"
-    ).innerHTML = "";
+      this.screensharing = false;
 
-  document.getElementById(
-    "speech-content"
-    ).innerHTML = "";
+      document.getElementById(
+        "chatting-content"
+        ).innerHTML = "";
 
-  // Remove beforeunload listener
-  window.removeEventListener("beforeunload", this.leaveSession);
-  },
+      document.getElementById(
+        "speech-content"
+        ).innerHTML = "";
 
-  updateMainVideoStreamManager(stream) {
+      // Remove beforeunload listener
+      window.removeEventListener("beforeunload", this.leaveSession);
+    },
 
-  if (this.mainStreamManager === stream) return;
+    updateMainVideoStreamManager(stream) {
 
-  this.mainStreamManager = null;
-  setTimeout(()=> this.mainStreamManager = stream, 100);
+      if (this.mainStreamManager === stream) return;
 
-  /*
-  if(this.mainStreamManager !== null) this.mainStreamManager = null;
-  else this.mainStreamManager = stream;
-  */
-  },
+      this.mainStreamManager = null;
+      setTimeout(()=> this.mainStreamManager = stream, 100);
 
-  videoTrigger() {
-  this.videoEnabled = !this.videoEnabled;
-  this.PublisherCamera.publishVideo(this.videoEnabled);
-  },
+      /*
+      if(this.mainStreamManager !== null) this.mainStreamManager = null;
+      else this.mainStreamManager = stream;
+      */
+    },
 
-  videoOn() {
+    videoTrigger() {
+      this.videoEnabled = !this.videoEnabled;
+      this.PublisherCamera.publishVideo(this.videoEnabled);
+    },
+
+    videoOn() {
       this.masterVideoEnabled = true
       this.sessionCamera
       .signal({
@@ -633,28 +632,28 @@ components: {
       });
     },
 
-  videoOff() {
-    this.masterVideoEnabled = false
-    this.sessionCamera
-    .signal({
-        to: [],
-        type: "master-video-off",
-    })
-    .then(() => {
-        console.log("master-video-off successfully sent");
-    })
-    .catch((error) => {
-    console.error(error);
-    });
-  },
+    videoOff() {
+      this.masterVideoEnabled = false
+      this.sessionCamera
+      .signal({
+          to: [],
+          type: "master-video-off",
+      })
+      .then(() => {
+          console.log("master-video-off successfully sent");
+      })
+      .catch((error) => {
+      console.error(error);
+      });
+    },
 
-  audioTrigger() {
-      this.audioEnabled = !this.audioEnabled;
-      this.PublisherCamera.publishAudio(this.audioEnabled);
-  },
+    audioTrigger() {
+        this.audioEnabled = !this.audioEnabled;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
+    },
 
-  audioOn(){
-      this.masterAudioEnabled = true;
+    audioOn(){
+      this.masterAudioEnabled = true
       this.sessionCamera
       .signal({
           to: [],
@@ -668,8 +667,8 @@ components: {
       });
     },
 
-  audioOff(){
-      this.masterAudioEnabled = false;
+    audioOff(){
+      this.masterAudioEnabled = false
       this.sessionCamera
       .signal({
           to: [],
@@ -683,7 +682,7 @@ components: {
       });
     },
 
-  endSession(){
+    endSession(){
       this.sessionCamera
       .signal({
           to: [],
@@ -699,52 +698,39 @@ components: {
       console.error(error);
       });
     },
+
     speechTrigger() {
-    this.speechEnabled = !this.speechEnabled;
+      this.speechEnabled = !this.speechEnabled;
     // console.log("speechEnabled : " + this.speechEnabled);
     },
-  },
 
-  endSession(){
+    speechTrigger() {
+      this.speechEnabled = !this.speechEnabled;
+      // console.log("speechEnabled : " + this.speechEnabled);
+    },
+
+    sendChat() {
+      /*
+      const sendData = {
+        nickname: this.myUserName,
+        msg: this.message,
+      };
+      */
       this.sessionCamera
-      .signal({
-          to: [],
-          type: "end-session",
-      })
-      .then(() => {
-          console.log("end-session successfully sent");
-      })
-      .catch((error) => {
-      console.error(error);
-      });
-  },
-  speechTrigger() {
-  this.speechEnabled = !this.speechEnabled;
-  // console.log("speechEnabled : " + this.speechEnabled);
-  },
-
-  sendChat() {
-  /*
-  const sendData = {
-    nickname: this.myUserName,
-    msg: this.message,
-  };
-  */
-  this.sessionCamera
-    .signal({
-    data: this.myUserName + "/" + this.message,
-    // data: JSON.stringify(sendData),
-    to: [],
-    type: "my-chat",
-    })
-    .then(() => {
-    console.log("Message successfully sent");
-    })
-    .catch((error) => {
-    console.error(error);
-    });
-  this.message = "";
-  },
+        .signal({
+        data: this.myUserName + "/" + this.message,
+        // data: JSON.stringify(sendData),
+        to: [],
+        type: "my-chat",
+        })
+        .then(() => {
+        console.log("Message successfully sent");
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+      this.message = "";
+    },
 
     /**
      * --------------------------------------------
@@ -794,27 +780,27 @@ components: {
 			});
 		},
 
-  // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-  createToken(sessionId) {
-    return new Promise((resolve, reject) => {
-      axios
-      .post(
-        `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-        {},
-        {
-        auth: {
-          username: "OPENVIDUAPP",
-          password: OPENVIDU_SERVER_SECRET,
-        },
-        }
-      )
-      .then((response) => response.data)
-      .then((data) => resolve(data.token))
-      .catch((error) => reject(error.response));
-    });
-  },
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+    createToken(sessionId) {
+      return new Promise((resolve, reject) => {
+        axios
+        .post(
+          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+          {},
+          {
+          auth: {
+            username: "OPENVIDUAPP",
+            password: OPENVIDU_SERVER_SECRET,
+          },
+          }
+        )
+        .then((response) => response.data)
+        .then((data) => resolve(data.token))
+        .catch((error) => reject(error.response));
+      });
+    },
 
-  // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 
     recordingTrigger(){
       this.recordingEnabled = !this.recodingEnabled;
@@ -834,7 +820,7 @@ components: {
       }
     },
     
-  recordingStartFunc(sessionId){
+    recordingStartFunc(sessionId){
       return new Promise((resolve, reject) => {
           axios
           .post(
@@ -857,9 +843,9 @@ components: {
           .then((data) => resolve(data.id))
           .catch((error) => reject(error.response));
       });
-  },
+    },
 
-  recordingStopFunc(recordingId){
+    recordingStopFunc(recordingId){
       return new Promise((resolve, reject) => {
           axios
           .post(
@@ -876,83 +862,83 @@ components: {
           .then((data) => resolve(data.url))
           .catch((error) => reject(error.response));
       });
-  },
+    },
 
-  checkingTrigger(){
-    this.sessionCamera
-      .signal({
-        data: !this.onFaceDetection,
-        to: [],
-        type: "checking",
-      })
-      .then(() => {
-        console.log("checking successfully sent");
+    checkingTrigger(){
+      this.sessionCamera
+        .signal({
+          data: !this.onFaceDetection,
+          to: [],
+          type: "checking",
         })
-      .catch((error) => {
-        console.error(error);
-      });
-  },
+        .then(() => {
+          console.log("checking successfully sent");
+          })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
 
-  // async startChecking(){
-  // this.onFaceDetection = true,
-  // document.getElementById('buttonStartPresent').style.visibility = "hidden";
-  // document.getElementById('buttonStopPresent').style.visibility = "visible";
-  // },
+    // async startChecking(){
+    // this.onFaceDetection = true,
+    // document.getElementById('buttonStartPresent').style.visibility = "hidden";
+    // document.getElementById('buttonStopPresent').style.visibility = "visible";
+    // },
 
-  // async stopChecking(){
-  // this.onFaceDetection = false,
-  // document.getElementById('buttonStartPresent').style.visibility = "visible";
-  // document.getElementById('buttonStopPresent').style.visibility = "hidden";
-  // },
+    // async stopChecking(){
+    // this.onFaceDetection = false,
+    // document.getElementById('buttonStartPresent').style.visibility = "visible";
+    // document.getElementById('buttonStopPresent').style.visibility = "hidden";
+    // },
 
-  speechingTrigger(){
-    this.sessionCamera
-      .signal({
-        data: !this.speechEnabled,
-        to: [],
-        type: "speeching",
-      })
-      .then(() => {
-        console.log("speech successfully sent");
+    speechingTrigger(){
+      this.sessionCamera
+        .signal({
+          data: !this.speechEnabled,
+          to: [],
+          type: "speeching",
         })
-      .catch((error) => {
-        console.error(error);
-      });
-  },
+        .then(() => {
+          console.log("speech successfully sent");
+          })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   
     async startSpeeching(){
-    // this.onFaceDetection = true,
-    console.log("startSpeeching");
-    this.speechEnabled = true;
-    // this.speechRecognition.onresult = (event) => {
-    //     this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
-    // };
+      // this.onFaceDetection = true,
+      console.log("startSpeeching");
+      this.speechEnabled = true;
+      // this.speechRecognition.onresult = (event) => {
+      //     this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
+      // };
 
 
-    this.speechRecognition.onresult = (event) => {
-      for(let i = event.resultIndex, len = event.results.length; i < len; i++){
-        let transcript = event.results[i][0].transcript;
-        console.log(transcript);
-        this.recognizedText += transcript;
-        if(event.results[i].isFinal){
-          this.sendSpeech();
+      this.speechRecognition.onresult = (event) => {
+        for(let i = event.resultIndex, len = event.results.length; i < len; i++){
+          let transcript = event.results[i][0].transcript;
+          console.log(transcript);
+          this.recognizedText += transcript;
+          if(event.results[i].isFinal){
+            this.sendSpeech();
+          }
         }
-      }
         // this.recognizedText = this.recognizedText + " " + event.results[0][0].transcript;
-    };
+      };
 
-    this.speechRecognition.start();
-  },
+      this.speechRecognition.start();
+    },
 
-  async stopSpeeching(){
-  // this.onFaceDetection = false,
-  console.log("stopSpeeching");
-  this.speechEnabled = false;
+    async stopSpeeching(){
+      // this.onFaceDetection = false,
+      console.log("stopSpeeching");
+      this.speechEnabled = false;
 
-    // this.sendSpeech();
-    this.speechRecognition.stop();
+        // this.sendSpeech();
+        this.speechRecognition.stop();
 
-    this.recognizedText = "";
+        this.recognizedText = "";
     },
 
     sendSpeech() {
@@ -979,10 +965,10 @@ components: {
         //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
         this.recognizedlog.push(this.myUserName+" : "+this.recognizedText);
         this.recognizedText = "";
-
     },
   },
-};
+}
+
 </script>
 
 <style>
