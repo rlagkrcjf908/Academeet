@@ -48,11 +48,11 @@
                   <div class="meeting-btn">
                     <!-- 마이크 오프 -->
                     <button data-tooltip="마이크 켜기" class="meeting-bnt-item"  v-if="!audioEnabled" @click="audioTrigger()">
-                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/FA5252/external-mic-off-interface-essentials-kmg-design-glyph-kmg-design.png"/>
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/external-zen-filled-royyan-wijaya/48/FA5252/external-mic-off-audio-and-video-zen-filled-royyan-wijaya.png"/>
                     </button>
                     <!-- 마이크 온 -->
                     <button data-tooltip="마이크 끄기" class="meeting-bnt-item"  v-if="audioEnabled" @click="audioTrigger()">
-                      <img class="meeting-btn-item-img" src="https://img.icons8.com/fluency-systems-filled/48/40C057/microphone.png"/>
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-black-filled/64/12B886/microphone.png"/>
                     </button>
                     <!-- 비디오 오프 -->
                     <button data-tooltip="비디오 켜기" class="meeting-bnt-item"   v-if="!videoEnabled" @click="videoTrigger()">
@@ -107,20 +107,18 @@
                     <button data-tooltip="전체 비디오 오프" class="meeting-bnt-item" v-if="masterVideoEnabled && userId==ownerId" @click="videoOff">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/pastel-glyph/64/12B886/laptop-play-video--v2.png"/>
                     </button>
+                    <!-- 회의 나가기 -->
+                    <button data-tooltip="회의 나가기" class="meeting-bnt-item" v-if="userId!==ownerId" @click="leaveSession">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-black-filled/64/FA5252/x.png"/>
+                    </button>
+                    <!-- 세션 종료하기 -->
+                    <button data-tooltip="세션 종료하기" class="meeting-bnt-item" v-if="userId==ownerId" @click="endSession">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-black-filled/64/FA5252/x.png"/>
+                    </button>
                     <!-- 파일다운받기 -->
                     <!-- <button data-tooltip="파일 다운" class="meeting-bnt-item">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/windows/64/1A1A1A/file-download.png"/>
                     </button> -->
-                  </div>
-                  <div>
-                    <!-- 회의 나가기 -->
-                    <button class="meeting-bnt-leave"  v-if="userId!==ownerId" @click="leaveSession">
-                      <div><span data-tooltip="회의 나가기">회의 나가기</span></div>
-                    </button>
-                    <!-- 세션 종료하기 -->
-                    <button class="meeting-bnt-leave" v-if="userId==ownerId" @click="endSession">
-                      <div><span data-tooltip="세션 종료하기">세션 종료하기</span></div>
-                    </button>
                   </div>
                 </div>
               </el-footer>
