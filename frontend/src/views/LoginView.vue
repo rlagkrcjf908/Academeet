@@ -38,7 +38,7 @@
       <el-button
         type="success"
         @click="submitForm(ruleFormRef)"
-        style="margin: 0; width: 100%;"
+        style="margin: 0; width: 100%"
         >LOGIN</el-button
       >
       <!-- </div> -->

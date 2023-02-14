@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="groupMain-div">
     <div v-if="groupLen" class="group-main">
       <h2 style="color: rgba(97, 178, 153, 1)">
         - 내가 속한 그룹 ({{ groupLen }}) -
@@ -26,9 +26,13 @@ const groupLen = computed(() => store.getters["groupStore/getGroupListLength"]);
 </script>
 
 <style>
-.group-main {
+/* .group-main {
   margin-top: 28px;
   margin-left: 100px;
+} */
+.groupMain-div {
+  margin-top: 5vh;
+  margin-left: 40vw;
 }
 </style>
 
