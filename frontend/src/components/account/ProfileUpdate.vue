@@ -28,21 +28,13 @@
       >
         <!-- 이메일 -->
         <div class="profileInfo">
-          <img
-            :src="require('@/assets/images/mail.png')"
-            alt=""
-            style="height: 1em; padding-right: 1em"
-          />
+          <el-icon><Message /></el-icon>
           <span>{{ profile.email }}</span>
         </div>
 
         <!-- 닉네임 -->
         <div class="profileInfo">
-          <img
-            :src="require('@/assets/images/id-card.png')"
-            alt=""
-            style="height: 1em; padding-right: 1em"
-          />
+          <el-icon><User /></el-icon>
           <el-form-item prop="nickname">
             <el-input
               v-model.trim="ruleForm.nick"
@@ -56,11 +48,7 @@
 
         <!-- 연락처  -->
         <div class="profileInfo">
-          <img
-            :src="require('@/assets/images/telephone-call.png')"
-            alt=""
-            style="height: 1em; padding-right: 1em"
-          />
+          <el-icon><Phone /></el-icon>
           <el-form-item prop="phone">
             <el-input
               v-model="ruleForm.phone"
@@ -72,11 +60,7 @@
 
         <!-- 생일 -->
         <div class="profileInfo">
-          <img
-            :src="require('@/assets/images/birthday-cake.png')"
-            alt=""
-            style="height: 1em; padding-right: 1em"
-          />
+          <el-icon><Present /></el-icon>
           <span>{{ profile.birth }}</span>
         </div>
       </el-form>
@@ -95,6 +79,8 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
 import axios from "axios";
+import { Message, User, Phone, Present } from '@element-plus/icons-vue'
+
 
 const store = useStore();
 const ruleFormRef = ref();

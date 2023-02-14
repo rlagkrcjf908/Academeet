@@ -2,7 +2,7 @@
   <div class="profile-container">
     <div>
       <!-- 프로필사진 -->
-        <img :src = "'https://i8d108.p.ssafy.io/img/'+profile.profile.filename"  style="height:100%; " class='profile-img'>
+        <img :src = "'https://i8d108.p.ssafy.io/img/'+profile.profile.filename" class='profile-img'>
       
       <!-- 유저이름 -->
       <p>{{profile.name}}</p>
@@ -12,26 +12,26 @@
     
       <!-- 이메일 -->
       <div class="profileInfo">
-        <img :src="require('@/assets/images/mail.png')" alt="" style="height:1em; padding-right: 1em;">
+        <el-icon><Message /></el-icon>
         <span>{{profile.email}}</span>
       </div>
       
       <!-- 닉네임 -->
       <div class="profileInfo">
-        <img :src="require('@/assets/images/id-card.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <el-icon><User /></el-icon>
         <span>{{profile.nick}}</span>
       </div>
       
     
       <!-- 연락처  -->                
       <div class="profileInfo" >
-        <img :src="require('@/assets/images/telephone-call.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <el-icon><Phone /></el-icon>
         <span>{{profile.phone}}</span>
       </div>
       
       <!-- 생일 -->
       <div class="profileInfo">
-        <img :src="require('@/assets/images/birthday-cake.png')" alt="" style="height: 1em; padding-right: 1em;">
+        <el-icon><Present /></el-icon>
         <span>{{profile.birth}}</span>
       </div>
     </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-
+import { Message, User, Phone, Present } from '@element-plus/icons-vue'
 const profile = JSON.parse(localStorage.getItem('userInfo'))
 
 console.log('받앗다',profile)
@@ -93,4 +93,7 @@ console.log('받앗다',profile)
     font-size: 16px;
 }
 
+.el-icon{
+  margin-right: 2em;
+}
 </style>

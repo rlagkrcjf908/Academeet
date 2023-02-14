@@ -19,7 +19,7 @@
           <td>
             <img
               :src="'http://i8d108.p.ssafy.io/img/' + item.profile"
-              style="height: 50px"
+              class="user-img"
             />
           </td>
           <td>{{ item.name }}</td>
@@ -64,6 +64,14 @@ tr:hover {
   font-weight: bolder;
   /* color: #fdce7e; */
   color: rgba(97, 178, 153, 1);
+}
+h1 {
+  font-size: 30px;
+  /* color: #fff; */
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
 }
 table {
   width: 100%;
@@ -115,5 +123,10 @@ td {
 }
 .attd-success {
   color: #95d475;
+}
+.user-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
 }
 </style>
