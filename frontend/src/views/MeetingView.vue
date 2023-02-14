@@ -511,23 +511,23 @@
       });
     });
 
-    // this.getToken(this.mySessionId).then((tokenScreen) => {
-    //   // Create a token for screen share
-    //   this.sessionScreen
-    //   .connect(tokenScreen, { clientData: this.myUserName })
-    //   .then(() => {
-    //     document.getElementById("buttonScreenShare").style.visibility =
-    //     "visible";
-    //     console.log("Session screen connected");
-    //   })
-    //   .catch((error) => {
-    //     console.warn(
-    //     "There was an error connecting to the session for screen share:",
-    //     error.code,
-    //     error.messag
-    //     );
-    //   });
-    // });
+    this.getToken(this.mySessionId).then((tokenScreen) => {
+      // Create a token for screen share
+      this.sessionScreen
+      .connect(tokenScreen, { clientData: this.myUserName })
+      .then(() => {
+        document.getElementById("buttonScreenShare").style.visibility =
+        "visible";
+        console.log("Session screen connected");
+      })
+      .catch((error) => {
+        console.warn(
+        "There was an error connecting to the session for screen share:",
+        error.code,
+        error.messag
+        );
+      });
+    });
     this.recognizedlog = [];
     window.addEventListener("beforeunload", this.leaveSession);
     },
