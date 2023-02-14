@@ -25,4 +25,6 @@ public class UserMeetRes {
     @ApiModelProperty(name="endtime")
     Time endTime;
 
+    @ApiModelProperty(name="ownerId")
+    int ownerId;
 }
