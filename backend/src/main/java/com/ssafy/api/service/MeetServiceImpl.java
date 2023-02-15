@@ -265,10 +265,10 @@ public class MeetServiceImpl implements MeetService {
 
     @Override
     public void makeExcelFile(SttReq sttReq) {
-//        String filePath = "/app/build/stt/";
+        String filePath = "/app/build/stt/";
         String fileName = sttReq.getTitle() + "note" + ".xlsx";
 //
-        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+//        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
 //        String fileName = "test.xlsx";
         try {
             File file = new File(filePath + fileName);
