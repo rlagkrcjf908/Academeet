@@ -18,7 +18,7 @@
                           :stream-manager="PublisherCamera"
                           :role="publisher"
                           :faceDetection="onFaceDetection"
-                          @click="updateMainVideoStreamManager(PublisherCamera)"
+                          @click.native="updateMainVideoStreamManager(PublisherCamera)"
                         />
                         <!-- 내 개인 공유중 -->
                         <!-- <user-video
@@ -26,14 +26,16 @@
                         @click="updateMainVideoStreamManager(PublisherScreen)"
                         /> -->
                         <!-- 게스트 -->
+                        <div>
                         <user-video
                           class = "other-video"
+                          id = "other-video-div"
                           v-for="sub in SubscribersCamera"
                           :key="sub.stream.connection.connectionId"
                           :stream-manager="sub"
                           :role="subscriber"
-                          @click="updateMainVideoStreamManager(sub)"
-                        />
+                          @click.native="updateMainVideoStreamManager(sub)"
+                        /></div>
                         <!-- 게스트 공유중 -->
                         <!-- <user-video
                         v-for="sub in SubscribersScreen"
@@ -271,7 +273,7 @@ components: {
     
     //ljy added
     isScreenShared: false,
-
+    sharedScreen: undefined,
   };
 },
 
@@ -305,108 +307,107 @@ components: {
       this.isActive = !this.isActive;
     },
 
-  joinSession() {
+    joinSession() {
     // --- *1) Create two OpenVidu objects.
     // 'OVCamera' will handle Camera operations.
-    // 'OVScreen' will handle screen sharing operations
     this.OVCamera = new OpenVidu();
+    
 
-    // --- *2) Init two OpenVidu Session Objects ---
+  // --- *2) Init two OpenVidu Session Objects ---
 
-    // 'sessionCamera' will handle camera operations
-    // 'sessionScreen' will handle screen sharing operations
-    this.sessionCamera = this.OVCamera.initSession();
+  // 'sessionCamera' will handle camera operations
+  this.sessionCamera = this.OVCamera.initSession();
+  
 
-    // --- 3) Specify the actions when events take place in the session ---
+  // --- 3) Specify the actions when events take place in the session ---
 
-    // On every new Stream received...
-    this.sessionCamera.on("streamCreated", ({ stream }) => {
-      if (stream.typeOfVideo == "CAMERA") {
-      const subscriber = this.sessionCamera.subscribe(stream);
-      this.SubscribersCamera.push(subscriber);
-      }
-    });
+  // On every new Stream received...
+  this.sessionCamera.on("streamCreated", ({ stream }) => {
+    const subscriber = this.sessionCamera.subscribe(stream);
+    this.SubscribersCamera.push(subscriber);
+  });
 
-    // On every Stream destroyed...
-    this.sessionCamera.on("streamDestroyed", ({ stream }) => {
-      const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
-      if (index >= 0) {
-      this.SubscribersCamera.splice(index, 1);
-      }
-    });
+  // On every Stream destroyed...
+  this.sessionCamera.on("streamDestroyed", ({ stream }) => {
+    const index = this.SubscribersCamera.indexOf(stream.streamManager, 0);
+    if (index >= 0) {
+    this.SubscribersCamera.splice(index, 1);
+    }
+  });
 
-    // On every asynchronous exception...
-    this.sessionCamera.on("exception", ({ exception }) => {
-      console.warn(exception);
-    });
+  // On every asynchronous exception...
+  this.sessionCamera.on("exception", ({ exception }) => {
+    console.warn(exception);
+  });
 
-    this.sessionCamera.on("signal:my-chat", (event) => {
-      //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+  this.sessionCamera.on("signal:my-chat", (event) => {
+    //this.chats.push(JSON.parse(event.data));
+    console.log(event.data); // Message
+    console.log(event.from); // Connection object of the sender
+    console.log(event.type); // The type of message ("my-chat")
 
-      let receive = event.data.split("/");
-      let userName = receive[0];
-      let message = receive[1];
-      document.getElementById(
-      "chatting-content"
-      ).innerHTML += `<p>${userName}: ${message}</p>`;
-      // document.getElementById(
-      //   "chatting-content"
-      // ).innerHTML += `<p>${message}</p>`;
-    });
+    let receive = event.data.split("/");
+    let userName = receive[0];
+    let message = receive[1];
+    document.getElementById(
+    "chatting-content"
+    ).innerHTML += `<p>${userName}: ${message}</p>`;
+    // document.getElementById(
+    //   "chatting-content"
+    // ).innerHTML += `<p>${message}</p>`;
+  });
 
-    this.sessionCamera.on("signal:my-speech", (event) => {
-      //this.chats.push(JSON.parse(event.data));
-      console.log(event.data); // Message
-      console.log(event.from); // Connection object of the sender
-      console.log(event.type); // The type of message ("my-chat")
+  this.sessionCamera.on("signal:my-speech", (event) => {
+    //this.chats.push(JSON.parse(event.data));
+    console.log(event.data); // Message
+    console.log(event.from); // Connection object of the sender
+    console.log(event.type); // The type of message ("my-chat")
 
-      let receive = event.data.split("/");
-      let userName = receive[0];
-      let message = receive[1];
-      document.getElementById(
-      "speech-content"
-      ).innerHTML += `<p>${userName}: ${message}</p>`;
+    let receive = event.data.split("/");
+    let userName = receive[0];
+    let message = receive[1];
+    document.getElementById(
+    "speech-content"
+    ).innerHTML += `<p>${userName}: ${message}</p>`;
 
-      // document.getElementById(
-      //   "speech-content"
-      // ).innerHTML += `<p>${message}</p>`;
-    });
+    // document.getElementById(
+    //   "speech-content"
+    // ).innerHTML += `<p>${message}</p>`;
+  });
 
     this.sessionCamera.on("signal:master-audio-on", (event) => {
-      console.log(event.type); // The type of message ("my-chat")
-      this.audioEnabled = true;
-      this.PublisherCamera.publishAudio(this.audioEnabled);
+        console.log(event.type); // The type of message ("my-chat")
+        this.audioEnabled = true;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
     });
 
     this.sessionCamera.on("signal:master-audio-off", (event) => {
-      console.log(event.type); // The type of message ("my-chat")
-      this.audioEnabled = false;
-      this.PublisherCamera.publishAudio(this.audioEnabled);
+        console.log(event.type); // The type of message ("my-chat")
+        this.audioEnabled = false;
+        this.PublisherCamera.publishAudio(this.audioEnabled);
     });
 
     this.sessionCamera.on("signal:master-video-on", (event) => {
-      console.log(event.type); // The type of message ("my-chat")
-      this.vedioEnabled = true;
-      this.PublisherCamera.publishVideo(this.vedioEnabled);
+        console.log(event.type); // The type of message ("my-chat")
+        this.vedioEnabled = true;
+        this.PublisherCamera.publishVideo(this.vedioEnabled);
     });
 
     this.sessionCamera.on("signal:master-video-off", (event) => {
-      console.log(event.type); // The type of message ("my-chat")
-      this.vedioEnabled = false;
-      this.PublisherCamera.publishVideo(this.vedioEnabled);
+        console.log(event.type); // The type of message ("my-chat")
+        this.vedioEnabled = false;
+        this.PublisherCamera.publishVideo(this.vedioEnabled);
     });
 
     this.sessionCamera.on("signal:end-session", (event) => {
-      console.log(event.type); // The type of message ("my-chat")
-      this.leaveSession();
+        console.log(event.type); // The type of message ("my-chat")
+        this.leaveSession();
     });
 
     this.sessionCamera.on('publisherStartSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' start speaking');
-    });
+
+  });
 
     this.sessionCamera.on('publisherStopSpeaking', (event) => {
       console.log('User ' + event.connection.connectionId + ' stop speaking');
@@ -416,7 +417,7 @@ components: {
       //this.recognizedText = "";
       }
     });
-    
+
   // --- 4) Connect to the session with a valid user token ---
 
   // Get a token from the OpenVidu deployment
@@ -431,14 +432,14 @@ components: {
       // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
       // element: we will manage it on our own) and with the desired properties
       let publisher = this.OVCamera.initPublisher(undefined, {
-        audioSource: undefined, // The source of audio. If undefined default microphone
-        videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-        publishVideo: true, // Whether you want to start publishing with your video enabled or not
-        resolution: "640x480", // The resolution of your video
-        frameRate: 30, // The frame rate of your video
-        insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-        mirror: true, // Whether to mirror your local video or not
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined, // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
       });
 
       // Set the main video in the page to display our webcam and store our Publisher
@@ -450,7 +451,7 @@ components: {
 
       this.sessionCamera.publish(this.PublisherCamera);
 
-    })
+      })
     .catch((error) => {
       console.log(
       "There was an error connecting to the session:",
@@ -459,15 +460,78 @@ components: {
       );
     });
   });
-  this.getToken(this.mySessionId).then((tokenScreen) => {
+
+    
+
+    this.recognizedlog = [];
+    window.addEventListener("beforeunload", this.leaveSession);
+  },
+
+  //ljy screen share creating
+  publishScreenShare() {
+    // 'OVScreen' will handle screen sharing operations
+    this.OVScreen = new OpenVidu();
+    // 'sessionScreen' will handle screen sharing operations
+    this.sessionScreen = this.OVScreen.initSession();
+
+    var mySessionId = this.mySessionId;
+
+    this.getToken(mySessionId).then((tokenScreen) => {
       // Create a token for screen share
       console.log("얍", tokenScreen, this.myUserName)
       this.sessionScreen
       .connect(tokenScreen, { clientData: this.myUserName })
       .then(() => {
         document.getElementById("buttonScreenShare").style.visibility =
-        "visible";
+        "hidden";
         console.log("Session screen connected");
+        this.publisherScreen = this.OVScreen.initPublisher(undefined, {
+          audioSource: true, // The source of audio. If undefined default microphone
+          videoSource: "screen", // The source of video. If undefined default webcam
+          // publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+          publishVideo: true, // Whether you want to start publishing with your video enabled or not
+          resolution: "640x480", // The resolution of your video
+          frameRate: 30, // The frame rate of your video
+          insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+          mirror: true, // Whether to mirror your local video or not
+        });
+        console.log("publisherScreen",this.publisherScreen);
+        this.publisherScreen.once('accessAllowed', () => {
+          try{
+            console.log("subscribeScreen", this.SubscribersCamera);
+            this.isScreenShared = true;
+            this.sessionCamera.unpublish(this.publisherScreen);
+            this.mainStreamManager = undefined;
+            this.OVCamera = undefined;
+
+            const constraints = {
+              width: {min: 640, ideal: 1280},
+              height: {min: 480, ideal: 720},
+              advanced: [
+                {width: 1920, height: 1280},
+                {aspectRatio: 1.333}
+              ]
+						};
+            this.publisherScreen.stream.getMediaStream().getVideoTracks()[0].applyConstraints(constraints, () => {
+
+            });
+            this.publisherScreen.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
+              console.log('Screen sharing ended');
+            
+              this.endScreenShare()
+              this.isScreenShared = false;
+              location.reload(true);
+            })
+          } catch (error) {
+            console.error('Error applying constraints: ', error);
+          }
+        });
+        this.publisherScreen.once('accessDenied', () => {
+          console.warn('ScreenShare: Access Denied');
+        });
+        this.mainStreamManager = this.publisherScreen;
+        this.sharedScreen = this.publisherScreen;
+        this.sessionScreen.publish(this.sharedScreen);
       })
       .catch((error) => {
         console.warn(
@@ -478,50 +542,26 @@ components: {
       });
     });
 
-    this.recognizedlog = [];
-    window.addEventListener("beforeunload", this.leaveSession);
   },
 
-  //ljy screen share creating
-  
-
-  publishScreenShare() {
-  // --- 9.1) To create a publisherScreen set the property 'videoSource' to 'screen'
-  var publisherScreen = this.OVScreen.initPublisher(undefined, {
-    videoSource: "screen",
-  });
-
-  // --- 9.2) Publish the screen share stream only after the user grants permission to the browser
-  publisherScreen.once("accessAllowed", () => {
+  endScreenShare () {
+    console.log("endScreenShare");
     document.getElementById("buttonScreenShare").style.visibility =
-    "hidden";
-    this.screensharing = true;
-    // If the user closes the shared window or stops sharing it, unpublish the stream
-    publisherScreen.stream
-    .getMediaStream()
-    .getVideoTracks()[0]
-    .addEventListener("ended", () => {
-      console.log('User pressed the "Stop sharing" button');
-      this.sessionScreen.unpublish(publisherScreen);
-      document.getElementById("buttonScreenShare").style.visibility =
       "visible";
-      this.screensharing = false;
+    this.isScreenShared = false;
+    this.sessionCamera.unpublish(this.publisherScreen);
+    this.sessionCamera = undefined;
+    this.mainStreamManager = undefined;
+    this.sharedScreen = undefined;
+    this.publisherScreen = undefined;
+    this.OVScreen = undefined;
+    
+    this.sessionCamera.publish(this.PublisherCamera).then(()=>{
+      this.PublisherCamera(this.PublisherCamera);
     });
 
-      this.PublisherScreen = publisherScreen;
-      this.sessionScreen.publish(publisherScreen);
-    });
-    /*
-    publisherScreen.on('videoElementCreated', function (event) {
-      appendUserData(event.element, sessionScreen.connection);
-      event.element['muted'] = true;
-    });
-    */
-    publisherScreen.once("accessDenied", () => {
-      console.error("Screen Share: Access Denied");
-    });
+    window.removeEventListener('beforeunload', this.endScreenShare);
   },
-
 
   leaveSession() {
     axios({
@@ -555,6 +595,7 @@ components: {
   this.OVScreen = undefined;
 
   this.screensharing = false;
+  this.sharedScreen = undefined;;
 
   document.getElementById(
     "chatting-content"
@@ -691,19 +732,6 @@ components: {
       });
   },
 
-  endSession(){
-      this.sessionCamera
-      .signal({
-          to: [],
-          type: "end-session",
-      })
-      .then(() => {
-          console.log("end-session successfully sent");
-      })
-      .catch((error) => {
-      console.error(error);
-      });
-  },
   speechTrigger() {
   this.speechEnabled = !this.speechEnabled;
   // console.log("speechEnabled : " + this.speechEnabled);
