@@ -85,7 +85,7 @@ public class MeetController {
         if (meetService.endMeet(meetId, endReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Fail"));
     }
 
     @PostMapping("/{meet_id}/attend")
