@@ -14,12 +14,10 @@ import java.util.List;
 @ApiModel("MeetEndPostRequest")
 public class MeetEndReq {
 
-    @ApiModelProperty(name="chat")
-    @JsonProperty("chat")
-    String chat;
+
     @ApiModelProperty(name="stt")
     @JsonProperty("stt")
-    List<String> stt;
+    List<SttDetailReq> stt;
     @ApiModelProperty(name="video")
     @JsonProperty("video")
     String video;
@@ -27,7 +25,5 @@ public class MeetEndReq {
     @JsonProperty("endtime")
     Time endtime;
 
-    @ApiModelProperty(name="attendReqs")
-    @JsonProperty("attendReqs")
-    AttendReq[] attendReqs;
+
 }

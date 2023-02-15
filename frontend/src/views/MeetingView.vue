@@ -207,9 +207,10 @@
       </el-container>
     </div>
 
-    <!-- <a id="playVideo" :href=this.videoURL>Video</a> -->
   </div>
 
+
+  </div>
 </template>
 
 <script>
@@ -219,6 +220,15 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../components/meeting/UserVideo";
 import { meetingCreate } from "@/common/api/meetingAPI";
+// import { CloseBold, Microphone, Mute, VideoCamera, VideoCameraFilled } from '@element-plus/icons-vue'
+import {
+  CloseBold,
+  Microphone,
+  Mute,
+  VideoCamera,
+  VideoCameraFilled,
+  Delete,
+} from "@element-plus/icons-vue";
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -294,14 +304,28 @@ export default {
       interval: undefined,
       onFaceDetection: false,
 
-      // Speech
-      speechEnabled: false,
-      speechRecognition: undefined,
-      recognizedText: "",
-      recognizedlog: [],
-      connectionId: ""
-    };
-  },
+    // Speech
+    speechEnabled: false,
+    speechRecognition: undefined,
+    recognizedText: "",
+    recognizedlog:[{
+      name : undefined,
+      time : undefined,
+      stt : undefined,
+    }],
+
+      //timer
+      timerId: null,
+      hour: 0,
+      minute: 0,
+      second: 0,
+
+      currentTime: null,
+
+
+
+  };
+},
 
   mounted: function () {
     var SpeechRecognition =
@@ -311,6 +335,10 @@ export default {
     this.speechRecognition.continuous = true;
     this.speechRecognition.maxAlternatives = 10000;
     this.joinSession();
+    setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
+
   },
 
   methods: {
@@ -321,6 +349,7 @@ export default {
     },
 
     joinSession() {
+      this.startTimer();
       // --- *1) Create two OpenVidu objects.
       // 'OVCamera' will handle Camera operations.
       // 'OVScreen' will handle screen sharing operations
@@ -562,40 +591,24 @@ export default {
             this.screensharing = false;
           });
 
-        this.PublisherScreen = publisherScreen;
-        this.sessionScreen.publish(publisherScreen);
-      });
-      /*
-      publisherScreen.on('videoElementCreated', function (event) {
-        appendUserData(event.element, sessionScreen.connection);
-        event.element['muted'] = true;
-      });
-      */
-      publisherScreen.once("accessDenied", () => {
-        console.error("Screen Share: Access Denied");
-      });
-    },
+      this.PublisherScreen = publisherScreen;
+      this.sessionScreen.publish(publisherScreen);
+    });
+    /*
+    publisherScreen.on('videoElementCreated', function (event) {
+      appendUserData(event.element, sessionScreen.connection);
+      event.element['muted'] = true;
+    });
+    */
+    publisherScreen.once("accessDenied", () => {
+      console.error("Screen Share: Access Denied");
+    });
+  },
+  leaveSession() {
 
-    leaveSession() {
-      axios({
-        url: "https://i8d108.p.ssafy.io/api/v1/meet/recognize",
-        method: "post",
-        data: {
-          stt: this.recognizedlog,
-        },
-      })
-        .then(() => {
-          this.$router.push({
-            name: "listMain",
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
-      // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
-      if (this.sessionCamera) this.sessionCamera.disconnect();
-      if (this.sessionScreen) this.sessionScreen.disconnect();
+  // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
+  if (this.sessionCamera) this.sessionCamera.disconnect();
+  if (this.sessionScreen) this.sessionScreen.disconnect();
 
       // Empty all properties...
       this.sessionCamera = undefined;
@@ -696,8 +709,24 @@ export default {
         });
     },
 
-    endSession() {
-      this.sessionCamera
+    endSession(){
+      axios({
+          url:`https://i8d108.p.ssafy.io/api/v1/meet/${this.meetInfo.meetId}/end`,
+          method:'post',
+          data:{
+              endtime:this.currentTime,
+              video:this.videoURL,
+              stt:this.recognizedlog
+          }
+      })
+      .then(function a(response){
+          console.log(response);
+      })
+      .catch(function(error){
+          console.log(error);
+      });
+    this.stopTimer();
+        this.sessionCamera
         .signal({
           to: [],
           type: "end-session",
@@ -964,10 +993,33 @@ createToken(sessionId) {
           console.error(error);
         });
 
-      //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
-      this.recognizedlog.push(this.myUserName + " : " + this.recognizedText);
-      this.recognizedText = "";
+        //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
+        this.recognizedlog.push({
+          name : this.myUserName,
+          stt : this.recognizedText,
+          time : this.hour+":" + this.minute + ":" + this.second
+        });
+
+        this.recognizedText = "";
+
     },
+    startTimer() {
+      this.timerId = setInterval(() => {
+        this.second++;
+        if (this.second === 60) {
+          this.second = 0;
+          this.minute++;
+        }
+        if (this.minute === 60) {
+          this.minute = 0;
+          this.hour++;
+        }
+      }, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.timerId);
+    },
+
   },
 };
 </script>

@@ -34,8 +34,6 @@ public class Meet {
     Time endtime;
 
     @Column(columnDefinition = "TEXT")
-    String chat;
-    @Column(columnDefinition = "TEXT")
     String stt;
     @Column(columnDefinition = "TEXT")
     String video;

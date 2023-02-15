@@ -12,8 +12,8 @@ import lombok.Setter;
 public class AttendReq {
     @ApiModelProperty(name="userId", example="User_Id")
     @JsonProperty("userId")
-    int userId;//사용자 이름으로 변경할 수도 있습니다.
-    @ApiModelProperty(name="attendance", example="attendance")
-    @JsonProperty("attendance")
+    String userId;//사용자 이름으로 변경할 수도 있습니다.
+    @ApiModelProperty(name="attendcount", example="attendance")
+    @JsonProperty("attendcount")
     int attendcount;
 }

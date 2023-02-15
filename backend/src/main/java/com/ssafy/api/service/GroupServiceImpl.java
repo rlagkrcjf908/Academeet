@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.GroupCreatePostReq;
 import com.ssafy.api.request.GroupUpdatePostReq;
+import com.ssafy.api.response.GroupMeetDataRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,22 @@ public class GroupServiceImpl implements GroupService {
         List<Group> groups = groupRepository.findGroupsByOwnerid(user);
         return groups;
 
+    }
+
+    @Override
+    public List<GroupMeetDataRes> getMeetData(int groupId) {
+        Group group = groupRepository.findGroupById(groupId);
+        List<Meet> meet = meetRepository.findMeetsByGroupid(group);
+        List<GroupMeetDataRes> gmdrList = new ArrayList<>();
+        for (int i = 0; i<meet.size();i++){
+            GroupMeetDataRes gmdr = new GroupMeetDataRes();
+            gmdr.setTitle(meet.get(i).getTitle());
+            gmdr.setDate(meet.get(i).getDate());
+            gmdr.setStt(meet.get(i).getStt());
+            gmdr.setVideo(meet.get(i).getVideo());
+            gmdrList.add(gmdr);
+        }
+        return gmdrList;
     }
 
     private void groupUserDelete(int groupId, List<Integer> delUsers) {

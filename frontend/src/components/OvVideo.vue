@@ -50,6 +50,8 @@ export default {
 				name,
 				meetingAtt
 			}
+			console.log(payload);
+
         await this.$store.dispatch('meetingStore/setAttendanceCount', payload);
     	}
 	},
@@ -69,12 +71,15 @@ export default {
 					if (detections) {
 						console.log(clientData + " : YES");
 						count++;
+						console.log(count);
 					}
 					else console.log(clientData+ " : NO");
 				}, 1000);
 			}else{
 				clearInterval(this.interval);
 			}
+			
+			console.log(this.client,count);
 			this.setAttendanceCount();
 			count = 0;
 		}

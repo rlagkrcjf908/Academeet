@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.GroupCreatePostReq;
 import com.ssafy.api.request.GroupUpdatePostReq;
+import com.ssafy.api.response.GroupMeetDataRes;
 import com.ssafy.db.entity.Group;
 import com.ssafy.db.entity.User;
 
@@ -23,4 +24,6 @@ public interface GroupService {
     List<User> getGroupUser(int groupId);
 
     List<Group> getGroupinMeet(int userId);
+
+    List<GroupMeetDataRes> getMeetData(int groupId);
 }

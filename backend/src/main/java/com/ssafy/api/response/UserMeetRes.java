@@ -12,8 +12,6 @@ import java.util.Date;
 @Setter
 @ApiModel("UserMeetResponse")
 public class UserMeetRes {
-    @ApiModelProperty(name="ownerid")
-    int ownerId;
     @ApiModelProperty(name="meetid")
     int meetId;
     @ApiModelProperty(name="grouptitle")
@@ -27,4 +25,6 @@ public class UserMeetRes {
     @ApiModelProperty(name="endtime")
     Time endTime;
 
+    @ApiModelProperty(name="ownerId")
+    int ownerId;
 }

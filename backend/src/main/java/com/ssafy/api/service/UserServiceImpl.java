@@ -263,8 +263,7 @@ public class UserServiceImpl implements UserService {
 //            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
             if(meet.getGroupid()==null){
                 UserMeetRes umr = new UserMeetRes();
-
-                umr.setOwnerId(user.getId());
+                umr.setOwnerId(meet.getUserid().getId());
                 umr.setMeetId(meet.getId());
                 umr.setDate(meet.getDate());
                 umr.setMeetTitle(meet.getTitle());
@@ -276,14 +275,13 @@ public class UserServiceImpl implements UserService {
                 Group group = groupRepository.findGroupById(meet.getGroupid().getId());
                 UserMeetRes umr = new UserMeetRes();
 
-                umr.setOwnerId(user.getId());
-                umr.setMeetId(meet.getId());
+                umr.setOwnerId(meet.getUserid().getId());
+                umr.setMeetId(meet.getUserid().getId());
                 umr.setGroupTitle(group.getName());
                 umr.setDate(meet.getDate());
                 umr.setMeetTitle(meet.getTitle());
                 umr.setStartTime(meet.getStarttime());
                 umr.setEndTime(meet.getEndtime());
-
                 umrs.add(umr);
             }
         }
@@ -303,6 +301,8 @@ public class UserServiceImpl implements UserService {
                 umr.setMeetTitle(meet.getTitle());
                 umr.setStartTime(meet.getStarttime());
                 umr.setEndTime(meet.getEndtime());
+                umr.setOwnerId(meet.getUserid().getId());
+
 
                 umrs.add(umr);
             }else {
@@ -317,6 +317,8 @@ public class UserServiceImpl implements UserService {
                 umr.setMeetTitle(meet.getTitle());
                 umr.setStartTime(meet.getStarttime());
                 umr.setEndTime(meet.getEndtime());
+                umr.setOwnerId(meet.getUserid().getId());
+
 
                 umrs.add(umr);
             }
