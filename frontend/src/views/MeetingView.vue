@@ -3,7 +3,7 @@
     <!-- 회의 입장 후 화면 -->
     <div class="common-layout">
       <el-container class="meetting-view-container">
-        <el-container>
+        <el-container class="meetting-view-main-container">
           <el-main>
             <!-- 비디오 화면 -->
             <!-- 내 메인 화면 -->
@@ -259,60 +259,57 @@
               </div>
             </div>
           </el-footer>
-          <!-- kaj -->
-
-          <!-- ljy -->
-
-          <!-- ljy -->
         </el-container>
 
         <!-- 사이드바 -->
         <el-aside class="meet-view-side">
-          <div class="common-layout meet-side">
-            <el-container>
-              <el-header class="meet-side-header">
-                <h3 id="session-title">[ {{ mySessionTitle }} ]</h3>
-              </el-header>
-              <hr style="border: 1px solid white; margin: 0" />
-
-              <el-main class="meet-side-main" v-show="isChatActive">
-                <div id="chatting-content" style="display: inline-block">
-                  - Chatting -
-                </div>
-              </el-main>
-              <el-main class="meet-side-main" v-show="isSpeechActive">
-                <div id="speech-content" style="display: inline-block">
-                  - Speech -
-                </div>
-              </el-main>
-
-              <el-footer class="meet-side-footer">
-                <div class="insert-chatting" v-if="isChatActive">
-                  <input
-                    required
-                    type="text"
-                    style="margin-right: 5px; height: 25px; width: 180px"
-                    v-model="message"
-                    @keydown.enter="sendChat()"
-                  />
-                  <button
-                    class="meet-chat-send-btn"
-                    style="height: 32px; width: 50px"
-                    @click="sendChat()"
-                  >
-                    입력
-                  </button>
-                </div>
-                <button
-                  class="meet-chat-ctrl-btn"
-                  :class="{ active: isChatActive }"
-                  @click="toggle"
-                >
-                  {{ isChatActive ? "Go Speech" : "Go Chatting" }}
-                </button>
-              </el-footer>
-            </el-container>
-          </div>
+          <!-- 헤더 -->
+          <header class="meet-side-header">
+            <h3 id="session-title">[ {{ mySessionTitle }} ]</h3>
+          </header>
+          <hr
+            style="border: 1px solid white; margin-bottom: 10px; width: 280px"
+          />
+          <!-- 채팅 -->
+          <section class="meet-side-main" v-show="isChatActive">
+            <div id="chatting-content" style="display: inline-block">
+              - Chatting -
+            </div>
+          </section>
+          <!-- 스피칭 -->
+          <section class="meet-side-main" v-show="isSpeechActive">
+            <div id="speech-content" style="display: inline-block">
+              - Speech -
+            </div>
+          </section>
+          <!-- 푸터 -->
+          <footer class="meet-side-footer">
+            <!-- 채팅입력, 버튼 -->
+            <div class="insert-chatting" v-if="isChatActive">
+              <input
+                required
+                type="text"
+                style="margin-right: 5px; height: 25px; width: 180px"
+                v-model="message"
+                @keydown.enter="sendChat()"
+              />
+              <button
+                class="meet-chat-send-btn"
+                style="height: 32px; width: 50px"
+                @click="sendChat()"
+              >
+                입력
+              </button>
+            </div>
+            <!-- 스피칭 -->
+            <button
+              class="meet-chat-ctrl-btn"
+              :class="{ active: isChatActive }"
+              @click="toggle"
+            >
+              {{ isChatActive ? "Go Speech" : "Go Chatting" }}
+            </button>
+          </footer>
         </el-aside>
       </el-container>
     </div>
@@ -1121,6 +1118,17 @@ export default {
 </script>
 
 <style>
+.common-layout {
+  background-color: black;
+}
+.meetting-view-main-container {
+  min-width: 700px;
+}
+.el-footer {
+  height: auto;
+  min-width: 480px;
+  margin: 24px;
+}
 .meeting-bnt-item {
   border: none;
   background-color: white;
@@ -1142,29 +1150,60 @@ export default {
 }
 
 .meeting-btn {
+  min-width: 480px;
+  max-width: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
   background-color: rgba(91, 88, 88, 1);
   padding: 1em;
+  margin: auto;
 }
 .meeting-btn-item-img {
   height: 20px;
   width: 20px;
 }
+
+/* 사이드 */
 .meet-view-side {
-  overflow: hidden;
-  margin: 10px;
-  width: 15vw;
+  /* overflow: hidden; */
+  /* margin: 10px; */
+  width: 300px;
+  height: 100vh;
+  background-color: #303133;
+}
+
+/* 변경 */
+.meet-side-header {
+  height: 50px;
+  color: white;
+}
+.meet-side-footer {
+  height: 100px;
 }
 .meet-side-main {
-  background-color: white;
-  margin: 10px;
-  height: 700px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  margin: auto;
+  height: 100%;
+  width: 290px;
   word-break: break-all;
-  /* overflow: hidden; */
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
+
+.meet-side {
+  width: 100%;
+}
+.meet-view-side-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  width: 100%;
+}
+
 .meet-chat-send-btn {
   width: 50px;
   height: 30px;
@@ -1174,29 +1213,29 @@ export default {
   color: white;
 }
 .meet-chat-send-btn:hover {
-  background-color: #d1edc4;
+  background-color: #f3d19e;
   border: none;
   font-size: 15px;
-  color: #5aba2a;
+  color: black;
 }
 .meet-chat-ctrl-btn {
   width: 230px;
   height: 35px;
   margin: 10px;
-  background-color: #eebe77;
+  background-color: #909399;
   border: none;
   font-size: 20px;
-  color: white;
+  color: black;
   border-radius: 50px;
 }
 .meet-chat-ctrl-btn:hover {
   width: 230px;
   height: 35px;
   margin: 10px;
-  background-color: #f8e3c5;
+  background-color: #a8abb2;
   border: none;
   font-size: 20px;
-  color: #fdb447;
+  color: white;
   border-radius: 50px;
 }
 ::-webkit-scrollbar {
@@ -1254,6 +1293,7 @@ export default {
   top: -8px;
 }
 .my-main-container {
+  display: flex;
   align-items: center;
   justify-content: center;
 }
