@@ -20,7 +20,6 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const isAuthenticated = store.state.accountStore.isAuthenticated
       if ( isAuthenticated === true ) {
-        console.log('로그인 된 사용자입니다');
         next({ name : 'submain' })
       }else{
         next()
@@ -35,7 +34,6 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const isAuthenticated = store.state.accountStore.isAuthenticated
       if ( isAuthenticated === true ) {
-        console.log('로그인 된 사용자입니다');
         next({ name : 'submain' })
       }else{
         next()

@@ -7,12 +7,6 @@
         type="button"
         @click="$router.push('/')"
       />
-      <!-- <img src="@/assets/images/logo.png" />
-      <h1 class="the-header-title">
-        <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
-          >M</span
-        >eet
-      </h1> -->
     </router-link>
 
     <nav class="the-header-nav">

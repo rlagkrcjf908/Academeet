@@ -20,16 +20,18 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
           <tr v-for="(item, index) in meetList" :key="index">
-            <td>{{ item.date }}</td>
-            <td>{{ item.startTime }} ~ {{ item.endTime }}</td>
-            <td>{{ item.meetTitle }}</td>
-            <td>{{ item.groupTitle }}</td>
+            <td v-if="!item.isMeetingEnd">{{ item.date }}</td>
+            <td v-if="!item.isMeetingEnd">
+              {{ item.startTime }} ~ {{ item.endTime }}
+            </td>
+            <td v-if="!item.isMeetingEnd">{{ item.meetTitle }}</td>
+            <td v-if="!item.isMeetingEnd">{{ item.groupTitle }}</td>
             <el-button
               class="meetEnterBtn"
               @click="joinMeet(item)"
               type="success"
               plain
-              :disabled="item.isMeetingEnd"
+              v-if="!item.isMeetingEnd"
               >회의시작
             </el-button>
           </tr>

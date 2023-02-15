@@ -102,7 +102,6 @@ const submitForm = (formEl) => {
 };
 </script>
 
-
 <style>
 .demo-ruleForm {
   margin: 3em;

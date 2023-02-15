@@ -29,4 +29,3 @@ const groupLen = computed(() => store.getters["groupStore/getGroupListLength"]);
   font-size: large;
 }
 </style>
-

@@ -4,8 +4,7 @@
 
 <script>
 export default {
-  components: {  },
-
+  components: {},
 };
 </script>
 
@@ -34,8 +33,7 @@ nav {
   }
 }
 
-body{ 
+body {
   margin: 0px;
 }
-
 </style>
