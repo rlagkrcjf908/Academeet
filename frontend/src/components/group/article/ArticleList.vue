@@ -1,7 +1,6 @@
 <template>
   <div class="tbl-header">
     <table cellpadding="0" cellspacing="0" border="0">
-      <!-- 테이블헤드 -->
       <thead>
         <tr>
           <th>No.</th>
@@ -14,7 +13,6 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <!-- 테이블 바디 -->
       <tbody v-if="articleListLength > 0">
         <tr
           v-for="(item, index) in articleList"
@@ -28,7 +26,9 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <div style="font-size: 20px; margin-top: 250px">- 글이 없습니다-</div>
+        <div style="font-size: 20px; margin-top: 250px">
+          - 게시글이 없습니다-
+        </div>
       </tbody>
     </table>
   </div>
@@ -39,6 +39,7 @@
   >
     <el-icon><EditPen /></el-icon>작성하기
   </el-button>
+  <p hidden>{{ articleList }}</p>
 </template>
 
 <script setup>
@@ -54,11 +55,10 @@ const store = useStore();
 
 const groupId = ref(route.params.groupId);
 const userId = store.state.accountStore.userId;
-var articleListLength = 0;
 
 const articleList = ref();
+var articleListLength = 0;
 
-// 공지사항 리스트로 가기
 const routeToArticle = (articleId) => {
   router.push({
     name: "articleDetail",
@@ -69,7 +69,6 @@ const routeToArticle = (articleId) => {
   });
 };
 
-// 글 작성으로 가기
 const routeToArticleCreate = () => {
   router.push({
     name: "articleCreate",
@@ -82,6 +81,7 @@ const routeToArticleCreate = () => {
 onMounted(async () => {
   const res = await requestArtileList(groupId.value, userId);
   const datas = res.data.articleList;
+  console.log(datas);
   const list = datas.map((item) => {
     return {
       articleId: item.id,
@@ -92,9 +92,6 @@ onMounted(async () => {
   });
   articleList.value = list;
   articleListLength = articleList.value.length;
-  console.log("articleList.value", articleList.value);
-  console.log("articleList.value.length", articleList.value.length);
-  console.log("articleList.length", articleList.length);
 });
 </script>
 
@@ -103,7 +100,6 @@ tr:hover {
   background-color: rgba(97, 178, 153, 0.2);
   font-weight: bolder;
   color: rgba(97, 178, 153, 1);
-  cursor: pointer;
 }
 h1 {
   font-size: 30px;

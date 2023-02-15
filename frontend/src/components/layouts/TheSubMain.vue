@@ -27,7 +27,7 @@
         link
         style="margin: 0; margin-bottom: 8px"
       >
-        공지사항
+        게시판
       </el-button>
 
       <el-button

@@ -28,14 +28,11 @@ import { ElButton } from "element-plus";
 
 <style scoped>
 .main {
-  height: 88vh;
-  /* background: linear-gradient(-60deg, #ffffff 50%, #cde59b 45%); */
-  /* background: linear-gradient(-60deg, img(""), #cde59b 45%); */
-  /* background: linear-gradient(60deg, #67c23a88, #ffffff); */
-  background-image: url("../assets/images/back6.jfif");
-  background-size: cover;
+  height: 91.6vh;
+  /* background-color: #d2e5a8; */
+  background-color: #e4f7ba;
 
-  width: 100%;
+  width: 100vw;
   /* //height: 100vh;  */
   display: -webkit-box;
   display: -moz-box;

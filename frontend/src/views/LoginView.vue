@@ -13,6 +13,7 @@
       :rules="rules"
       size="large"
       class="demo-ruleForm login-box"
+      @keydown.enter="submitForm(ruleFormRef)"
     >
       <!-- 이메일 -->
       <el-form-item prop="email" label="EMAIL">

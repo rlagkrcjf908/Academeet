@@ -54,6 +54,7 @@
       </tbody>
     </table>
   </div>
+  <p hidden>{{ attdUserList }}</p>
 </template>
   
 <script setup>
