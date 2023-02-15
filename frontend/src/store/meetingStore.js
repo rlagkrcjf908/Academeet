@@ -3,12 +3,12 @@ import router from '../router/index'
 import axios from 'axios';
 
 const state = {
-  id:null,
-  meetingInfo:null,
+  id: null,
+  meetingInfo: null,
 
   //attendance
-  clientName:null,
-  meetingAtt:null
+  clientName: null,
+  meetingAtt: null
 };
 
 const getters = {
@@ -23,10 +23,10 @@ const mutations = {
   },
 
   // attendance
-  SET_ATTENDANCE:(state, attendanceData)=>{
+  SET_ATTENDANCE: (state, attendanceData) => {
     state.meetingAtt = attendanceData
   },
-  SET_CLIENTNAME:(state, clientName)=>{
+  SET_CLIENTNAME: (state, clientName) => {
     state.clientName = clientName
   }
 };
@@ -53,26 +53,26 @@ const actions = {
     commit("SET_MEETINGINFO", response.data)
   },
   //attendance
-  setAttendanceCount: async({commit},payload) =>{
+  setAttendanceCount: async ({ commit }, payload) => {
     const meetingAtt = payload.meetingAtt;
     const clientName = payload.name;
     const meetInfo = JSON.parse(sessionStorage.getItem("meetInfo"));
-    commit("SET_ATTENDANCE",meetingAtt)
-    commit("SET_CLIENTNAME",clientName)
+    commit("SET_ATTENDANCE", meetingAtt)
+    commit("SET_CLIENTNAME", clientName)
     axios({
-      url:`http://i8d108.p.ssafy.io/api/v1/meet/${meetInfo.meetId}/attend`,
-      method:'post',
-      data:{
-          userId:clientName,
-          attendcount:meetingAtt
+      url: `https://i8d108.p.ssafy.io/api/v1/meet/${meetInfo.meetId}/attend`,
+      method: 'post',
+      data: {
+        userId: clientName,
+        attendcount: meetingAtt
       }
-  })
-  .then(function a(response){
-      console.log(response);
-  })
-  .catch(function(error){
-      console.log(error);
-  });
+    })
+      .then(function a(response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   },
 };
 
