@@ -1,4 +1,5 @@
 <template>
+  
   <div class="tbl-header">
     <table cellpadding="0" cellspacing="0" border="0">
       <thead>
@@ -18,8 +19,14 @@
         <tr v-for="(item, index) in referList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
-          <td>{{ item.stt }}</td>
-          <td>{{ item.video }}</td>
+          <!-- <td>{{ item.stt }}</td> -->
+          <td>
+            <button v-if="item.stt != null" @click="fileDownload(item.stt)">
+              회의록다운로드
+            </button>
+          </td>
+          <!-- <td>{{ item.video }}</td> -->
+          <td><a href="item.video" v-if="item.video != null">영상다운로드</a></td>
           <td>{{ item.date }}</td>
         </tr>
       </tbody>
@@ -28,6 +35,8 @@
       </tbody>
     </table>
   </div>
+
+  <p hidden>{{ referList }}</p>
 </template>
 
 <script setup>
@@ -38,10 +47,29 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
+// const groupId = ref(route.params.groupId);
 const groupId = ref(route.params.groupId);
 console.log("route.params.groupId:", route.params.groupId);
 const referList = ref([]);
 var referListLength = 0;
+
+// stt다운로드
+const fileDownload = (data)=>{
+      axios.get(`https://i8d108.p.ssafy.io/stt/${data}`, {
+        responseType: "blob"
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'test.txt'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      }).catch((error) => {
+        console.log(error);
+        alert("파일 다운로드 실패");
+      });
+    }
+
 
 onMounted(async () => {
   const res = await requestRefer(groupId.value);
