@@ -40,6 +40,7 @@
 </template>
 
 <script setup>
+import axios from "axios"
 import { requestRefer } from "@/common/api/groupAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";

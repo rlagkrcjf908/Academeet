@@ -369,6 +369,8 @@ export default {
 
       // On every new Stream received...
       this.sessionCamera.on("streamCreated", ({ stream }) => {
+        console.log("***streamCreated***")
+        console.log(stream)
         if (stream.typeOfVideo == "CAMERA") {
           const subscriber = this.sessionCamera.subscribe(stream);
           this.SubscribersCamera.push(subscriber);
