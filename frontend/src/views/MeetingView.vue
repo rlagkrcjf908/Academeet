@@ -427,6 +427,12 @@ export default {
           "speech-content"
         ).innerHTML += `<p>${userName}: ${message}</p>`;
 
+        this.recognizedlog.push({
+          name : userName,
+          stt : message, // event.data
+          time : this.hour+":" + this.minute + ":" + this.second
+        });
+
   });
 
       this.sessionCamera.on("signal:master-audio-on", (event) => {
@@ -1002,12 +1008,13 @@ createToken(sessionId) {
         });
 
         //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
+        /*
         this.recognizedlog.push({
           name : this.myUserName,
           stt : this.recognizedText,
           time : this.hour+":" + this.minute + ":" + this.second
         });
-
+        */
         this.recognizedText = "";
 
     },
