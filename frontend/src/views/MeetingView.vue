@@ -994,7 +994,7 @@ createToken(sessionId) {
           msg: this.message,
       };
       */
-      if(audioEnabled == true){
+      if(this.audioEnabled == true){
         this.sessionCamera
           .signal({
             data: this.myUserName + "/" + this.recognizedText,
