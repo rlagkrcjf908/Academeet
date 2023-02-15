@@ -209,25 +209,7 @@
 
     <!-- <a id="playVideo" :href=this.videoURL>Video</a> -->
   </div>
-  <div id="screens">
-    <!-- 스크린 공유 화면 -->
 
-    <div id="screen-container" class="col-md-6">
-      <h2>Screen Share</h2>
-      <!-- 호스트 -->
-      <user-video
-        :stream-manager="PublisherScreen"
-        @click="updateMainVideoStreamManager(PublisherScreen)"
-      />
-      <!-- 게스트 -->
-      <user-video
-        v-for="sub in SubscribersScreen"
-        :key="sub.stream.connection.connectionId"
-        :stream-manager="sub"
-        @click="updateMainVideoStreamManager(sub)"
-      />
-    </div>
-  </div>
 </template>
 
 <script>
@@ -508,7 +490,7 @@ export default {
               resolution: "640x480", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: true, // Whether to mirror your local video or not
+              mirror: false, // Whether to mirror your local video or not
             });
 
             // Set the main video in the page to display our webcam and store our Publisher
