@@ -504,7 +504,7 @@ export default {
 
       this.sessionCamera.on('publisherStopSpeaking', (event) => {
         console.log('User ' + event.connection.connectionId + ' stop speaking');
-        if(speechEnabled) this.speechRecognition.start();
+        if(this.speechEnabled) this.speechRecognition.start();
       });
 
     // --- 4) Connect to the session with a valid user token ---
@@ -637,12 +637,12 @@ export default {
 
       document.getElementById("speech-content").innerHTML = "";
 
-      this.$router.push({
-          name: "listMain",
-          });
-
       // Remove beforeunload listener
       window.removeEventListener("beforeunload", this.leaveSession);
+
+      this.$router.push({
+        name: "listMain",
+        });
     },
 
     updateMainVideoStreamManager(stream) {
