@@ -87,18 +87,16 @@ public class MeetController {
         String str = String.valueOf(endReq.getEndtime());
         String get = new String();
         String[] splitData = str.split(":");
-        for (int i = 0; i<2;i++){
+        for (int i = 0; i<1;i++){
             get += splitData[i];
         }
         int num = Integer.parseInt(get);
         num = num+9;
         if(num>=24) num = num-24;
         String set = String.valueOf(num);
-        for (int i = 2; i<6;i++){
-            if(i==2||i==4) set+=":";
-            set += splitData;
+        for (int i = 1; i<3;i++){
+            set += ":"+splitData[i];
         }
-        System.out.println(set);
         endReq.setEndtime(Time.valueOf(set));
 
 
