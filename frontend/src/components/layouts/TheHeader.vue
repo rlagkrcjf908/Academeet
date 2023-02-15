@@ -1,12 +1,18 @@
 <template>
   <header>
     <router-link to="/">
-      <img src="@/assets/images/logo.png" />
+      <img
+        src="@/assets/logo.png"
+        class="the-header-title"
+        type="button"
+        @click="$router.push('/')"
+      />
+      <!-- <img src="@/assets/images/logo.png" />
       <h1 class="the-header-title">
         <span style="color: #94d82d">A</span>cade<span style="color: #94d82d"
           >M</span
         >eet
-      </h1>
+      </h1> -->
     </router-link>
 
     <nav class="the-header-nav">
@@ -50,13 +56,11 @@ header {
 }
 
 .the-header-title {
-  display: inline-block;
-  vertical-align: middle;
-  color: black;
-  padding: 13px;
+  padding: 0;
   margin: 0;
   position: absolute;
-  left: 95px;
+  left: 25px;
+  top: 8px;
 }
 
 .the-header-nav {

@@ -8,7 +8,6 @@
     label-width="120px"
     class="demo-ruleForm meeting-create"
   >
-
     <div class="meeting-create-form">
       <!-- 회의이름 -->
       <el-form-item label="회의이름" prop="groupName" required>
@@ -22,7 +21,6 @@
       </el-form-item>
       <!-- 시간 -->
       <div>
-
         <!-- 회의날짜 -->
         <el-form-item prop="date" label="회의 날짜">
           <el-date-picker
@@ -69,7 +67,9 @@
         <el-radio-group v-model="ruleForm.group" @change="selectGroup">
           <el-radio label="선택안함" name="no" />
           <div v-for="(item, index) in groupList" :key="index">
-            <el-radio :label="item?.id" style="margin-right:2em">{{ item?.name }}</el-radio>
+            <el-radio :label="item?.id" style="margin-right: 2em">{{
+              item?.name
+            }}</el-radio>
           </div>
         </el-radio-group>
       </el-form-item>
@@ -97,7 +97,9 @@
     </div>
   </el-form>
   <!-- 회의 생성 버튼 -->
-    <el-button type="success" round @click="submitForm(ruleFormRef)">미팅생성</el-button>
+  <el-button type="success" round @click="submitForm(ruleFormRef)"
+    >회의생성</el-button
+  >
 </template>
 
 <script setup>
@@ -138,9 +140,9 @@ const validategroupName = (rule, value, callback) => {
 // 날짜 선택
 const disabledDate = (time) => {
   let today = new Date();
-  let yesterday = today.setDate(today.getDate() - 1)
-  return time.getTime() < yesterday
-}
+  let yesterday = today.setDate(today.getDate() - 1);
+  return time.getTime() < yesterday;
+};
 
 // 시간 입력
 const startTime = ref("");
@@ -174,14 +176,16 @@ const remoteMethod = (query) => {
     loading.value = true;
     setTimeout(async () => {
       // 검색요청
-      const username = { "name" : query };
+      const username = { name: query };
       const res = await userSearch(JSON.stringify(username));
 
       const searchUserList = res.data;
 
-      let list = searchUserList.filter(item =>item.id !== userid).map((item) => {
-        return { value: item.id, label: `${item.name}:${item.email}` }
-      })
+      let list = searchUserList
+        .filter((item) => item.id !== userid)
+        .map((item) => {
+          return { value: item.id, label: `${item.name}:${item.email}` };
+        });
 
       loading.value = false;
       options.value = list;
@@ -248,7 +252,7 @@ const submitForm = (formEl) => {
 </script>
 
 <style>
-.meeting-create{
+.meeting-create {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -256,7 +260,7 @@ const submitForm = (formEl) => {
   flex-wrap: wrap;
 }
 
-.meeting-create-form{
+.meeting-create-form {
   display: flex;
   flex-direction: column;
   justify-content: center;

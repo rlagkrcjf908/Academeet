@@ -174,6 +174,6 @@ td {
 }
 
 .list-view-home-btn {
-  margin-top: 1vw;
+  margin-top: 5vw;
 }
 </style>

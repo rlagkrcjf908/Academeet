@@ -1,6 +1,6 @@
 <template>
   <hr />
-  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 수정 -</h2>
+  <h2 style="color: rgba(97, 178, 153, 1)">- 게시글 수정 -</h2>
   <el-form
     label-position="top"
     ref="ruleFormRef"
@@ -10,7 +10,6 @@
     class="demo-ruleForm"
     status-icon
   >
-
     <!-- 글 제목 -->
     <el-form-item label="제목" prop="title">
       <el-input

@@ -1,6 +1,6 @@
 <template>
   <hr />
-  <h2 style="color: rgba(97, 178, 153, 1)">- 공지사항 작성 -</h2>
+  <h2 style="color: rgba(97, 178, 153, 1)">- 게시글 작성 -</h2>
   <el-form
     label-position="top"
     ref="ruleFormRef"
