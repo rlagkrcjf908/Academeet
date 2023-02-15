@@ -95,27 +95,27 @@
                     </el-dialog>
                     <!-- 그룹 호스트 권한 버튼 -->
                     <!-- 회의 녹화 시작 -->
-                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="startRecording">
+                    <button data-tooltip="회의 녹화 시작" class="meeting-bnt-item" v-if="!recodingEnabled && userId==ownerId" @click="recordingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-recording-multimedia-tanah-basah-glyph-tanah-basah.png"/>
                     </button>
                     <!-- 회의 녹화 끝 -->
-                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled && userId==ownerId" @click="stopRecording">
+                    <button data-tooltip="회의 녹화 끝" class="meeting-bnt-item" v-if="recodingEnabled && userId==ownerId" @click="recordingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/96/FA5252/external-rec-video-and-movie-tanah-basah-glyph-tanah-basah-2.png"/>
                     </button>
                     <!-- 음성 기록 시작 -->
-                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled && userId==ownerId" @click="startSpeeching">
+                    <button data-tooltip="음성 기록 시작" class="meeting-bnt-item" v-if="!speechEnabled && userId==ownerId" @click="speechingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-glyphs/60/737373/voice-recognition-scan.png"/>
                     </button>
                     <!-- 음성 기록 끝 -->
-                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled && userId==ownerId" @click="stopSpeeching">
+                    <button data-tooltip="음성 기록 끝" class="meeting-bnt-item" v-if="speechEnabled && userId==ownerId" @click="speechingTrigger()">
                       <img class="meeting-btn-item-img"  src="https://img.icons8.com/ios-glyphs/30/12B886/voice-recognition-scan.png"/>
                     </button>
                     <!-- 출석체크 시작-->
-                    <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!onFaceDetection && userId==ownerId" @click="startChecking">
+                    <button data-tooltip="출석체크 시작" class="meeting-bnt-item" v-if="!onFaceDetection && userId==ownerId" @click="checkingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/737373/attendance-mark.png"/>
                     </button>
                     <!-- 출석체크 끝-->
-                    <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="onFaceDetection && userId==ownerId" @click="stopChecking">
+                    <button data-tooltip="출석체크 끝" class="meeting-bnt-item" v-if="onFaceDetection && userId==ownerId" @click="checkingTrigger()">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/12B886/attendance-mark.png"/>
                     </button>
                     <!-- 전체 오디오 온 -->
@@ -142,6 +142,7 @@
                     <button data-tooltip="세션 종료하기" class="meeting-bnt-item" v-if="userId==ownerId" @click="endSession">
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/sf-black-filled/64/FA5252/x.png"/>
                     </button>
+
                   </div>
                 </div>
               </el-footer>
@@ -624,7 +625,7 @@ export default {
       document.getElementById("chatting-content").innerHTML = "";
 
       document.getElementById("speech-content").innerHTML = "";
-      
+
       this.$router.push({
           name: "listMain",
           });
@@ -712,6 +713,7 @@ export default {
     },
 
     endSession(){
+
       axios({
           url:`https://i8d108.p.ssafy.io/api/v1/meet/${this.meetInfo.meetId}/end`,
           method:'post',
@@ -727,21 +729,21 @@ export default {
       .catch(function(error){
           console.log(error);
       });
-    this.stopTimer();
-        this.sessionCamera
-        .signal({
-          to: [],
-          type: "end-session",
-        })
-        .then(() => {
-          this.$router.push({
-            name: "listMain",
-          });
-          console.log("end-session successfully sent");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+
+      this.stopTimer();
+
+      this.sessionCamera
+      .signal({
+        to: [],
+        type: "end-session",
+      })
+      .then(() => {
+
+        console.log("end-session successfully sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     },
 
     sendChat() {
