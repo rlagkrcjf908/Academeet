@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
                 UserMeetRes umr = new UserMeetRes();
 
                 umr.setOwnerId(meet.getUserid().getId());
-                umr.setMeetId(meet.getUserid().getId());
+                umr.setMeetId(meet.getId());
                 umr.setGroupTitle(group.getName());
                 umr.setDate(meet.getDate());
                 umr.setMeetTitle(meet.getTitle());
