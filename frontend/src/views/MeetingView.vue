@@ -504,9 +504,13 @@ export default {
 
       this.sessionCamera.on('publisherStopSpeaking', (event) => {
         console.log('User ' + event.connection.connectionId + ' stop speaking');
-        if(this.speechEnabled) this.speechRecognition.start();
       });
 
+      this.PublisherCamera.on('publisherStopSpeaking', (event) => {
+        console.log('The local user stop speaking');
+        if(this.speechEnabled) this.speechRecognition.start();
+      });
+      
     // --- 4) Connect to the session with a valid user token ---
       // --- 4) Connect to the session with a valid user token ---
 
