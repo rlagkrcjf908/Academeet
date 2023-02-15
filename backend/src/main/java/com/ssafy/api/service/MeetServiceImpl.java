@@ -137,8 +137,7 @@ public class MeetServiceImpl implements MeetService {
         if (endReq.getStt() != null) {
 
             String filePath = "/app/build/stt/";
-            String fileName = meet.getTitle() + "note" + ".txt";
-
+            String fileName = meet.getTitle() + "note" + ".xlsx";
             meet.setEndtime(endReq.getEndtime());
             meet.setStt(fileName);
             meet.setVideo(endReq.getVideo());
