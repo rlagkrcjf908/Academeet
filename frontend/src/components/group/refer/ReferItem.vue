@@ -19,14 +19,10 @@
         <tr v-for="(item, index) in referList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
-          <!-- <td>{{ item.stt }}</td> -->
-          <td>
-            <button v-if="item.stt != null" @click="fileDownload(item.stt)">
-              회의록다운로드
-            </button>
-          </td>
-          <!-- <td>{{ item.video }}</td> -->
-          <td><a href="item.video" v-if="item.video != null">영상다운로드</a></td>
+    
+          <td><a :href="`https://i8d108.p.ssafy.io/stt/${item.stt}`" v-if="item.video != null">회의록다운로드</a></td>
+
+          <td><a :href="item.video" v-if="item.video">영상다운로드</a></td>
           <td>{{ item.date }}</td>
         </tr>
       </tbody>
