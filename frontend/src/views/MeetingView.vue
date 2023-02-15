@@ -504,6 +504,7 @@ export default {
 
       this.sessionCamera.on('publisherStopSpeaking', (event) => {
         console.log('User ' + event.connection.connectionId + ' stop speaking');
+        if(speechEnabled) this.speechRecognition.start();
       });
 
     // --- 4) Connect to the session with a valid user token ---
@@ -993,28 +994,30 @@ createToken(sessionId) {
           msg: this.message,
       };
       */
-      this.sessionCamera
-        .signal({
-          data: this.myUserName + "/" + this.recognizedText,
-          // data: JSON.stringify(sendData),
-          to: [],
-          type: "my-speech",
-        })
-        .then(() => {
-          console.log("Speech successfully sent");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      if(audioEnabled == true){
+        this.sessionCamera
+          .signal({
+            data: this.myUserName + "/" + this.recognizedText,
+            // data: JSON.stringify(sendData),
+            to: [],
+            type: "my-speech",
+          })
+          .then(() => {
+            console.log("Speech successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
 
-        //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
-        /*
-        this.recognizedlog.push({
-          name : this.myUserName,
-          stt : this.recognizedText,
-          time : this.hour+":" + this.minute + ":" + this.second
-        });
-        */
+          //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
+          /*
+          this.recognizedlog.push({
+            name : this.myUserName,
+            stt : this.recognizedText,
+            time : this.hour+":" + this.minute + ":" + this.second
+          });
+          */
+        }
         this.recognizedText = "";
 
     },
