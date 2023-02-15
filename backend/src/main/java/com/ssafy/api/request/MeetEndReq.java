@@ -14,9 +14,7 @@ import java.util.List;
 @ApiModel("MeetEndPostRequest")
 public class MeetEndReq {
 
-    @ApiModelProperty(name="chat")
-    @JsonProperty("chat")
-    String chat;
+
     @ApiModelProperty(name="stt")
     @JsonProperty("stt")
     List<SttDetailReq> stt;
