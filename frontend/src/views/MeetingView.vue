@@ -228,6 +228,7 @@ import {
   VideoCameraFilled,
   Delete,
 } from "@element-plus/icons-vue";
+import { subStrict } from '@tensorflow/tfjs-core';
 // import SpeechRecognition from "./components/SpeechRecognition";
 //import * as faceapi from 'face-api.js';
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -286,6 +287,7 @@ export default {
       ownerId: meetInfo.ownerId,
       userId: meetInfo.userId,
       mySessionTitle: meetInfo.meetTitle,
+      meetId: meetInfo.meetId,
       // SessionId 는 무적권 알파벳과 숫자만
       mySessionId: String(meetInfo.meetId),
       myUserName: meetInfo.userName,
@@ -296,7 +298,7 @@ export default {
       outputMode: ["COMPOSED", "INDIVIDUAL", "COMPOSED_QUICK_START"],
       recordingMode: ["ALWAYS", "MANUAL"],
       recordingId: undefined,
-      videoURL: undefined,
+      videoURL: "",
       recodingEnabled: false,
 
       // face detection
@@ -335,7 +337,7 @@ export default {
     this.speechRecognition.maxAlternatives = 10000;
     this.joinSession();
     setInterval(() => {
-      this.currentTime = new Date();
+      this.currentTime = new Date().toJSON().slice(11, 19);
     }, 1000);
 
   },
@@ -715,10 +717,10 @@ export default {
     endSession(){
 
       axios({
-          url:`https://i8d108.p.ssafy.io/api/v1/meet/${this.meetInfo.meetId}/end`,
+          url:`https://i8d108.p.ssafy.io/api/v1/meet/${this.meetId}/end`,
           method:'post',
           data:{
-              endtime:this.currentTime,
+              endtime: this.currentTime,
               video:this.videoURL,
               stt:this.recognizedlog
           }
@@ -852,7 +854,7 @@ createToken(sessionId) {
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
 
     recordingTrigger() {
-      this.recordingEnabled = !this.recodingEnabled;
+      this.recodingEnabled = !this.recodingEnabled;
       if (this.recodingEnabled) {
         console.log("Starting recording");
         this.recordingStartFunc(this.mySessionId).then((recordingId) => {
