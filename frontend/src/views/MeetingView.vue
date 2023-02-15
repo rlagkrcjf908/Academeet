@@ -422,6 +422,7 @@ export default {
       speechRecognition: undefined,
       recognizedText: "",
       recognizedlog: [],
+      connectionId: ""
     };
   },
 
@@ -475,6 +476,9 @@ export default {
 
       // On every new Stream received...
       this.sessionCamera.on("streamCreated", ({ stream }) => {
+        console.log("*****streamCreated");
+        console.log(stream);
+
         if (stream.typeOfVideo == "CAMERA") {
           const subscriber = this.sessionCamera.subscribe(stream);
           this.SubscribersCamera.push(subscriber);
@@ -520,6 +524,9 @@ export default {
 
       this.sessionCamera.on("signal:my-speech", (event) => {
         //this.chats.push(JSON.parse(event.data));
+        console.log(this.userId + " signal:my-speech");
+        console.log(event);
+
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
@@ -577,8 +584,12 @@ export default {
       });
 
       this.sessionCamera.on("signal:speeching", (event) => {
+        console.log("***signal:speeching***")
         console.log(event);
         console.log(event.type); // The type of message ("my-chat")
+        // console.log(event.connection.connectionId);
+        // console.log(event.from.Connection.connectionId);
+        
 
         if (event.data == "true") {
           this.startSpeeching();
@@ -588,6 +599,8 @@ export default {
       });
 
       this.sessionCamera.on("publisherStartSpeaking", (event) => {
+        console.log("****publisherStartSpeaking")
+        console.log(event)
         console.log(
           "User " + event.connection.connectionId + " start speaking"
         );
@@ -629,6 +642,9 @@ export default {
             // --- 6) Publish your stream ---
 
             this.sessionCamera.publish(this.PublisherCamera);
+
+            console.log("*****sessionCamera Connection ID");
+            console.log(this.connectionId);
           })
           .catch((error) => {
             console.log(
@@ -648,6 +664,9 @@ export default {
             document.getElementById("buttonScreenShare").style.visibility =
               "visible";
             console.log("Session screen connected");
+
+            console.log("*****sessionScreen Connection ID");
+            console.log(this.connectionId);
           })
           .catch((error) => {
             console.warn(
@@ -939,7 +958,11 @@ export default {
             }
           )
           .then((response) => response.data)
-          .then((data) => resolve(data.token))
+          .then((data) => {
+            this.connectionId = data.id;
+            resolve(data.token)
+            }
+          )
           .catch((error) => reject(error.response));
       });
     },
@@ -1057,13 +1080,9 @@ export default {
       // };
 
       this.speechRecognition.onresult = (event) => {
-        console.log("speechRecognition successfully!!");
+        console.log("*****speechRecognition successfully!!");
         console.log(event);
-        for (
-          let i = event.resultIndex, len = event.results.length;
-          i < len;
-          i++
-        ) {
+        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
           let transcript = event.results[i][0].transcript;
           console.log(transcript);
           this.recognizedText += transcript;
