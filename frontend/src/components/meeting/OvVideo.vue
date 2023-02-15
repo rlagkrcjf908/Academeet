@@ -8,15 +8,17 @@ let count = 0;
 
 export default {
 	name: 'OvVideo',
+
 	data(){
 		return{
 			interval : undefined,
 		}
 	},
+	
 	props: {
 		streamManager: Object,
 		role: String,
-		faceDetection: Boolean
+		faceDetection: Boolean,
 	},
 
 	mounted () {
@@ -75,6 +77,8 @@ export default {
 			}else{
 				clearInterval(this.interval);
 			}
+			
+
 			this.setAttendanceCount();
 			count = 0;
 		}
