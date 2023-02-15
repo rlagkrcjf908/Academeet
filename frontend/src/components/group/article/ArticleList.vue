@@ -15,7 +15,7 @@
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
       <!-- 테이블 바디 -->
-      <tbody v-if="articleList">
+      <tbody v-if="articleListLength > 0">
         <tr
           v-for="(item, index) in articleList"
           :key="index"
@@ -54,6 +54,7 @@ const store = useStore();
 
 const groupId = ref(route.params.groupId);
 const userId = store.state.accountStore.userId;
+var articleListLength = 0;
 
 const articleList = ref();
 
@@ -90,6 +91,10 @@ onMounted(async () => {
     };
   });
   articleList.value = list;
+  articleListLength = articleList.value.length;
+  console.log("articleList.value", articleList.value);
+  console.log("articleList.value.length", articleList.value.length);
+  console.log("articleList.length", articleList.length);
 });
 </script>
 

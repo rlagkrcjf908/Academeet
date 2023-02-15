@@ -37,7 +37,13 @@
       </table>
     </div>
   </div>
-  <el-button type="success" round @click="$router.push('/')">HOME</el-button>
+  <el-button
+    class="list-view-home-btn"
+    type="success"
+    round
+    @click="$router.push('/')"
+    >HOME</el-button
+  >
 </template>
 
 <script setup>
@@ -110,11 +116,6 @@ const joinMeet = (item) => {
 </script>
 
 <style>
-.detail-btn {
-  width: 140px;
-  height: 30px;
-  font-size: 15px;
-}
 tr:hover {
   background-color: rgba(97, 178, 153, 0.2);
   font-weight: bolder;
@@ -164,14 +165,15 @@ td {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-.attd-fail {
-  color: #f89898;
-}
-.attd-success {
-  color: #95d475;
+.list-view {
+  padding: 2vw;
+  width: 80vw;
+  height: 50vh;
+  margin: auto;
+  margin-bottom: 2.5vw;
 }
 
-.list-view {
-  padding: 5vw;
+.list-view-home-btn {
+  margin-top: 1vw;
 }
 </style>

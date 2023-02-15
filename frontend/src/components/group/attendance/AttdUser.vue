@@ -38,7 +38,7 @@
         </tr>
       </tbody>
       <!-- 일반 유저 -->
-      <tbody v-else-if="attdUserList.length > 0">
+      <tbody v-else-if="attdUserListLength > 0">
         <tr v-for="(item, index) in attdUserList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
@@ -72,6 +72,7 @@ const hostId = ref(route.params.hostId);
 const attdUserList = ref([]);
 const meetId = ref(); //meetid로 받음
 const attendance = ref(); //변하는 출석률 값
+var attdUserListLength = 0;
 
 onMounted(async () => {
   const res = await requestAttdUser(groupId.value, selectUserId.value);
@@ -86,8 +87,8 @@ onMounted(async () => {
       meetId: item.meetId,
     };
   });
-
   attdUserList.value = list;
+  attdUserListLength = attdUserList.value.length;
 });
 
 // 수정요청함수

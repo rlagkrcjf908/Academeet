@@ -10,7 +10,7 @@
     </router-link>
 
     <nav class="the-header-nav">
-      <ul>
+      <ul class="the-header-ul">
         <li style="color: #94d82d">{{ userInfo.name }} 님</li>
         <li><router-link to="/profile">My Page</router-link></li>
         <li><router-link to="/group">Group</router-link></li>
@@ -65,11 +65,12 @@ header {
   padding: 8px;
 }
 
-ul {
+.the-header-ul {
   list-style: none;
   margin: 10px;
   padding: 10px;
   display: flex;
+  font-size: 20px;
 }
 
 .the-header-hr {

@@ -1,21 +1,32 @@
 <template>
   <div class="main">
     <div class="btn-group">
-      <el-button type="success" plain circle @click="$router.push('/meetingcreate')">회의생성</el-button>
-      <el-button type="success" plain circle @click="$router.push('/group/create')">그룹생성</el-button>
-      <el-button type="success" plain circle @click="$router.push('/list')">리스트</el-button>
+      <el-button
+        type="success"
+        plain
+        circle
+        @click="$router.push('/meetingcreate')"
+        >회의생성</el-button
+      >
+      <el-button
+        type="success"
+        plain
+        circle
+        @click="$router.push('/group/create')"
+        >그룹생성</el-button
+      >
+      <el-button type="success" plain circle @click="$router.push('/list')"
+        >리스트</el-button
+      >
     </div>
   </div>
 </template>
 
 <script setup>
-
 import { ElButton } from "element-plus";
-
 </script>
 
 <style scoped>
-
 .main {
   height: 88vh;
   /* background: linear-gradient(-60deg, #ffffff 50%, #cde59b 45%); */
@@ -60,14 +71,13 @@ import { ElButton } from "element-plus";
   justify-content: center; /* 수평 정렬 */
 }
 .el-button {
-  width: 9em;
-  height: 9em;
-  margin: 2em;
+  width: 10em;
+  height: 10em;
+  margin: 3em;
   font-family: "LINESeedKR-Rg";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2")
     format("woff2");
   font-weight: 600;
   font-style: normal;
-  font-size: 18px;
 }
 </style>

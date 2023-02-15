@@ -13,7 +13,7 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <tbody v-if="attdUserList.length > 0">
+      <tbody v-if="attdUserListLength > 0">
         <tr v-for="(item, index) in attdUserList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.name }}</td>
@@ -49,6 +49,7 @@ const groupId = ref(route.params.groupId);
 const hostId = ref(route.params.hostId);
 const selectUserId = ref(); //상세 출석 볼 유저
 const attdUserList = ref([]);
+var attdUserListLength = 0;
 
 const routeToUser = (item) => {
   selectUserId.value = item.userId;
@@ -73,6 +74,7 @@ onMounted(async () => {
     };
   });
   attdUserList.value = list;
+  attdUserListLength = attdUserList.value.length;
 });
 </script>
 

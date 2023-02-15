@@ -14,7 +14,7 @@
   </div>
   <div class="tbl-content">
     <table cellpadding="0" cellspacing="0" border="0">
-      <tbody v-if="referList.length > 0">
+      <tbody v-if="referListLength > 0">
         <tr v-for="(item, index) in referList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
@@ -41,6 +41,7 @@ const route = useRoute();
 const groupId = ref(route.params.groupId);
 console.log("route.params.groupId:", route.params.groupId);
 const referList = ref([]);
+var referListLength = 0;
 
 onMounted(async () => {
   const res = await requestRefer(groupId.value);
@@ -57,6 +58,7 @@ onMounted(async () => {
     };
   });
   referList.value = list;
+  referListLength = referList.value.length;
 });
 </script>
 
