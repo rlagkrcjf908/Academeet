@@ -541,10 +541,13 @@ export default {
             // --- 6) Publish your stream ---
 
             this.sessionCamera.publish(this.PublisherCamera);
-            
+
             this.PublisherCamera.on('publisherStopSpeaking', (event) => {
               console.log('The local user stop speaking');
-              if(this.speechEnabled) this.speechRecognition.start();
+              if(this.speechEnabled) {
+                this.speechRecognition.stop();
+                this.speechRecognition.start();
+              }
             });
           })
           .catch((error) => {
