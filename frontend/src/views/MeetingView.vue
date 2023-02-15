@@ -209,8 +209,6 @@
 
   </div>
 
-
-  </div>
 </template>
 
 <script>
@@ -626,6 +624,10 @@ export default {
       document.getElementById("chatting-content").innerHTML = "";
 
       document.getElementById("speech-content").innerHTML = "";
+      
+      this.$router.push({
+          name: "listMain",
+          });
 
       // Remove beforeunload listener
       window.removeEventListener("beforeunload", this.leaveSession);
