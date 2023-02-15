@@ -435,18 +435,32 @@ public class MeetServiceImpl implements MeetService {
             sheet.addMergedRegion(new CellRangeAddress(12, 12, 3, 4));
             sheet.addMergedRegion(new CellRangeAddress(12, 12, 5, 13));
 
-
+            String checktime = " ";
+            String checkname = " ";
             //내용 input
             for (int j = 13; j < 13 + sttReq.getStt().size(); j++) {
                 Row row5 = sheet.createRow(j);
+
                 for (int i = 1; i < 14; i++) {
                     Cell cell5 = row5.createCell(i);
                     cell5.setCellStyle(inputStyle);
+
                     if(j==12+sttReq.getStt().size())cell5.setCellStyle(endStyle);
+
                     if (i == 1) {
-                        cell5.setCellValue(sttReq.getStt().get(j-13).getTime());
+                        if(sttReq.getStt().get(j-13).getTime()==checktime){
+                            cell5.setCellValue(" ");
+                        }else {
+                            cell5.setCellValue(sttReq.getStt().get(j-13).getTime());
+                            checktime = sttReq.getStt().get(j-13).getTime();
+                        }
                     } else if (i == 3) {
-                        cell5.setCellValue(sttReq.getStt().get(j - 13).getName());
+                        if(sttReq.getStt().get(j-13).getName()==checkname) {
+                            cell5.setCellValue(" ");
+                        }else {
+                            cell5.setCellValue(sttReq.getStt().get(j - 13).getName());
+                            checkname = sttReq.getStt().get(j - 13).getName();
+                        }
                     } else if (i == 5) {
                         cell5.setCellValue(sttReq.getStt().get(j - 13).getStt());
                     }

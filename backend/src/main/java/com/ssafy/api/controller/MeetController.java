@@ -107,8 +107,40 @@ public class MeetController {
         return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
     }
     @GetMapping("/test")
-    public ResponseEntity<? extends BaseResponseBody> test(@RequestBody SttReq sttReq){
+    public ResponseEntity<? extends BaseResponseBody> test(/*@RequestBody SttReq sttReq*/){
+        SttReq sttReq = new SttReq();
+        List<String> names = new ArrayList<>();
+        names.add("이학철");
+        names.add("asd");
+        names.add("cvz");
+        List<SttDetailReq> stt = new ArrayList<>();
+        SttDetailReq sttDetailReq1 = new SttDetailReq();
+        sttDetailReq1.setTime("11");
+        sttDetailReq1.setName("김학철");
+        sttDetailReq1.setStt("이게 뭐시랑께요?");
+        stt.add(sttDetailReq1);
+        SttDetailReq sttDetailReq2 = new SttDetailReq();
+        sttDetailReq2.setTime("11");
+        sttDetailReq2.setName("김학철");
+        sttDetailReq2.setStt("이게 뭐시랑께요?");
+        stt.add(sttDetailReq2);
+        SttDetailReq sttDetailReq3 = new SttDetailReq();
+        sttDetailReq3.setTime("12");
+        sttDetailReq3.setName("김학철");
+        sttDetailReq3.setStt("이게 뭐시랑께요?");
+        stt.add(sttDetailReq3);
+        SttDetailReq sttDetailReq4 = new SttDetailReq();
+        sttDetailReq4.setTime("13");
+        sttDetailReq4.setName("이학철");
+        sttDetailReq4.setStt("이게 뭐시랑께요?");
+        stt.add(sttDetailReq4);
 
+        sttReq.setTitle("테스트 엑셀");
+        sttReq.setName("학철");
+        sttReq.setDate("2022-02-03");
+        sttReq.setGroupName("test");
+        sttReq.setUserName(names);
+        sttReq.setStt(stt);
         meetService.makeExcelFile(sttReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
 
