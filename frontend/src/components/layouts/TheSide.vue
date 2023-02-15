@@ -1,20 +1,25 @@
 <template>
-    <el-aside>
-      <el-button type="success" round @click="$router.push({name:'groupCreate'})"> Create Group </el-button>
-      <group-list/>
-    </el-aside>
+  <el-aside>
+    <el-button
+      type="success"
+      round
+      @click="$router.push({ name: 'groupCreate' })"
+    >
+      Create Group
+    </el-button>
+    <group-list />
+  </el-aside>
 </template>
 
 <script setup>
-import GroupList from '@/components/group/GroupList'
-
+import GroupList from "@/components/group/GroupList";
 </script>
 
 <style>
-.el-aside{
-  width:304px;
+.el-aside {
+  width: 304px;
   /* height: 90vh; */
-  background-color: #CDE59B;
+  background-color: #cde59b;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,7 +31,7 @@ import GroupList from '@/components/group/GroupList'
   height: 90vh;
   background-color: #FFECB9; 
 } */
-.el-button{
+.el-button {
   margin: 1em;
   width: 252px;
   height: 5vh;

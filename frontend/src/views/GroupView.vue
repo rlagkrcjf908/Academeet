@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="group-container">
     <TheSide />
     <router-view class="gruop-view"></router-view>
   </el-container>
@@ -10,7 +10,7 @@ import TheSide from "@/components/layouts/TheSide.vue";
 </script>
 
 <style>
-.el-container {
+.group-container {
   width: auto;
   height: calc(100vh - 86px);
   margin: 0;
