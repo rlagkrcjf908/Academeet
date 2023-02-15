@@ -313,7 +313,21 @@ components: {
     speechEnabled: false,
     speechRecognition: undefined,
     recognizedText: "",
-    recognizedlog:[]
+    recognizedlog:[{
+      name : undefined,
+      time : undefined,
+      stt : undefined,
+    }],
+
+      //timer
+      timerId: null,
+      hour: 0,
+      minute: 0,
+      second: 0,
+
+      currentTime: null,
+
+    
 
   };
 },
@@ -324,6 +338,9 @@ components: {
     this.speechRecognition.lang = "ko-KR"
     this.speechRecognition.continuous = true;
     this.speechRecognition.maxAlternatives = 10000;
+    setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
 
   },
 
@@ -349,6 +366,7 @@ components: {
     },
 
     joinSession() {
+      this.startTimer();
     // --- *1) Create two OpenVidu objects.
     // 'OVCamera' will handle Camera operations.
     // 'OVScreen' will handle screen sharing operations
@@ -572,19 +590,7 @@ components: {
     });
   },
   leaveSession() {
-    axios({
-          url:'https://i8d108.p.ssafy.io/api/v1/meet/recognize',
-          method:'post',
-          data:{
-              stt:this.recognizedlog
-          }
-      })
-      .then(function a(response){
-          console.log(response);
-      })
-      .catch(function(error){
-          console.log(error);
-      });
+    
   // --- 7) Leave the session by calling 'disconnect' method OVCameraer the Session object ---
   if (this.sessionCamera) this.sessionCamera.disconnect();
   if (this.sessionScreen) this.sessionScreen.disconnect();
@@ -728,6 +734,22 @@ components: {
     },
 
     endSession(){
+      axios({
+          url:`https://i8d108.p.ssafy.io/api/v1/meet/${this.meetInfo.meetId}/end`,
+          method:'post',
+          data:{
+              endtime:this.currentTime,
+              video:this.videoURL,
+              stt:this.recognizedlog
+          }
+      })
+      .then(function a(response){
+          console.log(response);
+      })
+      .catch(function(error){
+          console.log(error);
+      });
+    this.stopTimer();
         this.sessionCamera
         .signal({
             to: [],
@@ -1024,10 +1046,32 @@ createToken(sessionId) {
         });
 
         //this.recognizedlog[n++]=this.myUserName+" : "+this.recognizedText;
-        this.recognizedlog.push(this.myUserName+" : "+this.recognizedText);
+        this.recognizedlog.push({
+          name : this.myUserName,
+          stt : this.recognizedText,
+          time : this.hour+":" + this.minute + ":" + this.second
+        });
+
         this.recognizedText = "";
 
     },
+    startTimer() {
+      this.timerId = setInterval(() => {
+        this.second++;
+        if (this.second === 60) {
+          this.second = 0;
+          this.minute++;
+        }
+        if (this.minute === 60) {
+          this.minute = 0;
+          this.hour++;
+        }
+      }, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.timerId);
+    },
+
   },
 };
 </script>
