@@ -1,9 +1,6 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.AttendReq;
-import com.ssafy.api.request.MeetCreateReq;
-import com.ssafy.api.request.MeetEndReq;
-import com.ssafy.api.request.test;
+import com.ssafy.api.request.*;
 import com.ssafy.api.service.GroupService;
 import com.ssafy.api.service.MeetService;
 import com.ssafy.api.service.UserService;
@@ -17,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,8 +107,9 @@ public class MeetController {
         return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
     }
     @GetMapping("/test")
-    public ResponseEntity<? extends BaseResponseBody> test(){
-        meetService.makeExcelFile();
+    public ResponseEntity<? extends BaseResponseBody> test(@RequestBody SttReq sttReq){
+
+        meetService.makeExcelFile(sttReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
 
     }

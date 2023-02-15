@@ -13,12 +13,12 @@ import java.util.List;
 public class SttReq {
     String Title;
     String name;
-    Date date;
+    String date;
 
     String groupName;
 
     List<String> userName;
 
-    List<String> stt;
+    List<SttDetailReq> stt;
 
 }

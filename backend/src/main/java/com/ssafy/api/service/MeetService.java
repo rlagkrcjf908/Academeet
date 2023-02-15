@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.AttendReq;
 import com.ssafy.api.request.MeetCreateReq;
 import com.ssafy.api.request.MeetEndReq;
+import com.ssafy.api.request.SttReq;
 
 import java.io.IOException;
 
@@ -17,5 +18,5 @@ public interface MeetService {
 
     boolean addAttendance(int meetid, AttendReq attendReq);
 
-    void makeExcelFile();
+    void makeExcelFile(SttReq sttReq);
 }

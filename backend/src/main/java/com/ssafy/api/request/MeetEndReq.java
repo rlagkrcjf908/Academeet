@@ -19,7 +19,7 @@ public class MeetEndReq {
     String chat;
     @ApiModelProperty(name="stt")
     @JsonProperty("stt")
-    List<String> stt;
+    List<SttDetailReq> stt;
     @ApiModelProperty(name="video")
     @JsonProperty("video")
     String video;
