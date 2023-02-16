@@ -140,6 +140,6 @@ td {
   color: red;
 }
 .attd-success {
-  color: green;
+  color: blue;
 }
 </style>

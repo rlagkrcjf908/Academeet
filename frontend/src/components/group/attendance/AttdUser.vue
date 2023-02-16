@@ -20,11 +20,11 @@
           <td>{{ item.meetId }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.date }}</td>
-          <td class="attd-user-success" v-if="item.attendance >= 70">
+          <td style="color: blue" v-if="item.attendance >= 70">
             <el-input v-model="item.attendance"></el-input>
           </td>
           <td v-else-if="item.attendance == 0">정보없음</td>
-          <td class="attd-user-fail" v-else>
+          <td style="color: red" v-else>
             <el-input v-model="item.attendance"></el-input>
           </td>
           <td>
@@ -44,15 +44,11 @@
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.date }}</td>
-          <td
-            class="attd-user-success"
-            style="color: green"
-            v-if="item.attendance >= 70"
-          >
+          <td style="color: blue" v-if="item.attendance >= 70">
             {{ item.attendance }}
           </td>
           <td v-else-if="item.attendance == 0">정보없음</td>
-          <td class="attd-user-fail" v-else>{{ item.attendance }}</td>
+          <td style="color: red" v-else>{{ item.attendance }}</td>
         </tr>
       </tbody>
       <tbody v-else>
@@ -182,12 +178,5 @@ td {
 }
 ::-webkit-scrollbar-thumb {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-.td.attd-user-fail {
-  color: red;
-}
-.td.attd-user-success {
-  color: green;
 }
 </style>
