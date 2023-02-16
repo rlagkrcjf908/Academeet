@@ -5,6 +5,7 @@
 <script>
 import * as faceapi from 'face-api.js';
 let count = 0;
+let allCount = 0;
 
 export default {
 	name: 'OvVideo',
@@ -45,10 +46,12 @@ export default {
 		async setAttendanceCount(){
 			const name = this.client;
 			const meetingAtt = count;
+			const allAtt = allCount;
 			
 			const payload = {
 				name,
-				meetingAtt
+				meetingAtt,
+				allAtt,
 			}
         await this.$store.dispatch('meetingStore/setAttendanceCount', payload);
     	}
@@ -71,12 +74,14 @@ export default {
 						count++;
 					}
 					else console.log(clientData+ " : NO");
+						allCount++;
 				}, 1000);
 			}else{
 				clearInterval(this.interval);
 			}
 			this.setAttendanceCount();
 			count = 0;
+			allCount = 0;
 		}
 	}
 };
