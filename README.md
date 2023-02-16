@@ -145,6 +145,10 @@
 ![ERD-Academeet](https://user-images.githubusercontent.com/110094768/219382529-6bc63706-08d9-45ab-a2fa-3f3dd86ccce5.png)
 
 ---
+## 📑 SSAFY 8기 구미 1반 공통 D108조 📑
+https://lizard-cadet-cdc.notion.site/SSAFY-8-1-D108-9e79f4fdcfbb4d4c9f662520436d5bd2
+
+---
 ## 💡 팀원 역할 💡
 #### 👑이찬석👑: CI/CD, BE
 #### 🤍권아진🤍: FE
