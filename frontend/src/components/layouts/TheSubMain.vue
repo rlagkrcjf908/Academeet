@@ -168,5 +168,12 @@ const open = () => {
 .button.el-button.el-button--success.is-link {
   max-width: 150px;
   max-height: 50px;
+  font-weight: 700;
+}
+.el-button > span {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: larger;
 }
 </style>

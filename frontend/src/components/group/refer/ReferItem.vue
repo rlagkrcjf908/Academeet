@@ -99,7 +99,7 @@ onMounted(async () => {
 }
 tr:hover {
   background-color: rgba(97, 178, 153, 0.2);
-  font-weight: bolder;
+  font-weight: 700;
   /* color: #fdce7e; */
   color: rgba(97, 178, 153, 1);
 }
@@ -120,8 +120,7 @@ th {
   padding: 20px 15px;
   text-align: center;
   font-size: 20px;
-  color: #fff;
-  font-weight: bolder;
+  font-weight: 700;
   text-transform: uppercase;
   /* background-color: #94d82d; */
   background-color: rgba(97, 178, 153, 1);
@@ -130,7 +129,7 @@ td {
   padding: 15px;
   text-align: center;
   vertical-align: middle;
-  font-weight: 300;
+  font-weight: 700;
   font-size: 18px;
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);

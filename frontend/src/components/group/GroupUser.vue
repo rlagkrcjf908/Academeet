@@ -56,7 +56,7 @@ h1 {
   font-size: 30px;
   /* color: #fff; */
   text-transform: uppercase;
-  font-weight: 300;
+  font-weight: 400;
   text-align: center;
   margin-bottom: 15px;
 }

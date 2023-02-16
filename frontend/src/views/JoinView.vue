@@ -1,6 +1,6 @@
 <template>
   <div class="join">
-    <div class="common-layout">
+    <div class="common-layout" style="background-color: white">
       <el-header class="join-title" @click="$router.push('/login')">
         <div>
           -<span style="color: #94d82d">&nbsp;A</span>cade<span
