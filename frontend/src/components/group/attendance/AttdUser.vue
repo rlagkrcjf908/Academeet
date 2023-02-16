@@ -7,7 +7,7 @@
           <th>제목</th>
           <th>날짜</th>
           <th>출석률</th>
-          <th>수정</th>
+          <th v-if="hostId == userId">수정</th>
         </tr>
       </thead>
     </table>
@@ -20,10 +20,11 @@
           <td>{{ item.meetId }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.date }}</td>
-          <td class="attd-success" v-if="item.attendance >= 80">
+          <td class="attd-user-success" v-if="item.attendance >= 70">
             <el-input v-model="item.attendance"></el-input>
           </td>
-          <td class="attd-fail" v-else>
+          <td v-else-if="item.attendance == 0">정보없음</td>
+          <td class="attd-user-fail" v-else>
             <el-input v-model="item.attendance"></el-input>
           </td>
           <td>
@@ -43,10 +44,15 @@
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.date }}</td>
-          <td class="attd-success" v-if="item.attendance >= 80">
+          <td
+            class="attd-user-success"
+            style="color: green"
+            v-if="item.attendance >= 70"
+          >
             {{ item.attendance }}
           </td>
-          <td class="attd-fail" v-else>{{ item.attendance }}</td>
+          <td v-else-if="item.attendance == 0">정보없음</td>
+          <td class="attd-user-fail" v-else>{{ item.attendance }}</td>
         </tr>
       </tbody>
       <tbody v-else>
@@ -122,4 +128,66 @@ const saveAttdList = (item) => {
 };
 </script>
 
-<style></style>
+<style scoped>
+.detail-btn {
+  width: 140px;
+  height: 30px;
+  font-size: 15px;
+}
+tr:hover {
+  background-color: rgba(97, 178, 153, 0.2);
+  font-weight: bolder;
+  /* color: #fdce7e; */
+  color: rgba(97, 178, 153, 1);
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+.tbl-header {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.tbl-content {
+  height: 75vh;
+  overflow-x: auto;
+  margin-top: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+th {
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  font-weight: bolder;
+  text-transform: uppercase;
+  /* background-color: #94d82d; */
+  background-color: rgba(97, 178, 153, 1);
+}
+td {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 300;
+  font-size: 18px;
+  /* color: #fff; */
+  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+}
+/* for custom scrollbar for webkit browser  */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.td.attd-user-fail {
+  color: red;
+}
+.td.attd-user-success {
+  color: green;
+}
+</style>

@@ -17,9 +17,10 @@
         <tr v-for="(item, index) in attdUserList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.name }}</td>
-          <td class="attd-success" v-if="item.allAtt >= 80">
+          <td class="attd-success" v-if="item.allAtt >= 70">
             {{ item.allAtt }}
           </td>
+          <td v-else-if="item.allAtt == 'NaN'">정보없음</td>
           <td class="attd-fail" v-else>{{ item.allAtt }}</td>
           <el-button
             class="detail-btn"
@@ -107,7 +108,7 @@ table {
 th {
   padding: 20px 15px;
   text-align: center;
-  font-size: 15px;
+  font-size: 20px;
   color: #fff;
   font-weight: bolder;
   text-transform: uppercase;
@@ -119,7 +120,7 @@ td {
   text-align: center;
   vertical-align: middle;
   font-weight: 300;
-  font-size: 12px;
+  font-size: 18px;
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
 }
@@ -136,9 +137,9 @@ td {
 }
 
 .attd-fail {
-  color: #f89898;
+  color: red;
 }
 .attd-success {
-  color: #95d475;
+  color: green;
 }
 </style>

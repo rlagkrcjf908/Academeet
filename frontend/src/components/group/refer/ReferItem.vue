@@ -119,7 +119,7 @@ table {
 th {
   padding: 20px 15px;
   text-align: center;
-  font-size: 15px;
+  font-size: 20px;
   color: #fff;
   font-weight: bolder;
   text-transform: uppercase;
@@ -131,7 +131,7 @@ td {
   text-align: center;
   vertical-align: middle;
   font-weight: 300;
-  font-size: 12px;
+  font-size: 18px;
   /* color: #fff; */
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
 }
