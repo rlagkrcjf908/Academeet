@@ -543,8 +543,10 @@ export default {
             this.PublisherCamera.on('publisherStopSpeaking', (event) => {
               console.log('The local user stop speaking');
               if(this.speechEnabled) {
+                
                 this.speechRecognition.stop();
-                this.speechRecognition.start();
+                setTimeout(() => (this.speechRecognition.start()), 500);
+                ;
               }
             });
           })
