@@ -68,9 +68,8 @@
                       <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/>
                     </button>
                     <!-- 공유중인화면목록 -->
-                    <button data-tooltip="공유중" class="meeting-bnt-item" id="buttonShared" @click="[openSharedList = true, reloadDivArea()]">
-                      공유중
-                      <!-- <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/> -->
+                    <button data-tooltip="공유중 화면" class="meeting-bnt-item" id="buttonShared" @click="[openSharedList = true, reloadDivArea()]">
+                      <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/null/share-3.png"/>
                     </button>
                     <el-dialog v-model="openSharedList" title="Sharing" width="30%" center>
                     <span>
@@ -1241,6 +1240,10 @@ createToken(sessionId) {
   text-align: center;
   border-radius: 4px;
   background: var(--el-color-danger-light-9);
+}
+
+#video{
+  border: solid 1px rgb(65, 63, 63);
 }
 
 .other-video {

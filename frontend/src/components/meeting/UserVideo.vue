@@ -70,10 +70,10 @@ export default {
 					const { clientData } =  this.getConnectionData();
 					this.client = clientData;
 					if (detections) {
-						document.getElementById("client-name").style.color = "black"
+						document.getElementById("client-name").style.backgroundColor = "green"
 					}
 					else 
-							document.getElementById("client-name").style.color = "yellow"
+							document.getElementById("client-name").style.backgroundColor = "red"
 						// working
 				}, 1000);
 			}else{
@@ -92,7 +92,7 @@ export default {
 }
 
 #client-name {
-	background-color: olivedrab;
+	background-color: white;
 	color: black;
 }
 
