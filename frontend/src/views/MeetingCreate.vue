@@ -265,6 +265,7 @@ const submitForm = (formEl) => {
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  flex-wrap: wrap;
   padding: 8vw;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="join">
-    <div class="common-layout join-view-layout">
+    <div class="common-layout">
       <el-header class="join-title" @click="$router.push('/login')">
         <div>
           -<span style="color: #94d82d">&nbsp;A</span>cade<span
@@ -534,9 +534,5 @@ const submitForm = (formEl) => {
   margin-bottom: 5vh;
   text-align: center;
   font-size: 50px;
-}
-
-.join-view-layout {
-  background-color: white;
 }
 </style>

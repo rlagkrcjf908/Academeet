@@ -1,5 +1,4 @@
 <template>
-  
   <div class="tbl-header">
     <table cellpadding="0" cellspacing="0" border="0">
       <thead>
@@ -19,8 +18,14 @@
         <tr v-for="(item, index) in referList" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.title }}</td>
-    
-          <td><a :href="`https://i8d108.p.ssafy.io/stt/${item.stt}`" v-if="item.video != null">회의록다운로드</a></td>
+
+          <td>
+            <a
+              :href="`https://i8d108.p.ssafy.io/stt/${item.stt}`"
+              v-if="item.video != null"
+              >회의록다운로드</a
+            >
+          </td>
 
           <td><a :href="item.video" v-if="item.video">영상다운로드</a></td>
           <td>{{ item.date }}</td>
@@ -36,7 +41,7 @@
 </template>
 
 <script setup>
-import axios from "axios"
+import axios from "axios";
 import { requestRefer } from "@/common/api/groupAPI";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -46,32 +51,31 @@ const route = useRoute();
 
 // const groupId = ref(route.params.groupId);
 const groupId = ref(route.params.groupId);
-console.log("route.params.groupId:", route.params.groupId);
 const referList = ref([]);
 var referListLength = 0;
 
 // stt다운로드
-const fileDownload = (data)=>{
-      axios.get(`https://i8d108.p.ssafy.io/stt/${data}`, {
-        responseType: "blob"
-      }).then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'test.txt'); //or any other extension
-        document.body.appendChild(link);
-        link.click();
-      }).catch((error) => {
-        console.log(error);
-        alert("파일 다운로드 실패");
-      });
-    }
-
+const fileDownload = (data) => {
+  axios
+    .get(`https://i8d108.p.ssafy.io/stt/${data}`, {
+      responseType: "blob",
+    })
+    .then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "test.txt"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("파일 다운로드 실패");
+    });
+};
 
 onMounted(async () => {
   const res = await requestRefer(groupId.value);
-  console.log("전체 자료 res", res);
-  console.log("res.data.length", res.data.length);
 
   const datas = res.data;
   const list = datas.map((item) => {

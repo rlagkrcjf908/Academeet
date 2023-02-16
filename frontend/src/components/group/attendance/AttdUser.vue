@@ -56,7 +56,7 @@
   </div>
   <p hidden>{{ attdUserList }}</p>
 </template>
-  
+
 <script setup>
 import { requestAttdUser, attdUserUpdate } from "@/common/api/groupAPI";
 import { useRoute } from "vue-router";
@@ -121,70 +121,5 @@ const saveAttdList = (item) => {
   }
 };
 </script>
-  
-<style>
-tr:hover {
-  background-color: rgba(97, 178, 153, 0.2);
-  font-weight: bolder;
-  /* color: #fdce7e; */
-  color: rgba(97, 178, 153, 1);
-}
-h1 {
-  font-size: 30px;
-  /* color: #fff; */
-  text-transform: uppercase;
-  font-weight: 300;
-  text-align: center;
-  margin-bottom: 15px;
-}
-table {
-  width: 100%;
-  table-layout: fixed;
-}
-.tbl-header {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-.tbl-content {
-  height: 75vh;
-  overflow-x: auto;
-  margin-top: 0px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-th {
-  padding: 20px 15px;
-  text-align: center;
-  font-size: 18px;
-  color: #fff;
-  font-weight: bolder;
-  text-transform: uppercase;
-  /* background-color: #94d82d; */
-  background-color: rgba(97, 178, 153, 1);
-}
-td {
-  padding: 15px;
-  text-align: center;
-  vertical-align: middle;
-  font-weight: 400;
-  font-size: 15px;
-  /* color: #fff; */
-  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-}
-/* for custom scrollbar for webkit browser  */
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-::-webkit-scrollbar-thumb {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-.attd-fail {
-  color: #f89898;
-}
-.attd-success {
-  color: #95d475;
-}
-</style>
+<style></style>

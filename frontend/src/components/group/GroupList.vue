@@ -24,6 +24,4 @@ onMounted(() => {
   getGroupList();
 });
 </script>
-<style>
-</style>
-
+<style></style>

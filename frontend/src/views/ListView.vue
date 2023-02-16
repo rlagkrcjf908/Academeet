@@ -19,10 +19,11 @@
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
-              
           <tr v-for="(item, index) in meetList" :key="index">
             <td v-if="!item.isMeetingEnd">{{ item.date }}</td>
-            <td v-if="!item.isMeetingEnd">{{ item.startTime }} ~ {{ item.endTime }}</td>
+            <td v-if="!item.isMeetingEnd">
+              {{ item.startTime }} ~ {{ item.endTime }}
+            </td>
             <td v-if="!item.isMeetingEnd">{{ item.meetTitle }}</td>
             <td v-if="!item.isMeetingEnd">{{ item.groupTitle }}</td>
             <el-button

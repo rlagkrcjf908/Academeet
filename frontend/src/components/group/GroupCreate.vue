@@ -25,7 +25,7 @@
           type="text"
           autocomplete="off"
           placeholder="그룹이름을 입력해 주세요."
-          maxlength="45"
+          maxlength="15"
         />
       </el-form-item>
       <!-- 유저 검색 -->

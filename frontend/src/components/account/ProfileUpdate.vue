@@ -79,7 +79,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
 import axios from "axios";
-import { Message, User, Phone, Present } from '@element-plus/icons-vue'
+import { Message, User, Phone, Present } from "@element-plus/icons-vue";
 
 const store = useStore();
 const ruleFormRef = ref();
@@ -164,11 +164,7 @@ const submitForm = (formEl) => {
       );
 
       axios
-        .put(
-          `https://i8d108.p.ssafy.io/api/v1/user/${id}/update`,
-          frm,
-          config
-        )
+        .put(`https://i8d108.p.ssafy.io/api/v1/user/${id}/update`, frm, config)
         .then((res) => {
           localStorage.setItem("userInfo", JSON.stringify(res.data));
           router.push("/profile");

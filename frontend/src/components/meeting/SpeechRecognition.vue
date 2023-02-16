@@ -10,26 +10,27 @@
 <script>
 export default {
   name: "SpeechRecognition",
-  data: function() {
+  data: function () {
     return {
       speechRecognition: undefined,
-      recognizedText: ""
+      recognizedText: "",
     };
   },
   methods: {
-    startRecording: function() {
+    startRecording: function () {
       this.speechRecognition.onresult = (event) => {
         this.recognizedText =
           this.recognizedText + " " + event.results[0][0].transcript;
       };
       // console.log(this.recognizedText);
       this.speechRecognition.start();
-    }
+    },
   },
-  mounted: function() {
-    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  mounted: function () {
+    var SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     this.speechRecognition = new SpeechRecognition();
-  }
+  },
 };
 </script>
 

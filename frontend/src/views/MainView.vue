@@ -18,5 +18,4 @@ import TheHeader from "@/components/layouts/TheHeader.vue";
 .el-alert:first-child {
   margin: 0;
 }
-
 </style>

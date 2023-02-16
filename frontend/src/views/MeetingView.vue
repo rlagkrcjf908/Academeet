@@ -506,8 +506,6 @@ export default {
         console.log('User ' + event.connection.connectionId + ' stop speaking');
       });
 
-
-      
     // --- 4) Connect to the session with a valid user token ---
       // --- 4) Connect to the session with a valid user token ---
 
@@ -575,8 +573,6 @@ export default {
             );
           });
       });
-
-
 
       this.recognizedlog = [];
       window.addEventListener("beforeunload", this.leaveSession);

@@ -1,43 +1,49 @@
 <template>
-	<div v-if="streamManager">
-		<div class="userVideo_info">
-			<div class="user-video">
-				<ov-video :stream-manager="streamManager" :role="role" :faceDetection="faceDetection"/>
-			</div>
-			<div><p class="clientName">{{ clientData }}</p></div>
-		</div>
-	</div>
+  <div v-if="streamManager">
+    <div class="userVideo_info">
+      <div class="user-video">
+        <ov-video
+          :stream-manager="streamManager"
+          :role="role"
+          :faceDetection="faceDetection"
+        />
+      </div>
+      <div>
+        <p class="clientName">{{ clientData }}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import OvVideo from './OvVideo';
+import OvVideo from "./OvVideo";
 
 export default {
-	name: 'UserVideo',
+  name: "UserVideo",
 
-	components: {
-		OvVideo,
-	},
+  components: {
+    OvVideo,
+  },
 
-	props: {
-		streamManager: Object,
-		role: String,
-		faceDetection: Boolean,
-	},
+  props: {
+    streamManager: Object,
+    role: String,
+    faceDetection: Boolean,
+  },
 
-	computed: {
-		clientData () {
-			const { clientData } = this.getConnectionData();
-			return clientData;
-		},
-	},
+  computed: {
+    clientData() {
+      const { clientData } = this.getConnectionData();
+      return clientData;
+    },
+  },
 
-	methods: {
-		getConnectionData () {
-			const { connection } = this.streamManager.stream;
-			return JSON.parse(connection.data);
-		},
-	},
+  methods: {
+    getConnectionData() {
+      const { connection } = this.streamManager.stream;
+      return JSON.parse(connection.data);
+    },
+  },
 };
 </script>
 

@@ -44,8 +44,8 @@
     </el-form>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { reactive, ref } from "vue";
 import { checkPassword, changePassword } from "@/common/api/accountAPI.js";
 import { useRouter } from "vue-router";
@@ -151,8 +151,8 @@ const submitForm = (formEl) => {
   });
 };
 </script>
-  
-  <style>
+
+<style>
 .password {
   width: 73vw;
   height: 55vh;
