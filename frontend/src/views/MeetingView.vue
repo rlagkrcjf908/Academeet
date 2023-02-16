@@ -109,14 +109,15 @@
                 </button>
                 <!-- 공유중인화면목록 -->
                 <button
-                  data-tooltip="공유중"
+                  data-tooltip="공유중 화면"
                   class="meeting-bnt-item"
                   id="buttonShared"
                   @click="[(openSharedList = true), reloadDivArea()]"
                 >
-                  공유중
+                  <img class="meeting-btn-item-img" src="https://img.icons8.com/ios-filled/50/null/share-3.png"/>
                   <!-- <img class="meeting-btn-item-img" src="https://img.icons8.com/material-outlined/48/12B886/imac.png"/> -->
                 </button>
+
                 <el-dialog
                   v-model="openSharedList"
                   title="Sharing"
