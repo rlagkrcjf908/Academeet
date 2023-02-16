@@ -70,13 +70,28 @@ const router = useRouter();
 const store = useStore();
 const userid = store.state.accountStore.userId;
 const ruleFormRef = ref();
+const groupList = store.state.groupStore.groupList;
+
+// 그룹이름 중복확인
+
 
 // 그룹이름 유효성 검사
 const validategroupName = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("그룹이름을 입력해 주세요."));
   } else {
-    callback();
+    function isExistName(item)  {
+      if(item.name === value)  {
+        return true;
+      }
+    }
+    let existName = groupList.find(isExistName)
+    if( existName ){
+      console.log('existName////////////',existName)
+      callback(new Error("이미 존재하는 그룹 이름 입니다."));
+    }else{
+      callback();
+    }
   }
 };
 
