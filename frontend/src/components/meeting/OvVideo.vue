@@ -5,7 +5,6 @@
 <script>
 import * as faceapi from 'face-api.js';
 let count = 0;
-let allCount = 0;
 
 export default {
 	name: 'OvVideo',
@@ -46,19 +45,17 @@ export default {
 		async setAttendanceCount(){
 			const name = this.client;
 			const meetingAtt = count;
-			const allAtt = allCount;
-
+			
 			const payload = {
 				name,
 				meetingAtt,
-				allAtt,
 			}
         await this.$store.dispatch('meetingStore/setAttendanceCount', payload);
     	}
 	},
 
 	watch:{
-		faceDetection() {
+		faceDetection() {			
 			const video = document.getElementById("video");
 
 			if(this.faceDetection){
@@ -66,7 +63,7 @@ export default {
 					const detections = await faceapi
 						.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()
 					);
-
+				
 					const { clientData } =  this.getConnectionData();
 					this.client = clientData;
 					if (detections) {
