@@ -9,11 +9,13 @@ import com.ssafy.db.entity.Group;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.MeetRepository;
 import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -82,10 +84,26 @@ public class MeetController {
     })
     public ResponseEntity<? extends BaseResponseBody> endMeet(@PathVariable("meet_id") int meetId,
                                                               @RequestBody @ApiParam(value = "회원가입 정보", required = true) MeetEndReq endReq) throws IOException {
+        String str = String.valueOf(endReq.getEndtime());
+        String get = new String();
+        String[] splitData = str.split(":");
+        for (int i = 0; i<1;i++){
+            get += splitData[i];
+        }
+        int num = Integer.parseInt(get);
+        num = num+9;
+        if(num>=24) num = num-24;
+        String set = String.valueOf(num);
+        for (int i = 1; i<3;i++){
+            set += ":"+splitData[i];
+        }
+        endReq.setEndtime(Time.valueOf(set));
+
+
         if (meetService.endMeet(meetId, endReq)) {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
-        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Fail"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Fail"));
     }
 
     @PostMapping("/{meet_id}/attend")

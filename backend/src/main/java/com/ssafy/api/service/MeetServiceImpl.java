@@ -134,69 +134,16 @@ public class MeetServiceImpl implements MeetService {
         Meet meet = meetRepository.findMeetById(meetId);
         List<Attendance> attendances = attendanceRepository.findAttendancesByMeetid(meet);
         if (meet == null) return false;
+        if (meet.getGroupid() == null) return false;
         if (endReq.getStt() != null) {
 
-            String filePath = "/app/build/stt/";
             String fileName = meet.getTitle() + "note" + ".xlsx";
             meet.setEndtime(endReq.getEndtime());
             meet.setStt(fileName);
             meet.setVideo(endReq.getVideo());
             meetRepository.save(meet);
-            if (meet.getGroupid() != null) {
-                List<Attendance> atts = new ArrayList<>();
-
-                for (int i = 0; i < attendances.size(); i++) {
-                    User user = userRepository.findUserById(attendances.get(i).getUserid().getId());
-                    Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
-                    Integer count = 0;
-                    if (attendance.getAttendcount() == null) {
-                        attendance.setAttendance(0);
-                        atts.add(attendance);
-                    } else {
-                        count = attendance.getAttendcount();
-                        Time et = meet.getEndtime();
-                        Time st = meet.getStarttime();
-                        double countTime = ((et.getTime() - st.getTime()) / 1000);
-                        double att = (count / countTime) * 100;
-                        attendance.setAttendance(Math.ceil(att));
-                        atts.add(attendance);
-                    }
-                }
-                attendanceRepository.saveAll(atts);
-
-            }
-
-            SttReq sttReq = new SttReq();
-            sttReq.setTitle(meet.getTitle());
-            sttReq.setName(meet.getUserid().getName());
-            sttReq.setDate(String.valueOf(meet.getDate()));
-            sttReq.setGroupName(meet.getGroupid().getName());
-            if(meet.getGroupid()==null){
-                List<User_Meet> userMeet = user_MeetRepository.findByMeetid(meet);
-                List<String> name = new ArrayList<>();
-                for (int i = 0; i < userMeet.size(); i++) {
-                    name.add(userMeet.get(i).getUserid().getName());
-                }
-                sttReq.setUserName(name);
-            }else {
-                List<User_Group> userGroup = user_GroupRepository.findByGroupid(meet.getGroupid());
-                List<String> name = new ArrayList<>();
-                for (int i = 0; i < userGroup.size(); i++) {
-                    name.add(userGroup.get(i).getUserid().getName());
-                }
-                sttReq.setUserName(name);
-            }
-            sttReq.setStt(endReq.getStt());
-            makeExcelFile(sttReq);
-            return true;
-
-        }
-        meet.setEndtime(endReq.getEndtime());
-        meet.setVideo(endReq.getVideo());
-        meetRepository.save(meet);
-        System.out.println("그룹아이디" + meet.getGroupid().getId());
-        if (meet.getGroupid() != null) {
             List<Attendance> atts = new ArrayList<>();
+            // 출석률 구하기
             for (int i = 0; i < attendances.size(); i++) {
                 User user = userRepository.findUserById(attendances.get(i).getUserid().getId());
                 Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
@@ -206,22 +153,74 @@ public class MeetServiceImpl implements MeetService {
                     atts.add(attendance);
                 } else {
                     count = attendance.getAttendcount();
-                    System.out.println(count);
                     Time et = meet.getEndtime();
                     Time st = meet.getStarttime();
-                    System.out.println("et+" + et);
-                    System.out.println("st+" + st);
                     double countTime = ((et.getTime() - st.getTime()) / 1000);
-                    System.out.println(countTime);
                     double att = (count / countTime) * 100;
                     attendance.setAttendance(Math.ceil(att));
-                    System.out.println(Math.ceil(att));
                     atts.add(attendance);
                 }
-
             }
             attendanceRepository.saveAll(atts);
+
+
+            // 엑셀만들기
+            SttReq sttReq = new SttReq();
+            sttReq.setTitle(meet.getTitle());
+            sttReq.setName(meet.getUserid().getName());
+            sttReq.setDate(String.valueOf(meet.getDate()));
+            sttReq.setGroupName(meet.getGroupid().getName());
+            List<User_Meet> userMeet = user_MeetRepository.findByMeetid(meet);
+            List<String> name = new ArrayList<>();
+            for (int i = 0; i < userMeet.size(); i++) {
+                name.add(userMeet.get(i).getUserid().getName());
+            }
+            sttReq.setUserName(name);
+//            }else {
+//                List<User_Group> userGroup = user_GroupRepository.findByGroupid(meet.getGroupid());
+//                List<String> name = new ArrayList<>();
+//                for (int i = 0; i < userGroup.size(); i++) {
+//                    name.add(userGroup.get(i).getUserid().getName());
+//                }
+//                sttReq.setUserName(name);
+
+            sttReq.setStt(endReq.getStt());
+            makeExcelFile(sttReq);
+
+            return true;
+
         }
+
+        meet.setEndtime(endReq.getEndtime());
+        meet.setVideo(endReq.getVideo());
+        meetRepository.save(meet);
+        System.out.println("그룹아이디" + meet.getGroupid().getId());
+        List<Attendance> atts = new ArrayList<>();
+        for (int i = 0; i < attendances.size(); i++) {
+            User user = userRepository.findUserById(attendances.get(i).getUserid().getId());
+            Attendance attendance = attendanceRepository.findAttendanceByUseridAndMeetid(user, meet);
+            Integer count = 0;
+            if (attendance.getAttendcount() == null) {
+                attendance.setAttendance(0);
+                atts.add(attendance);
+            } else {
+                count = attendance.getAttendcount();
+                System.out.println(count);
+                Time et = meet.getEndtime();
+                Time st = meet.getStarttime();
+                System.out.println("et+" + et);
+                System.out.println("st+" + st);
+                double countTime = ((et.getTime() - st.getTime()) / 1000);
+                System.out.println(countTime);
+                double att = (count / countTime) * 100;
+                attendance.setAttendance(Math.ceil(att));
+                System.out.println(Math.ceil(att));
+                atts.add(attendance);
+            }
+
+        }
+        attendanceRepository.saveAll(atts);
+
         return true;
     }
 
@@ -266,11 +265,11 @@ public class MeetServiceImpl implements MeetService {
 
     @Override
     public void makeExcelFile(SttReq sttReq) {
-//        String filePath = "/app/build/stt/";
-//        String fileName = sttReq.getTitle() + "note" + ".xlsx";
+        String filePath = "/app/build/stt/";
+        String fileName = sttReq.getTitle() + "note" + ".xlsx";
 //
-        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
-        String fileName = "test.xlsx";
+//        String filePath = "C:/Users/SSAFY/Pictures/meetnote/";
+//        String fileName = "test.xlsx";
         try {
             File file = new File(filePath + fileName);
             FileOutputStream fileout = new FileOutputStream(file);
@@ -444,19 +443,19 @@ public class MeetServiceImpl implements MeetService {
                     Cell cell5 = row5.createCell(i);
                     cell5.setCellStyle(inputStyle);
 
-                    if(j==12+sttReq.getStt().size())cell5.setCellStyle(endStyle);
+                    if (j == 12 + sttReq.getStt().size()) cell5.setCellStyle(endStyle);
 
                     if (i == 1) {
-                        if(sttReq.getStt().get(j-13).getTime()==checktime){
+                        if (sttReq.getStt().get(j - 13).getTime() == checktime) {
                             cell5.setCellValue(" ");
-                        }else {
-                            cell5.setCellValue(sttReq.getStt().get(j-13).getTime());
-                            checktime = sttReq.getStt().get(j-13).getTime();
+                        } else {
+                            cell5.setCellValue(sttReq.getStt().get(j - 13).getTime());
+                            checktime = sttReq.getStt().get(j - 13).getTime();
                         }
                     } else if (i == 3) {
-                        if(sttReq.getStt().get(j-13).getName()==checkname) {
+                        if (sttReq.getStt().get(j - 13).getName() == checkname) {
                             cell5.setCellValue(" ");
-                        }else {
+                        } else {
                             cell5.setCellValue(sttReq.getStt().get(j - 13).getName());
                             checkname = sttReq.getStt().get(j - 13).getName();
                         }

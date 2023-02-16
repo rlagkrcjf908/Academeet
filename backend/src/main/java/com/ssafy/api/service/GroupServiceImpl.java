@@ -38,6 +38,8 @@ public class GroupServiceImpl implements GroupService {
     private MeetRepository meetRepository;
     @Autowired
     private User_MeetRepository user_MeetRepository;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
 
     @Override
     public Group createGroup(int id, GroupCreatePostReq groupCreatePostReq) {
@@ -90,6 +92,7 @@ public class GroupServiceImpl implements GroupService {
             return 0;
         }
         List<Meet> meet = meetRepository.findMeetsByGroupid(group);
+        attendanceRepository.deleteAttendancesByGroupid(group);
         for(int i = 0; i<meet.size() ; i++){
             group_MeetRepository.deleteGroup_MeetsByMeetid(meet.get(i));
             user_MeetRepository.deleteByMeetid(meet.get(i));

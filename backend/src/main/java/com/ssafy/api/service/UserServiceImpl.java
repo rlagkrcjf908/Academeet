@@ -262,6 +262,7 @@ public class UserServiceImpl implements UserService {
             Meet meet = meetRepository.findMeetById(um.get(i).getMeetid().getId());
 //            Group_Meet gm = group_MeetRepository.findGroup_MeetByMeetid(meet);
             if(meet.getGroupid()==null){
+
                 UserMeetRes umr = new UserMeetRes();
                 umr.setOwnerId(meet.getUserid().getId());
                 umr.setMeetId(meet.getId());
@@ -274,9 +275,8 @@ public class UserServiceImpl implements UserService {
             }else {
                 Group group = groupRepository.findGroupById(meet.getGroupid().getId());
                 UserMeetRes umr = new UserMeetRes();
-
                 umr.setOwnerId(meet.getUserid().getId());
-                umr.setMeetId(meet.getUserid().getId());
+                umr.setMeetId(meet.getId());
                 umr.setGroupTitle(group.getName());
                 umr.setDate(meet.getDate());
                 umr.setMeetTitle(meet.getTitle());
