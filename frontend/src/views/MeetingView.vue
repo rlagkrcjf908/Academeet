@@ -1230,7 +1230,6 @@ createToken(sessionId) {
 }
 
 .my-video {
-  background-color: aqua;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -1240,11 +1239,9 @@ createToken(sessionId) {
   text-align: center;
   border-radius: 4px;
   background: var(--el-color-danger-light-9);
-  color: var(--el-color-danger);
 }
 
 .other-video {
-  background-color: #c71100;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -1254,7 +1251,6 @@ createToken(sessionId) {
   text-align: center;
   border-radius: 4px;
   background: var(--el-color-danger-light-9);
-  color: var(--el-color-danger);
 }
 
 .my-main {

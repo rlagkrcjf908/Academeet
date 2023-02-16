@@ -1,26 +1,27 @@
 <template>
-  <video id="video" autoplay />
+	<video id="video" autoplay/>
 </template>
 
 <script>
-import * as faceapi from "face-api.js";
+import * as faceapi from 'face-api.js';
 let count = 0;
+let allCount = 0;
 
 export default {
-  name: "OvVideo",
-  data() {
-    return {
-      interval: undefined,
-    };
-  },
-  props: {
-    streamManager: Object,
-    role: String,
-    faceDetection: Boolean,
-  },
+	name: 'OvVideo',
+	data(){
+		return{
+			interval : undefined,
+		}
+	},
+	props: {
+		streamManager: Object,
+		role: String,
+		faceDetection: Boolean
+	},
 
-  mounted() {
-    /*
+	mounted () {
+		/*
 		console.log('OvVideo is mounted');
 		console.log(this.streamManager);
 		if(this.role === "publisher") console.log('Pusher');
@@ -28,56 +29,58 @@ export default {
 		else console.log('Noting');
 		console.log("role : " + this.role);
 		*/
-    this.streamManager.addVideoElement(this.$el);
+		this.streamManager.addVideoElement(this.$el);
 
-    this.initApi();
-    //Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri("/models"),])
-  },
+		this.initApi();
+		//Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri("/models"),])
+	},
 
-  methods: {
-    async initApi() {
-      await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
-    },
-    getConnectionData() {
-      const { connection } = this.streamManager.stream;
-      return JSON.parse(connection.data);
-    },
-    async setAttendanceCount() {
-      const name = this.client;
-      const meetingAtt = count;
+	methods:{
+		async initApi(){
+			await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+		},
+		getConnectionData () {
+			const { connection } = this.streamManager.stream;
+			return JSON.parse(connection.data);
+		},
+		async setAttendanceCount(){
+			const name = this.client;
+			const meetingAtt = count;
+			const allAtt = allCount;
 
-      const payload = {
-        name,
-        meetingAtt,
-      };
-      await this.$store.dispatch("meetingStore/setAttendanceCount", payload);
-    },
-  },
+			const payload = {
+				name,
+				meetingAtt,
+				allAtt,
+			}
+        await this.$store.dispatch('meetingStore/setAttendanceCount', payload);
+    	}
+	},
 
-  watch: {
-    faceDetection() {
-      const video = document.getElementById("video");
+	watch:{
+		faceDetection() {
+			const video = document.getElementById("video");
 
-      if (this.faceDetection) {
-        this.interval = setInterval(async () => {
-          const detections = await faceapi.detectSingleFace(
-            video,
-            new faceapi.TinyFaceDetectorOptions()
-          );
+			if(this.faceDetection){
+				this.interval = setInterval(async () => {
+					const detections = await faceapi
+						.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()
+					);
 
-          const { clientData } = this.getConnectionData();
-          this.client = clientData;
-          if (detections) {
-            console.log(clientData + " : YES");
-            count++;
-          } else console.log(clientData + " : NO");
-        }, 1000);
-      } else {
-        clearInterval(this.interval);
-      }
-      this.setAttendanceCount();
-      count = 0;
-    },
-  },
+					const { clientData } =  this.getConnectionData();
+					this.client = clientData;
+					if (detections) {
+						console.log(clientData + " : YES");
+						count++;
+					}
+					else console.log(clientData+ " : NO");
+				}, 1000);
+			}else{
+				clearInterval(this.interval);
+			}
+			this.setAttendanceCount();
+			count = 0;
+		}
+	}
 };
 </script>
