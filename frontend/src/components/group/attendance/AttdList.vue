@@ -69,10 +69,11 @@ onMounted(async () => {
   const res = await requestAttdList(groupId.value);
   const datas = res.data;
   const list = datas.map((item) => {
+    var att = parseFloat(item.allAtt);
     return {
       userId: item.userId,
       name: item.name,
-      allAtt: item.allAtt,
+      allAtt: att.toFixed(2),
     };
   });
   attdUserList.value = list;
