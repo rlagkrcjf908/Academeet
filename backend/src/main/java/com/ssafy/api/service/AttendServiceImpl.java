@@ -49,7 +49,7 @@ public class AttendServiceImpl implements AttendService{
             for (int j = 0; j<attendance.size();j++){
                 System.out.println(attendance.get(j).getAttendance());
                 if(attendance.get(j).getAttendance()>70){
-                    sumatt += attendance.get(j).getAttendance();
+                    sumatt += 1;
                 }
             }
             allatt = (sumatt/attendance.size())*100;
