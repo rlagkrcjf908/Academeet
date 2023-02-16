@@ -70,7 +70,7 @@ export default {
 					const { clientData } =  this.getConnectionData();
 					this.client = clientData;
 					if (detections) {
-						console.log($store.state.setAttendanceAccount)
+						// console.log($store.state.setAttendanceAccount)
 						console.log(clientData + " : YES1");
 						console.log(onCount, "on");
 						onCount++;
